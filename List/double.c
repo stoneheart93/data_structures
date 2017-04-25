@@ -145,6 +145,21 @@ void quick_sort()
     quick_sortUtil(start, high);
 }
 
+struct node *split(struct node *rider)
+{
+    struct node *fast = rider;
+	struct node *slow = rider;
+	printf("split \n");
+    while(fast->rptr != NULL && fast->rptr->rptr != NULL)
+    {
+        fast = fast->rptr->rptr;
+        slow = slow->rptr;
+    }
+    struct node *temp = slow->rptr;
+    printf("split debug: %d\n", temp->data);
+    slow->rptr = NULL;
+    return temp;
+}
 struct node *merge(struct node *first, struct node *second)
 {
     if(!first)
@@ -155,33 +170,27 @@ struct node *merge(struct node *first, struct node *second)
  
     if(first->data < second->data)
     {
-        first->next = merge(first->next,second);
-        first->next->prev = first;
-        first->prev = NULL;
+        first->rptr = merge(first->rptr,second);
+        first->rptr->lptr = first;
+        first->lptr = NULL;
         return first;
     }
     else
     {
-        second->next = merge(first,second->next);
-        second->next->prev = second;
-        second->prev = NULL;
+        second->rptr = merge(first,second->rptr);
+        second->rptr->lptr = second;
+        second->lptr = NULL;
         return second;
     }
 }
- 
-// Function to do merge sort
-struct node *mergeSort(struct node *head)
+struct node* merge_sort(struct node *first)
 {
-    if (!head || !head->next)
-        return head;
-    struct node *second = split(head);
- 
-    // Recur for left and right halves
-    head = mergeSort(head);
-    second = mergeSort(second);
- 
-    // Merge the two sorted halves
-    return merge(head,second);
+    if(first == NULL || first->rptr == NULL)
+        return first;
+    struct node *second = split(first);
+    first = merge_sort(first);
+    second = merge_sort(second);
+	return merge(first,second);
 }
 
 int main()
@@ -206,7 +215,8 @@ int main()
         printf("\n 6.Deletion in the middle");
         printf("\n 7.Reverse");
         printf("\n 8.Quick sort");
-        printf("\n 9.Exit");
+        printf("\n 9.Merge sort");
+        printf("\n 10.Exit");
         printf("\n Enter the choice:");
         scanf("%d", &n);
 		switch(n)
@@ -235,7 +245,10 @@ int main()
 			case 8: quick_sort(start);
 					display(start);
 					break;
-            case 9: goto exit;
+			case 9: start = merge_sort(start);
+					display(start);
+					break;
+            case 10: goto exit;
 		}
 	}
     exit:
