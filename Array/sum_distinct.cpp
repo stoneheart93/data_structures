@@ -5,7 +5,7 @@ using namespace std;
 int findSum(int a[], int n)
 {
     int sum = 0;
-    unordered_set< int > s;
+    unordered_set<int> s;
     for(int i = 0; i < n; i++)
     {
         if(s.find(a[i]) == s.end())

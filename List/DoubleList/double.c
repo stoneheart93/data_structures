@@ -162,10 +162,10 @@ struct node *split(struct node *rider)
 }
 struct node *merge(struct node *first, struct node *second)
 {
-    if(!first)
+    if(first == null)
     	return second;
  
-    if(!second)
+    if(second == null)
     	return first;
  
     if(first->data < second->data)
