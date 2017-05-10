@@ -54,14 +54,14 @@ void sorted_insert(struct node* head)
         temp->next = head;
         head->next = temp;
     }
-    else if(rider->data >= temp->data)
+    else if(temp->data <= rider->data)
     {
     	temp->next=head->next;
 	    head->next=temp;
     }
     else
     {
-        while(rider->next != head && rider->next->data < temp->data)
+        while(rider->next != head && temp->data > rider->next->data)
         	rider = rider->next;
         temp->next = rider->next;
         rider->next = temp;
@@ -111,31 +111,31 @@ void display(struct node *head)
 
 void splitList(struct node *head, struct node **head1, struct node **head2)
 {
-	struct node *slow_ptr = head->next;
-  	struct node *fast_ptr = head->next; 
-   	
-	if(head == NULL)
+	if(head->next == NULL)
     	return;
   
+	struct node *slowptr = head->next;
+	struct node *fastptr = head->next; 
+   		
   	// slowptr -> middle, fastptr -> last 
-	while(fast_ptr->next != head && fast_ptr->next->next != head) 
+	while(fastptr->next != head && fastptr->next->next != head) 
 	{
-    	fast_ptr = fast_ptr->next->next;
-     	slow_ptr = slow_ptr->next;
+    	fastptr = fastptr->next->next;
+		slowptr = slowptr->next;
 	}  
-	if(fast_ptr->next->next == head)
-		fast_ptr = fast_ptr->next;      
+	if(fastptr->next->next == head)
+		fastptr = fastptr->next;      
    
    	*head1 = head;    
       
 	if(head->next->next != head)
 	{
 		*head2 = (struct node*)malloc(sizeof(struct node));
-		(*head2)->next = slow_ptr->next;
-    	fast_ptr->next = *head2;
+		(*head2)->next = slowptr->next;
+    	fastptr->next = *head2;
 	}
 	
-	slow_ptr->next = *head1;       
+	slowptr->next = *head1;       
 }
 
 int main()

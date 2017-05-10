@@ -23,7 +23,7 @@ int maxSum(int stack1[], int stack2[], int stack3[], int n1, int n2, int n3)
 		
 		if(sum1 >= sum2 && sum1 >= sum3)
         	sum1 -= stack1[top1++];
-		else if(sum2 >= sum3 && sum2 >= sum3)
+		else if(sum2 >= sum1 && sum2 >= sum3)
         	sum2 -= stack2[top2++];
 		else if(sum3 >= sum2 && sum3 >= sum1)
         	sum3 -= stack3[top3++];
