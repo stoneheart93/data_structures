@@ -4,7 +4,7 @@
 
 int compare (const void* a, const void* b)
 {
-	return (*(char *)a - *(char *)b);
+	return strcmp(*(char *)a, *(char *)b);
 }
 
 void permuteRepetitionRecur(char* str, char* data, int index, int len)

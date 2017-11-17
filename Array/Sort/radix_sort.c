@@ -2,7 +2,7 @@
 
 void count_sort(int a[], int n, int exp)
 {
-    int b[n], c[10];
+    int b[n+1], c[10];
     int i, j;
  
 	for(i = 0; i < 10; i++)

@@ -4,7 +4,7 @@
 int firstNonRepeating(char* str)
 {
     static int count[NO_OF_CHARS];
-    int i, index=-1;
+    int i, index = -1;
     for(i = 0; str[i]; i++)
     	count[str[i]]++;
     for(i = 0; str[i]; i++)

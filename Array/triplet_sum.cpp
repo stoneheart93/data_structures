@@ -17,8 +17,10 @@ void tripletSum(int a[], int n, int sum)
         {
             if(a[i] + a[l] + a[r] == sum)
             {
-                printf("Triplet is %d, %d, %d", a[i], a[l], a[r]);
+            	printf("Triplet is %d, %d, %d\n", a[i], a[l], a[r]);
                 found = 1;
+                l++;
+                r--;
 			}
             else if(a[i] + a[l] + a[r] < sum)
                 l++;
@@ -45,8 +47,9 @@ int main()
 /*
 ip
 6
-1 4 45 6 10 8
-22
+12 3 6 1 6 9
+24
 op
-Triplet is 4, 8, 10
+Triplet is 3, 9, 12
+Triplet is 6, 6, 12
 */

@@ -1,8 +1,7 @@
 #include<stdio.h>
 #include<string.h>
-#include<string.h>
 
-char* stringFilter(char* str)
+void stringFilter(char* str)
 {
     int n = strlen(str);
     int i = -1, j = 0; 
@@ -22,13 +21,13 @@ char* stringFilter(char* str)
             str[++i] = str[j++];
     }
     str[++i] = '\0';
-    return str;
 }
 
 int main()
 {
     char str[10];
     scanf("%s", str);
-    printf("%s",stringFilter(str));
+    stringFilter(str);
+    printf("%s", str);
     return 0;
 }

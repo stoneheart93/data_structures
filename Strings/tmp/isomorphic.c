@@ -18,14 +18,14 @@ int areIsomorphic(char* str1, char* str2)
 	int i;
     for(i = 0; i < n; i++)
     {
-        if (map[str1[i]] == -1)
+        if(map[str1[i]] == -1)
         {
-            if (marked[str2[i]])
+            if(marked[str2[i]])
                 return 0;
  			marked[str2[i]] = 1;
  			map[str1[i]] = str2[i];
         }
- 		else if (map[str1[i]] != str2[i])
+		else if(map[str1[i]] != str2[i])
             return 0;
 	}
  	return 1;

@@ -3,8 +3,8 @@
 
 char getMaxOccuringChar(char *str)  
 {
-   	static int count[256];
-    int i, max_index=0;
+	static int count[NO_OF_CHARS];
+    int i, max_index = 0;
     for(i = 0; str[i]; i++)
         count[str[i]]++;
     for(i = 1; i < NO_OF_CHARS; i++)
@@ -19,6 +19,6 @@ int main()
 {
     char str[10];
     scanf("%s", str);
-	printf("Max occuring character: %c",getMaxOccuringChar(str));
+	printf("Max occuring character: %c", getMaxOccuringChar(str));
     return 0;
 }

@@ -13,7 +13,7 @@ int areRotations(char* str1,char* str2)
 	void* ptr;
     strcat(temp, str1);
     strcat(temp, str1);
-    ptr = strstr(temp, str2);// strstr returns NULL if the second string is NOT a substring of first string 
+    ptr = strstr(temp, str2); // strstr returns NULL if the second string is NOT a substring of first string 
     if(ptr != NULL)
     	return 1;
     else

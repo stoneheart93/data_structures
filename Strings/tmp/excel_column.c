@@ -21,7 +21,7 @@ char* column(int n)
         }
     }
     str[i] = '\0';
-  	return strrev(str);
+	return strrev(str);
 }
  
 int main()
