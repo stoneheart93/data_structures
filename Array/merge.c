@@ -38,14 +38,14 @@ int main()
 {
 	int i, m = 5, n = 4;
 	int mPlusN[] = {2, 8, NA, NA, NA, 13, NA, 15, 20};
-  	int N[] = {5, 7, 9, 25};
+	int N[] = {5, 7, 9, 25};
   
-  	moveToEnd(mPlusN, m + n);
- 	merge(mPlusN, N, m, n);
+	moveToEnd(mPlusN, m + n);
+	merge(mPlusN, N, m, n);
  
 	for(i = 0; i < m + n; i++)
 		printf("%d ", mPlusN[i]);   
-  	return 0;
+	return 0;
 
 }
 

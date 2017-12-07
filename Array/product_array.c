@@ -1,26 +1,16 @@
 #include<stdio.h>
+#include<math.h>
+#define EPS 1e-9
 
 void productArray(int a[], int n)
 {
-	int i, temp = 1;
- 	int prod[n];
- 	
- 	for(i = 0; i < n; i++)
-  	{	
-    	prod[i] = temp;
-    	temp *= a[i];
-  	}
- 
-  	temp = 1;
- 
- 	for(i = n - 1; i >= 0; i--)
-  	{
-    	prod[i] *= temp;
-    	temp *= a[i];
-  	}
- 
-  	for(i = 0; i < n; i++)
-    	printf("%d ", prod[i]);
+	int i;
+	long double sum = 0; 
+	for(i = 0; i < n; i++)
+		sum += (long double)log10(a[i]);
+
+	for(i = 0; i < n; i++)
+		printf("%d ", (int)(EPS + pow((long double)10.00, sum - log10(a[i])) )); 
 }
 
 int main() 
