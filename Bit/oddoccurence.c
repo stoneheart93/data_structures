@@ -19,3 +19,11 @@ int main()
 	printf("%d", getOddOccurrence(a, n));
     return 0;
 }
+
+/*
+ip
+13
+2 3 5 4 5 2 4 3 5 2 4 4 2
+op
+5
+
