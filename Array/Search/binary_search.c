@@ -8,7 +8,7 @@ int binary_search(int a[], int low, int high, int key)
 		if(a[mid] == key)
 			return mid;
 
-        if(a[mid] > key)
+        if(key < a[mid])
 			return binary_search(a, low, mid - 1, key);
 		else 
         	return binary_search(a, mid + 1, high, key);
