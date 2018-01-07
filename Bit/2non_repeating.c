@@ -28,7 +28,7 @@ int main()
 	for(i = 0; i < n; i++)
 		scanf("%d", &a[i]);
 	get2NonRepeating(a, n, &x, &y);
-	printf("Two Non Repeating elements: %d %d", x, y);
+	printf("Two Non Repeating elements: %d %d", x, y); // odd occurrences of two elements in an array 
 	return 0;
 }
 
