@@ -1,5 +1,5 @@
 #include<iostream>
-#include<unordered_Set>
+#include<unordered_set>
 using namespace std;
 
 int printDistinct(int a[], int n)
