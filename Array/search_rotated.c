@@ -5,10 +5,10 @@ int search_rotated(int a[], int low, int high, int key)
 	if(high >= low)
 	{
 		int mid = low + (high - low)/2;
-    	if(a[mid] == key)
+    	if(key == a[mid])
 			return mid;
- 
-    	if(a[low] <= a[mid])
+    	
+		if(a[low] <= a[mid])
     	{
         	if(key >= a[low] && key <= a[mid])
 				return search_rotated(a, low, mid - 1, key);

@@ -7,12 +7,12 @@ void swap(int* a, int* b)
 	*b = temp;
 }
 
-void segregate01(int a[], int n)
+void segregatePosNeg(int a[], int n)
 {
     int i = -1, j;
     for(j = 0; j < n; j++)
     {
-        if(a[j] == 0)
+        if(a[j] >= 0)
         {
             i++;
         	swap(&a[i], &a[j]);
@@ -27,7 +27,7 @@ int main()
 	scanf("%d", &n);
 	for(i = 0; i < n; i++)
 		scanf("%d", &a[i]);
-	segregate01(a, n);
+	segregatePosNeg(a, n);
 	for(i = 0; i < n; i++)
 		printf("%d ", a[i]);
 	return 0;

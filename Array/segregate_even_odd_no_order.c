@@ -1,32 +1,25 @@
 #include<stdio.h>
- 
+
 void swap(int* a, int* b)
 {
 	int temp = *a;
 	*a = *b;
 	*b = temp;
 }
+
 void segregateEvenOdd(int a[], int n)
 {
-	int left = 0, right = n - 1;
- 
-    while (left < right)
+    int i = -1, j;
+    for(j = 0; j < n; j++)
     {
-        while (a[left] % 2 == 0 && left < right)
-            left++;
- 
- 	    while (a[right] % 2 != 0 && left < right)
-            right--;
- 
-        if (left < right)
+        if(a[j] % 2 == 0)
         {
-            swap(&a[left], &a[right]);
-            left++;
-            right--;
+            i++;
+        	swap(&a[i], &a[j]);
         }
     }
 }
-
+ 
 int main() 
 {
     int n, i;
