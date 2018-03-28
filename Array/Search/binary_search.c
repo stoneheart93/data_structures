@@ -1,30 +1,27 @@
 #include<stdio.h>
 
-int binary_search(int a[], int n, int key)
+int array_even(int a[], int n)
 {
-	int low = 0, high = n - 1;
-	while(low <= high)
+	int i, count = 0;
+	for(i = 0; i <n; i++)
 	{
-		int mid = low + (high - low)/2;
-		if(a[mid] == key)
-			return mid;
-        else if(key < a[mid])
-			high = mid - 1;
-		else 
-        	low = mid + 1;
-   }
-   return -1;
+		if(a[i] % 2 != 0)
+			count++;
+	}
+	if(count % 2 == 0)
+		return 0;
+	else
+		return 1;
 }
 
 int main() 
 {
-    int n, i, key;
+    int n, i;
 	int a[20];
 	scanf("%d", &n);
 	for(i = 0; i < n; i++)
 		scanf("%d", &a[i]);
-	scanf("%d", &key);
-	printf("Position: %d", binary_search(a, n, key));
+	printf("%d", array_even(a, n));
 	return 0;
 }
 
