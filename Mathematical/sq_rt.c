@@ -1,24 +1,20 @@
 #include<stdio.h>
 
-int binary_search(int low, int high, int input)
+int sqroot(int input)
 {
-	if(low <= high)
+	int low = 0, high = 65535;
+	while(low <= high)
 	{
 		int mid = low + (high - low)/2;
 		int mid_sqr = mid * mid;
 		if(input == mid_sqr)
 			return mid;
 		else if(input < mid_sqr)
-			return binary_search(low, mid - 1, input);
+			high = mid - 1;
 	   	else
-	    	return binary_search(mid + 1, high, input);
+	    	low = mid + 1;
 	}
 	return -1;
-}
-
-int sqroot(int n)
-{
-	binary_search(0, 65535, n);
 }
 
 int main()

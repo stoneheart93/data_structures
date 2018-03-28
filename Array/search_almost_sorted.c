@@ -6,12 +6,16 @@ int binary_search(int a[], int n, int key)
 	while(low <= high)
 	{
 		int mid = low + (high - low)/2;
-		if(a[mid] == key)
+		if(key == a[mid])
 			return mid;
+		else if(mid > low && key == a[mid - 1])
+			return mid - 1;
+		else if(mid < high && key == a[mid + 1])
+			return mid + 1;
         else if(key < a[mid])
-			high = mid - 1;
+			high = mid - 2;
 		else 
-        	low = mid + 1;
+        	low = mid + 2;
    }
    return -1;
 }

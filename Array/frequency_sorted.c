@@ -1,6 +1,5 @@
 #include<stdio.h>
 
-
 int first(int a[], int n, int key)
 {
 	int low = 0, high = n - 1;
@@ -41,6 +40,15 @@ int last(int a[], int n, int key)
    return last;
 }
 
+int freq(int a[], int n, int key)
+{
+	int i = first(a, n, key);
+	if(i == -1)
+		return i;
+	int j = last(a, n, key);
+	return (j - i + 1);
+}
+
 int main() 
 {
     int i, key, n;
@@ -49,8 +57,7 @@ int main()
 	for(i = 0; i < n; i++)
 		scanf("%d", &a[i]);
 	scanf("%d", &key);
-	printf("\nFirst occurence: %d", first(a, n, key));
-	printf("\nLast occurence: %d", last(a, n, key));
+	printf("\nFrequency: %d", freq(a, n, key));
 	return 0;
 }
 
