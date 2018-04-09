@@ -10,10 +10,13 @@ int countWords(char* str)
     {
     	if(*str == ' ' || *str == '\n' || *str == '\t')
         	state = OUT;
-        else if(state==OUT)
+        else 
         {
-            state=IN;
-            wc++;
+            if(state == OUT)
+            {
+                state=IN;
+                wc++;
+            }
         }
         str++;
     }
