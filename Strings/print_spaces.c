@@ -1,11 +1,5 @@
 #include<stdio.h>
 #include<string.h>
-#include<stdlib.h>
-
-int compare (const void* a, const void* b)
-{
-	return (*(char *)a - *(char *)b);
-}
 
 void printSpacesRecur(char* str, char* data, int i, int j, int len)
 {

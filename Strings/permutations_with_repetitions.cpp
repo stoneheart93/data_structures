@@ -1,5 +1,8 @@
 #include<stdio.h>
 #include<string.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
 #include<stdlib.h>
 
 void permuteRepetitionRecur(char* str, char* data, int index, int len)
