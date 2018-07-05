@@ -330,6 +330,16 @@ int fullnodeCount(struct node* root)
 	return fullnodeCount(root->left) + fullnodeCount(root->right);
 }
 
+int halfnodeCount(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+	
+	if((root->left != NULL && root->right == NULL) || (root->left == NULL && root->right != NULL))
+		return 1 + halfnodeCount(root->left) + halfnodeCount(root->right);
+	return halfnodeCount(root->left) + halfnodeCount(root->right);
+}
+
 void inorder(struct node* root)
 {
 	if(root == NULL)
@@ -1491,6 +1501,8 @@ int main()
 			case 19: printf("%d", nonleafCount(root));
 					 break;
 			case 20: printf("%d", fullnodeCount(root));
+				     break;
+			case 21: printf("%d", halfnodeCount(root));
 				     break;
 			case 25: inorder(root);
 					 break;
