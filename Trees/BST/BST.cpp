@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<stack>
 #include<queue>
 #include<deque>
 #include<map>
@@ -309,6 +310,26 @@ int leafCountIter(struct node* root)
     return count;
 }
 
+int nonleafCount(struct node* root)
+{
+    if(root == NULL)       
+        return 0;
+	
+	if(root->left == NULL && root->right == NULL)      
+        return 0;            
+    return 1 + nonleafCount(root->left) + nonleafCount(root->right);      
+}    
+
+int fullnodeCount(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+	
+	if(root->left != NULL && root->right != NULL)
+		return 1 + fullnodeCount(root->left) + fullnodeCount(root->right);
+	return fullnodeCount(root->left) + fullnodeCount(root->right);
+}
+
 void inorder(struct node* root)
 {
 	if(root == NULL)
@@ -380,6 +401,29 @@ void morris(struct node* root)
 		}
 	}
 }
+
+void iterativePreorder(struct node* root)
+{
+	if(root == NULL)
+		return;
+	
+	stack<struct node*> s;
+	s.push(root);
+	
+	while(!s.empty())
+	{
+		struct node* temp = s.top();
+		s.pop();
+		
+		printf("%d ", temp->data);
+		
+		if(temp->right != NULL)
+			s.push(temp->right);
+		if(temp->left != NULL)
+			s.push(temp->left);
+	}
+}
+
 
 void reverseMorris(struct node* root)
 {
@@ -572,6 +616,37 @@ void levelOrderDirectionChange(struct node* root)
 	}
 }
 
+void reverseLevelOrder(struct node* root)
+{
+	if(root == NULL)
+		return;
+	
+	queue<struct node*> q;
+	q.push(root);
+	
+	stack<struct node*> s;
+	
+	while(!q.empty())
+	{
+		struct node* temp = q.front();
+		q.pop();
+		
+		s.push(temp);
+		
+		if(temp->right != NULL)
+		q.push(temp->right);
+		if(temp->left != NULL)
+		q.push(temp->left);
+	}
+	
+	while(!s.empty())
+	{
+	   struct node* temp = s.top();
+	   s.pop();
+	   printf("%d ", temp->data);
+	}
+}
+
 void verticalOrder(struct node* root)
 {
 	if(root == NULL)
@@ -606,6 +681,61 @@ void verticalOrder(struct node* root)
 			printf("%d ", it->second[i]);
 		printf("\n");
 	}
+}
+
+void printBoundaryLeft(struct node* root)
+{
+	if(root == NULL)
+		return;
+	
+	if(root->left != NULL)
+	{
+		printf("%d ", root->data);
+		printBoundaryLeft(root->left);
+	}
+	else if(root->right != NULL)
+	{
+		printf("%d ", root->data);
+		printBoundaryLeft(root->right);
+	}
+}
+
+void printLeaves(struct node* root)
+{
+	if(root == NULL)
+		return;
+	
+	if(root->left == NULL && root->right == NULL)
+		printf("%d ",root->data);
+	printLeaves(root->left);
+	printLeaves(root->right);
+}
+
+void printBoundaryRight(struct node* root)
+{
+	if(root == NULL)
+		return;
+	
+	if(root->right != NULL)
+	{
+		printBoundaryRight(root->right);
+		printf("%d ", root->data);
+	}
+	else if(root->left != NULL)
+	{
+		printBoundaryLeft(root->left);
+		printf("%d ", root->data);
+	}
+}
+
+void boundary(struct node* root)
+{
+	if(root == NULL)
+		return;
+
+	printBoundaryLeft(root);
+	printLeaves(root);
+	printBoundaryRight(root);
 }
 
 void nInorder(struct node* root, int n)
@@ -773,6 +903,68 @@ void rightView(struct node* root)
 				q.push(temp->right);
 		}
 	}
+}
+
+void topView(struct node* root)
+{
+	if(root == NULL)
+		return;
+
+	int hd = 0;
+	map<int, int> m;
+	
+	queue<pair<struct node*, int> > q;
+	q.push(make_pair(root, hd));
+
+	while(!q.empty())
+	{
+		pair<struct node*, int> temp_pair = q.front();
+		q.pop();
+		
+		struct node* temp = temp_pair.first;
+		hd = temp_pair.second;
+		
+		if(m.find(hd) == m.end())
+			m[hd] = temp->data;
+		
+		if(temp->left != NULL)
+			q.push(make_pair(temp->left, hd-1));
+		if(temp->right != NULL)
+			q.push(make_pair(temp->right, hd+1));
+	}
+	for(map<int,int>::iterator it = m.begin(); it != m.end(); it++)
+		printf("%d ", it->second);
+}
+
+void bottomView(struct node* root)
+{
+	if(root == NULL)
+		return;
+	
+	int hd = 0;
+	map<int, int> m;
+	
+	queue<pair<struct node*, int> > q;
+	q.push(make_pair(root, hd));
+	
+	while(!q.empty())
+	{
+		pair<struct node*, int> temp_pair = q.front();
+		q.pop();
+		
+		struct node* temp = temp_pair.first;
+		hd = temp_pair.second;
+		
+		m[hd] = temp->data;
+		
+		if(temp->left != NULL)
+			q.push(make_pair(temp->left, hd-1));
+		if(temp->right != NULL)
+			q.push(make_pair(temp->right, hd+1));
+		}
+	
+	for(map<int,int>::iterator it = m.begin(); it != m.end(); it++)
+		printf("%d ", it->second);
 }
 
 int kthsmallest(struct node* root, int k)
@@ -1192,22 +1384,30 @@ int main()
 		printf("\n16.Height/Depth - Iter");
 		printf("\n17.No of leaves - Recur");
 		printf("\n18.No of leaves - Iter");
+		printf("\n19.No of non leaves");
+		printf("\n20.No of full nodes");
+		printf("\n21.No of half nodes");
 		printf("\n25.Inorder");
 		printf("\n26.Preorder");
 		printf("\n27.Postorder");
 		printf("\n28.Morris(Inorder without stack and recursion)");
-		printf("\n29.Reverse Morris");
-		printf("\n30.Level Order");
-		printf("\n31.Level Order line by line");
-		printf("\n32.Level Order spiral");
-		printf("\n33.Level Order direction change for every 2 traversals");
-		printf("\n34.Vertical Order Traversal");
+		printf("\n29.Iterative Preorder");
+		printf("\n31.Reverse Morris");
+		printf("\n32.Level Order");
+		printf("\n33.Level Order line by line");
+		printf("\n34.Level Order spiral");
+		printf("\n35.Level Order direction change for every 2 traversals");
+		printf("\n36.Reverse Level Order Traversal");
+		printf("\n37.Vertical Order Traversal");
+		printf("\n38.Boundary Traversal");
 		printf("\n39.nth Node in Inorder");
 		printf("\n40.nth Node in Preorder");
 		printf("\n41.nth Node in Postorder");
 		printf("\n42.Maximum Product level");
 		printf("\n43.Left view");
 		printf("\n44.Right view");
+		printf("\n45.Top view");
+		printf("\n46.Bottom view");
 		printf("\n50.Kth Smallest");
 		printf("\n51.Kth Largest");
 		printf("\n52.Sum of elements lesser than or equal to kth smallest element");
@@ -1288,26 +1488,36 @@ int main()
 					 break;
 			case 18: printf("%d", leafCountIter(root));
 					 break;
+			case 19: printf("%d", nonleafCount(root));
+					 break;
+			case 20: printf("%d", fullnodeCount(root));
+				     break;
 			case 25: inorder(root);
-					break;
+					 break;
 			case 26: preorder(root);
-					break;
+					 break;
 			case 27: postorder(root);
 					 break;
 			case 28: morris(root);
 					 break;
-			case 29: reverseMorris(root);
+			case 29: iterativePreorder(root);
 					 break;
-			case 30: levelOrder(root);
+			case 31: reverseMorris(root);
 					 break;
-			case 31: levelOrder1by1(root);
+			case 32: levelOrder(root);
 					 break;
-			case 32: levelOrderSpiral(root);
+			case 33: levelOrder1by1(root);
 					 break;
-			case 33: levelOrderDirectionChange(root);
+			case 34: levelOrderSpiral(root);
 					 break;
-			case 34: verticalOrder(root);
+			case 35: levelOrderDirectionChange(root);
+					 break;
+			case 36: reverseLevelOrder(root);
+					 break;
+			case 37: verticalOrder(root);
 				  	 break;
+			case 38: boundary(root);
+					 break;
 			case 39: scanf("%d", &n);
 					 nInorder(root, n);
 					 break;
@@ -1324,6 +1534,10 @@ int main()
 			case 43: leftView(root);
 					 break;
 			case 44: rightView(root);
+					 break;
+			case 45: topView(root);
+					 break;
+			case 46: bottomView(root);
 					 break;
 			case 50: scanf("%d", &k);
 					 printf("%d", kthsmallest(root, k));
