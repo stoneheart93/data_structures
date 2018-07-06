@@ -65,6 +65,51 @@ void sorted_insert(struct node* rider)
     }
 }
 
+void insert_middle(struct node* head)
+{
+	if(head == NULL)
+		return;
+		
+	struct node* temp = (struct node*)malloc(sizeof(struct node));
+	scanf("%d", &temp->data);
+	
+	struct node* slowptr = head;
+    struct node* fastptr = head;
+    
+    while(fastptr->next != NULL && fastptr->next->next != NULL)
+    {
+        slowptr = slowptr->next;
+        fastptr = fastptr->next->next;
+    }
+    
+    temp->next = slowptr->next;
+	slowptr->next = temp;
+}
+
+void insert_nth_from_last(struct node* head, int n)
+{
+	if(head == NULL)
+		return;
+		
+	struct node* temp = (struct node*)malloc(sizeof(struct node));
+	scanf("%d", &temp->data);
+	
+	struct node* slowptr = head;
+    struct node* fastptr = head;
+    
+    for(int i = 1; i <= n - 1; i ++)
+    	fastptr = fastptr->next;
+    
+	while(fastptr->next != NULL)
+    {
+        slowptr = slowptr->next;
+        fastptr = fastptr->next;
+    }
+    
+    temp->next = slowptr->next;
+	slowptr->next = temp;    
+}
+
 void delatbeg()
 {
     struct node* temp = start;
@@ -824,23 +869,61 @@ void rearrangeEvenOdd(struct node *rider)
     }
 }
  
-void moveToFront(struct node *rider)
+void moveLastToFront(struct node** head)
 {
-    if(rider == NULL || rider->next == NULL)
-    	return;
+    if(*head == NULL || (*head)->next == NULL)
+		return;
  
-    struct node *secLast, *last;
+    struct node* secLast;
+	struct node* last = *head;
  
-	while(rider->next != NULL)
+	while(last->next != NULL)
     {
-        secLast = rider;
-        rider = rider->next;
+        secLast = last;
+        last = last->next;
     }
-    last = rider;
  
     secLast->next = NULL;
-	last->next = start;
-	start = last;
+	last->next = *head;
+	*head = last;
+}
+
+void moveMiddleToFront(struct node** head)
+{
+	if(*head == NULL || (*head)->next == NULL || (*head)->next->next == NULL) //till two nodes, functionality cant be applied 
+		return;
+		
+	struct node* slowptr = *head;
+    struct node* fastptr = *head;
+    struct node* prev = NULL;
+	while(fastptr->next != NULL && fastptr->next->next != NULL)
+    {
+    	prev = slowptr;
+        slowptr = slowptr->next;
+        fastptr = fastptr->next->next;
+    }
+    
+    prev->next = slowptr->next;
+    slowptr->next = *head;
+    *head = slowptr;
+}
+
+int countRotations(struct node* head)
+{
+	if(head == NULL || head->next == NULL)
+		return 0;
+	
+	int k = 0;	
+	int num = head->data;
+	
+	while(head->next != NULL)
+	{
+		if(num > head->data)
+			break;
+		k++;
+		head = head->next;
+	}
+	return k;
 }
 
 int main()
@@ -851,9 +934,10 @@ int main()
 	struct node* first, *second;
     
 	struct node* i = (struct node*)malloc(sizeof(struct node));
-    printf("\n Enter the data: ");
+    printf("Enter the data: ");
     scanf("%d", &i->data);
     i->next = NULL;
+    struct node* head = i;
     start = i;
     
 	while(1)
@@ -863,52 +947,56 @@ int main()
         printf("\n 2.Insertion at the end");
         printf("\n 3.Insertion in the middle");
         printf("\n 4.Insertion in a sorted way");
-        printf("\n 5.Deletion at the front");
-        printf("\n 6.Deletion at the end");
-        printf("\n 7.Deletion in the middle");
-        printf("\n 8.Deletion of alternate nodes");
-        printf("\n 9.Deletion of alternate nodes Recursive");
-        printf("\n 10.Delete entire list");
-        printf("\n 11.Delete given pointer to a node");
-        printf("\n 12.Delete at a given position");
-        printf("\n 13.Delete last occurence of an item");
-        printf("\n 14.Delete n nodes after m nodes");
-        printf("\n 15.Count");
-        printf("\n 16.Count Recursive");
-        printf("\n 17.Search");
-        printf("\n 18.Search Recursive");
-        printf("\n 19.Modify");
-        printf("\n 20.Print Reverse");
-        printf("\n 21.Reverse");
-        printf("\n 22.Reverse Recursive");
-        printf("\n 23.Reverse by k nodes");
-        printf("\n 24.Reverse by k nodes alternately");
-        printf("\n 25.Remove duplicates(sorted)");
-        printf("\n 26.Remove duplicates(unsorted)");
-        printf("\n 27.Alternatively split a list");
-        printf("\n 28.Sort 0s,1s,2s");
-        printf("\n 29.Sort 0s,1s,2s by changing links");
-        printf("\n 30.Sort by actual values(absoulte sorted)");
-        printf("\n 31.Insertion sort");
-        printf("\n 32.Merge sort");
-        printf("\n 33.Quick sort");
-        printf("\n 34.Sort a list that is sorted alternating ascending and descending orders");
-        printf("\n 35.Get nth node");
-        printf("\n 36.Print middle");
-        printf("\n 37.Print nth node from end");
-        printf("\n 38.Number of times a node has occurred");
-        printf("\n 39.Detect a loop(insert 5 nodes)");
-        printf("\n 40.Detect and remove loop");
-        printf("\n 41.Decimal Equivalent");
-        printf("\n 42.Swap nodes without swapping data");
-		printf("\n 43.Pairwise Swap");
-        printf("\n 44.Pairwise Swap Recursive");
-        printf("\n 45.Add one");
-        printf("\n 46.Add one Recursive");
-        printf("\n 47.ZigZag a < b > c < d > ..");
-        printf("\n 48.Rearrange odd and even positioned nodes together");
-        printf("\n 49.Move last node to front");
-		printf("\n 50.Exit");
+        printf("\n 5.Insertion in middle");
+        printf("\n 6.Insertion in nth position from last node");
+        printf("\n 7.Deletion at the front");
+        printf("\n 8.Deletion at the end");
+        printf("\n 9.Deletion in the middle");
+        printf("\n 10.Deletion of alternate nodes");
+        printf("\n 11.Deletion of alternate nodes Recursive");
+        printf("\n 12.Delete entire list");
+        printf("\n 13.Delete given pointer to a node");
+        printf("\n 14.Delete at a given position");
+        printf("\n 15.Delete last occurence of an item");
+        printf("\n 16.Delete n nodes after m nodes");
+        printf("\n 17.Count");
+        printf("\n 18.Count Recursive");
+        printf("\n 19.Search");
+        printf("\n 20.Search Recursive");
+        printf("\n 21.Modify");
+        printf("\n 22.Print Reverse");
+        printf("\n 23.Reverse");
+        printf("\n 24.Reverse Recursive");
+        printf("\n 25.Reverse by k nodes");
+        printf("\n 26.Reverse by k nodes alternately");
+        printf("\n 27.Remove duplicates(sorted)");
+        printf("\n 28.Remove duplicates(unsorted)");
+        printf("\n 29.Alternatively split a list");
+        printf("\n 30.Sort 0s,1s,2s");
+        printf("\n 31.Sort 0s,1s,2s by changing links");
+        printf("\n 32.Sort by actual values(absoulte sorted)");
+        printf("\n 33.Insertion sort");
+        printf("\n 34.Merge sort");
+        printf("\n 35.Quick sort");
+        printf("\n 36.Sort a list that is sorted alternating ascending and descending orders");
+        printf("\n 37.Get nth node");
+        printf("\n 38.Print middle");
+        printf("\n 39.Print nth node from end");
+        printf("\n 40.Number of times a node has occurred");
+        printf("\n 41.Detect a loop(insert 5 nodes)");
+        printf("\n 42.Detect and remove loop");
+        printf("\n 43.Decimal Equivalent");
+        printf("\n 44.Swap nodes without swapping data");
+		printf("\n 45.Pairwise Swap");
+        printf("\n 46.Pairwise Swap Recursive");
+        printf("\n 47.Add one");
+        printf("\n 48.Add one Recursive");
+        printf("\n 49.ZigZag a < b > c < d > ..");
+        printf("\n 50.Rearrange odd and even positioned nodes together");
+        printf("\n 51.Move last node to front");
+        printf("\n 52.Move middle node to front");
+        printf("\n 53.Count Rotations");
+		printf("\n 54.Exit");
         printf("\n Enter the choice:");
         scanf("%d", &n);
 		switch(n)
@@ -925,160 +1013,173 @@ int main()
 			case 4: sorted_insert(start);
                     display(start);
                     break;
-			case 5: delatbeg();
+            case 5: scanf("%d", &n);
+					insert_middle(head);
+            		display(head);
+            		break;
+			case 6: scanf("%d", &n);
+					insert_nth_from_last(head, n);
+            		display(head);
+            		break;
+			case 7: delatbeg();
 					display(start);
 					break;
-			case 6: delatend(start);
+			case 8: delatend(start);
 					display(start);
 					break;
-			case 7: delatmid(start);
+			case 9: delatmid(start);
 		         	display(start);
 					break;
-			case 8: delalt(start);
-			        display(start);
-			        break;
-            case 9: delaltRec(start);
-			        display(start);
-			        break;
-            case 10: deletelist(start);
-                    display(start);
-                    break;
-        	case 11 : delNode(start->next->next);
-        			  display(start);
-        			  break;
-        	case 12: printf("\n Enter the position: ");
+			case 10: delalt(start);
+			         display(start);
+			         break;
+            case 11: delaltRec(start);
+			         display(start);
+			         break;
+            case 12: deletelist(start);
+                     display(start);
+                     break;
+        	case 13: delNode(start->next->next);
+        			 display(start);
+        			 break;
+        	case 14: printf("\n Enter the position: ");
 					 scanf("%d", &position);
 					 delposition(start, position);
         			 display(start);
         			 break;
-        	case 13: printf("\n Enter the key: ");
+        	case 15: printf("\n Enter the key: ");
 					 scanf("%d", &key);
 					 delLastOcc(start, key);
         			 display(start);
         			 break;
-        	case 14: printf("\n Enter m and n: ");
+        	case 16: printf("\n Enter m and n: ");
 					 scanf("%d%d", &M, &N);
 					 skipMdeleteN(start, M, N);
         			 display(start);
         			 break;
-			case 15: printf("\n No. of nodes: %d",count(start));
+			case 17: printf("\n No. of nodes: %d",count(start));
                      break;
-            case 16: printf("\n No. of nodes: %d",countRec(start));
+            case 18: printf("\n No. of nodes: %d",countRec(start));
                      break;
-            case 17: printf("\n Enter the element to be searched for:");
+            case 19: printf("\n Enter the element to be searched for:");
 					 scanf("%d", &x);
 					 if(search(start, x))
             			printf("\n Found");
             		 else
             			printf("\n Not found");
             		 break;
-            case 18: printf("\n Enter the element to be searched for:");
+            case 20: printf("\n Enter the element to be searched for:");
 					 scanf("%d", &x);
 					 if(searchRec(start, x))
             			printf("\n Found");
             		 else
             			printf("\n Not found");
             		 break;
-            case 19: printf("\n Enter the value to be replaced:");
+            case 21: printf("\n Enter the value to be replaced:");
                      scanf("%d", &oldv);
                      printf("\n Enter the new value:");
                      scanf("%d", &newv);
                      modify(oldv, newv, start);
                      display(start);
                      break;
-            case 20: printReverse(start);
+            case 22: printReverse(start);
             		 break;
-            case 21: reverse(start);
+            case 23: reverse(start);
                      display(start);
                      break;
-            case 22: reverseRec(start);
+            case 24: reverseRec(start);
                      display(start);
                      break;
-            case 23: printf("\n Enter the factor: ");
+            case 25: printf("\n Enter the factor: ");
                      scanf("%d", &k);
                      start = revk(start, k);
                      display(start);
               		 break;
-            case 24: printf("\n Enter the factor: ");
+            case 26: printf("\n Enter the factor: ");
                      scanf("%d", &kalt);
                      start = revkalt(start, kalt);
                      display(start);
                      break;
-            case 25: removedupsort(start);
+            case 27: removedupsort(start);
                      display(start);
                      break;
-            case 26: removedupunsort(start);
+            case 28: removedupunsort(start);
             		 display(start);
             		 break;
-            case 27: splitList(start, &first, &second);
+            case 29: splitList(start, &first, &second);
             		 display(first);
             		 printf("\n");
             		 display(second);
             		 break;
-            case 28: sort012(start);
+            case 30: sort012(start);
                      display(start);
                      break;
-            case 30: sort_actual(start);
+            case 32: sort_actual(start);
             		 display(start);
             		 break;
-            case 31: insertion_sort(start);
+            case 33: insertion_sort(start);
             		 display(start);
             		 break;
-            case 34: sortAscendDescendList(start);
+            case 36: sortAscendDescendList(start);
             	     display(start);
             	     break;
-			case 35: printf("\n Enter the index: ");
+			case 37: printf("\n Enter the index: ");
                      scanf("%d", &index);
                      printf("\n The node at %d position is %d", index, getnth(start, index));
                      break;
-            case 36: printf("\n The middle node is %d", printmid(start));
+            case 38: printf("\n The middle node is %d", printmid(start));
                      break;
-            case 37: printf("\n Enter the nth node: ");
+            case 39: printf("\n Enter the nth node: ");
                      scanf("%d", &nend);
                      printf("\n The %dth node from end is %d", nend, printnthfromend(start, nend));
                      break;
-            case 38: printf("\n Enter a number: ");
+            case 40: printf("\n Enter a number: ");
                      scanf("%d", &n1);
                      printf("\n %d has occurred %d times", n1, dupcount(start, n1));
                      break;
-            case 39: start->next->next->next->next = start;
+            case 41: start->next->next->next->next = start;
                      if(detectloop(start))
                      	printf("Loop is detected");
                      break;
-            case 40: start->next->next->next->next = start;
+            case 42: start->next->next->next->next = start;
             		 //display(start);
             		 detectandRemoveloop(start);
             		 display(start);
             		 break;
-            case 41: printf("%d", decimalValue(start));
+            case 43: printf("%d", decimalValue(start));
             		 break;
-            case 42: printf("\n Enter the nodes to be swapped: ");
+            case 44: printf("\n Enter the nodes to be swapped: ");
                      scanf("%d%d", &x, &y);
 					 swapNodes(start, x, y);
             		 display(start);
             		 break;
-            case 43: pairwiseSwap(start);
+            case 45: pairwiseSwap(start);
             		 display(start);
             		 break;
-            case 44: pairwiseSwapRec(start);
+            case 46: pairwiseSwapRec(start);
             		 display(start);
             		 break;
-            case 45: addOne(start);
+            case 47: addOne(start);
             		 display(start);
             		 break;
-            case 46: addOneRec(start);
+            case 48: addOneRec(start);
             		 display(start);
             		 break;
-            case 47: zigZag(start);
+            case 49: zigZag(start);
             		 display(start);
             		 break;
-        	case 48: rearrangeEvenOdd(start);
+        	case 50: rearrangeEvenOdd(start);
         			 display(start);
         			 break;
-        	case 49: moveToFront(start);
-        			 display(start);
+        	case 51: moveLastToFront(&head);
+        			 display(head);
         			 break;
-			case 50 : goto exit;
+        	case 52: moveMiddleToFront(&head);
+        			 display(head);
+        			 break;
+        	case 53: printf("%d",countRotations(head));
+        			 break;
+			case 54 : goto exit;
         }
 	}
 	exit:
