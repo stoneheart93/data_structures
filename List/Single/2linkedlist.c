@@ -8,11 +8,11 @@ struct node
 
 };
 
-void create(struct node **start)
+void create(struct node **head)
 {
     int flag;
-    struct node *temp=(struct node *) malloc(sizeof(struct node)); 
-    *start=temp; 
+    struct node *temp = (struct node *) malloc(sizeof(struct node)); 
+    *head = temp; 
     do 
     {
         printf("\n Enter data: ");
@@ -37,12 +37,12 @@ struct node* newNode(int data)
 	return temp;
 }
 
-void display(struct node* rider)
+void display(struct node* head)
 {
- 	while(rider != NULL)
+ 	while(head != NULL)
 	{
-	    printf("-->%d", rider->data);
-	    rider = rider->next;
+	    printf("-->%d", head->data);
+	    head = head->next;
     }     
 }
 
@@ -99,6 +99,7 @@ struct node *intersectSortedLists(struct node *a, struct node *b)
     	return result;
     }
 }
+
 int getIntesectionNodeUtil(int d, struct node* a, struct node* b)
 {
     int i;
@@ -117,45 +118,45 @@ int getIntesectionNodeUtil(int d, struct node* a, struct node* b)
     }
     return -1;
 } 
-int count(struct node *rider)
+int count(struct node *head)
 {
 	int count=0;
-    while(rider!=NULL)
+    while(head != NULL)
 	{
 	    count++;
-        rider=rider->next;
+        head = head->next;
     } 
     return count;    
 } 
-int getIntesectionNode(struct node *start1, struct node *start2)
+int getIntesectionNode(struct node *a, struct node *b)
 {
-    int c1 = count(start1);
-    int c2 = count(start2);
+    int c1 = count(a);
+    int c2 = count(b);
     int d;
     if(c1 > c2)
     {
         d = c1-c2;
-        return getIntesectionNodeUtil(d, start1, start2);
+        return getIntesectionNodeUtil(d, a, b);
     }
     else
     {
         d = c2 - c1;
-        return getIntesectionNodeUtil(d, start2, start1);
+        return getIntesectionNodeUtil(d, b, a);
     }
 }
 
 int main()
 {
     int choice;
-    struct node *start1, *start2;
+    struct node *head1, *head2;
 	struct node *res,*res1;
 	printf("\n\n List1");
-    create(&start1);
-    display(start1);
+    create(&head1);
+    display(head1);
     
 	printf("\n\n List2");
-    create(&start2);
-    display(start2);
+    create(&head2);
+    display(head2);
     
 	while(1)
     {
@@ -169,18 +170,18 @@ int main()
         scanf("%d", &choice);
         switch(choice)
         {
-        	case 1: if(identical(start1, start2))
+        	case 1: if(identical(head1, head2))
                         printf("\n The two lists are identical");
                     else
                         printf("\n The two lists are not identical");
                     break;
-        	case 2: res = mergeSortedLists(start1, start2);
+        	case 2: res = mergeSortedLists(head1, head2);
                     display(res);
                     break;
-            case 3: res = intersectSortedLists(start1, start2);
+            case 3: res = intersectSortedLists(head1, head2);
             		display(res);
             		break;
-            case 4: printf("\n The node of intersection is %d \n", getIntesectionNode(start1, start2)); 
+            case 4: printf("\n The node of intersection is %d \n", getIntesectionNode(head1, head2)); 
                     break;
             case 5: goto exit;
     	}
