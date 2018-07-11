@@ -10,29 +10,38 @@ struct node
 	int data;
 	struct node *next;
 
-}*start, *rest;
+};
 
-void addatbeg()
+void addatbeg(struct node** head)
 {
 	struct node* temp = (struct node*)malloc(sizeof(struct node));
 	printf("Enter the data to be inserted at beginning: ");
 	scanf("%d", &temp->data);
-	temp->next = start;
-	start = temp;
+	temp->next = *head;
+	*head = temp;
 }
 
-void addatend(struct node* rider)
+void addatend(struct node** head)
 {
 	struct node* temp = (struct node*)malloc(sizeof(struct node));
 	printf("Enter the data to be inserted at end: ");
-	scanf("%d", &temp->data);  
+	scanf("%d", &temp->data);
+	temp->next = NULL;
+	
+	if((*head) == NULL)
+	{
+		*head = temp;
+		return;
+	}
+	
+	struct node* rider = *head;
 	while(rider->next != NULL)
 		rider = rider->next;  
-	temp->next = NULL;
 	rider->next = temp;
 }
 
-void addatmid(struct node* rider)
+
+void addatmid(struct node* head)
 {
 	int num;
 	struct node* temp = (struct node*)malloc(sizeof(struct node));
@@ -40,21 +49,22 @@ void addatmid(struct node* rider)
 	scanf("%d", &temp->data);
 	printf("Enter the data succeeding the number to be inserted: ");
 	scanf("%d", &num);
-	while(rider->next->data != num)
-		rider = rider->next;
-	temp->next = rider->next;
-	rider->next = temp;
+	while(head->next->data != num)
+		head = head->next;
+	temp->next = head->next;
+	head->next = temp;
 }
 
-void sorted_insert(struct node* rider)
+void sorted_insert(struct node** head)
 {
+	struct node* rider = *head;
 	struct node* temp = (struct node*)malloc(sizeof(struct node));
 	printf("Enter the data to be inserted in sorted way: ");
 	scanf("%d", &temp->data);
 	if(rider == NULL || temp->data <= rider->data)
 	{
 		temp->next = rider;
-		start = temp;
+		*head = temp;
 	}
 	else
 	{
@@ -110,42 +120,41 @@ void insert_nth_from_last(struct node* head, int n)
 	slowptr->next = temp;    
 }
 
-void delatbeg()
+void delatbeg(struct node** head)
 {
-	struct node* temp = start;
-	start = start->next;
+	struct node* temp = *head;
+	*head = (*head)->next;
 	free(temp);
 }
 
-void delatend(struct node* rider)
+void delatend(struct node** head)
 {
 	struct node* temp;
-	if(rider->next == NULL)
+	if((*head)->next == NULL)
 	{
-		temp = rider;
+		temp = *head;
 		free(temp);
-		start = NULL;
+		*head = NULL;
 	}
-	else
-	{
-		while(rider->next->next != NULL)         
-			rider=rider->next;
-		temp = rider->next;
-		rider->next = NULL;
-		free(temp);
-	}
+	
+	struct node* rider = *head;
+	while(rider->next->next != NULL)         
+		rider = rider->next;
+	temp = rider->next;
+	rider->next = NULL;
+	free(temp);
 }
 
-void delatmid(struct node* rider)
+void delatmid(struct node* head)
 {
 	int num;
 	struct node* temp;
 	printf("Enter the number to be deleted: ");
 	scanf("%d", &num);
-	while(rider->next->data != num)
-		rider = rider->next;
-	temp = rider->next;
-	rider->next = temp->next;
+	while(head->next->data != num)
+		head = head->next;
+	temp = head->next;
+	head->next = temp->next;
 	free(temp);
 }   
 
@@ -156,8 +165,8 @@ void delMidNode(struct node** head)
 
 	if((*head)->next == NULL)
 	{
-		*head = NULL;
 		free(*head);
+		*head = NULL;
 	}
 
 	struct node* slowptr = *head;
@@ -174,12 +183,13 @@ void delMidNode(struct node** head)
 	free(slowptr);
 }
 
-void delalt(struct node* rider)
+void delalt(struct node* head)
 {
-	if(rider == NULL)
+	if(head == NULL)
 		return;
-	struct node* prev = rider; 
-	struct node* node = rider->next;
+
+	struct node* prev = head; 
+	struct node* node = head->next;
 	while(prev != NULL && node != NULL)
 	{
 		prev->next = node->next;   
@@ -190,24 +200,24 @@ void delalt(struct node* rider)
 	}      
 }
 
-void delaltRec(struct node* rider)
+void delaltRec(struct node* head)
 {
-	if(rider == NULL)
+	if(head == NULL)
 		return;
 
-	struct node* node = rider->next;
+	struct node* node = head->next;
 
 	if(node == NULL)
 		return;
 
-	rider->next = node->next;   
+	head->next = node->next;   
 	free(node);
-	delaltRec(rider->next);  
+	delaltRec(head->next);  
 }
 
-
-void deletelist(struct node* rider)
+void deletelist(struct node** head)
 {
+	struct node* rider = *head;
 	struct node* next_node;
 	while(rider != NULL) 
 	{
@@ -215,7 +225,7 @@ void deletelist(struct node* rider)
 		free(rider);
 		rider = next_node;
 	}
-	start = NULL;
+	*head = NULL;
 }
 
 void delNode(struct node* node_ptr)   
@@ -226,26 +236,23 @@ void delNode(struct node* node_ptr)
 	free(temp);
 }
 
-void delposition(struct node* rider, int position)
+void delposition(struct node** head, int position)
 {
-	if(rider == NULL)
+	if((*head) == NULL)
 		return;
 
-	struct node* temp; 
 	if(position == 0)
 	{
-		temp = start;
-		start = start->next;   
-		free(temp);               
+		free(*head);
+		*head = NULL;               
 		return;
 	}
 
 	int i;
+	struct node* rider = *head;
 	for(i = 0; rider != NULL && i < position - 1; i++)
 		rider = rider->next;
-	if(rider == NULL || rider->next == NULL)
-		return;
-	temp = rider->next;
+	struct node* temp = rider->next;
 	rider->next = temp->next;
 	free(temp);
 }
@@ -278,37 +285,45 @@ void delLastOcc(struct node* head, int key)
 	}
 }
 
-void skipMdeleteN(struct node* rider, int m, int n)
+void skipMdeleteN(struct node* head, int m, int n)
 {
 	struct node* d;
 	int count;
 
-	while(rider != NULL)
+	while(head != NULL)
 	{
-		for(count = 1; count < m && rider != NULL; count++)
-			rider = rider->next;
+		for(count = 1; count < m && head != NULL; count++)
+			head = head->next;
 
-		if(rider == NULL)
+		if(head == NULL)
 			return;
 
-		d = rider->next;
+		d = head->next;
 		for(count = 1; count <= n && d != NULL; count++)
 		{
 			struct node *temp = d;
 			d = d->next;
 			free(temp);
 		}
-		rider->next = d; 
-		rider = d;
+		head->next = d; 
+		head = d;
 	}
 }
 
-void display(struct node* rider)
+struct node* newNode(int data)
 {
-	while(rider != NULL)
+	struct node *temp = (struct node*)malloc(sizeof(struct node));
+	temp->data = data;
+	temp->next = NULL;
+	return temp;
+}
+
+void display(struct node* head)
+{
+	while(head != NULL)
 	{
-		printf("-->%d", rider->data);
-		rider = rider->next;
+		printf("-->%d", head->data);
+		head = head->next;
 	}     
 }
 
@@ -343,37 +358,36 @@ int lengthEvenOdd(struct node* head)
 		return 0;
 }
 
-
-int search(struct node* rider, int x)
+int search(struct node* head, int x)
 {
-	while(rider != NULL)
+	while(head != NULL)
 	{
-		if(rider->data == x)
+		if(head->data == x)
 			return 1;
-		rider = rider->next;
+		head = head->next;
 	}
 	return 0;
 } 
 
-int searchRec(struct node* rider, int x)
+int searchRec(struct node* head, int x)
 {
-	if(rider == NULL)
+	if(head == NULL)
 		return 0;
 
-	if(rider->data == x)
+	if(head->data == x)
 		return 1;
 
-	return searchRec(rider->next, x);
+	return searchRec(head->next, x);
 } 
 
-void modify(int old_value, int new_value, struct node* rider)
+void modify(int old_value, int new_value, struct node* head)
 {
-	while(rider->data != old_value && rider != NULL)
-		rider=rider->next;
-	if(rider==NULL)
+	while(head->data != old_value && head != NULL)
+		head = head->next;
+	if(head == NULL)
 		printf("The inputted value not found in the list");
 	else
-		rider->data = new_value;      
+		head->data = new_value;      
 }
 
 void printReverse(struct node* rider)
@@ -384,29 +398,33 @@ void printReverse(struct node* rider)
 	printf("--->%d", rider->data);
 }
 
-void reverse(struct node* rider)
+void reverse(struct node** head)
 {
+	struct node* rider = *head;
 	struct node* prev = NULL;
-	struct node* temp;
+	struct node* r_next;
 	while(rider != NULL)
 	{
-		temp = rider->next;
+		r_next = rider->next;
 		rider->next = prev;
 		prev = rider;
-		rider = temp;
+		rider = r_next;
 	}
-	start = prev;
+	*head = prev;
 }
 
-void reverseRec(struct node* first)
+void reverseRec(struct node** head)
 {
-	if(first == NULL|| first->next == NULL)
+	if((*head) == NULL || (*head)->next == NULL)
 		return;
-	rest = first->next;
-	reverseRec(rest);
+		
+	struct node* first = *head;
+	struct node* rest = first->next; 
+	
+	reverseRec(&rest);
 	first->next->next = first;
 	first->next = NULL;
-	start = rest;
+	*head = rest;
 }
 
 struct node* revk(struct node* head, int k)
@@ -455,53 +473,64 @@ struct node *revkalt(struct node* head, int k)
 	return prev;
 }
 
-void removedupsort(struct node* rider)
+void removedupsort(struct node* head)
 {
-	if(rider == NULL)
+	if(head == NULL)
 		return;
-	struct node* dup; 
-	while(rider->next != NULL) 
+		
+	struct node* dup;
+	while(head->next != NULL) 
 	{
-		if(rider->data == rider->next->data) 
+		if(head->data == head->next->data) 
 		{
-			dup = rider->next;
-			rider->next = dup->next;
+			dup = head->next;
+			head->next = dup->next;
 			free(dup);  
 		}
 		else 
-			rider = rider->next; 
+			head = head->next; 
 	}
 }
 
-void removedupunsort(struct node* rider)
+struct node* removedupsortRec(struct node* head)
+{
+	if(head == NULL)
+		return NULL;
+		
+	head->next = removedupsortRec(head->next);
+	
+	if(head->next != NULL && head->data == head->next->data) 
+	{
+		struct node* dup = head->next;
+		head->next = dup->next;
+		free(dup);
+		return head;  
+	}
+	return head;
+}
+
+void removedupunsort(struct node* head)
 {
 	unordered_set<int> seen;
 
 	struct node *prev;
-	while(rider != NULL)
+	while(head != NULL)
 	{
-		if(seen.find(rider->data) != seen.end())
+		if(seen.find(head->data) != seen.end())
 		{
-			prev->next = rider->next;
-			free(rider);
+			prev->next = head->next;
+			free(head);
 		}
 		else
 		{
-			seen.insert(rider->data);
-			prev = rider;
+			seen.insert(head->data);
+			prev = head;
 		}
-		rider = prev->next;
+		head = prev->next;
 	}
 }
 
-struct node* newNode(int data)
-{
-	struct node *temp = (struct node*)malloc(sizeof(struct node));
-	temp->data = data;
-	temp->next = NULL;
-	return temp;
-}
-void splitList(struct node *rider, struct node **first, struct node **second)
+void AlternateSplit(struct node* head, struct node** first, struct node** second)
 {
 	*first = newNode(0);
 	*second = newNode(0);
@@ -509,17 +538,17 @@ void splitList(struct node *rider, struct node **first, struct node **second)
 	struct node *frider = *first;
 	struct node *srider = *second;
 
-	while(rider != NULL)
+	while(head != NULL)
 	{
-		frider->next = rider;
+		frider->next = head;
 		frider = frider->next;
-		rider = rider->next;
+		head = head->next;
 
-		if(rider)
+		if(head)
 		{
-			srider->next = rider;
+			srider->next = head;
 			srider = srider->next;
-			rider = rider->next;
+			head = head->next;
 		}
 	}
 
@@ -529,8 +558,9 @@ void splitList(struct node *rider, struct node **first, struct node **second)
 	*second = (*second)->next;
 }
 
-void sort012(struct node* rider)
+void sort012(struct node* head)
 {
+	struct node* rider = head;
 	int count[3] = {0, 0, 0};  
 	int i = 0;
 	while(rider != NULL)
@@ -538,7 +568,7 @@ void sort012(struct node* rider)
 		count[rider->data]++;
 		rider = rider->next;
 	}
-	rider = start;
+	rider = head;
 	while(rider != NULL)
 	{
 		if(count[i] == 0)
@@ -552,17 +582,17 @@ void sort012(struct node* rider)
 	}
 }       
 
-void sort_actual(struct node* rider)
+void sort_actual(struct node** head)
 {
-	struct node* prev = rider;
-	struct node* curr = rider->next;
+	struct node* prev = *head;
+	struct node* curr = (*head)->next;
 	while(curr != NULL)
 	{
 		if(curr->data < prev->data)
 		{
 			prev->next = curr->next;
-			curr->next = start;
-			start = curr;
+			curr->next = *head;
+			*head = curr;
 			curr = prev;
 		}
 		else
@@ -588,31 +618,32 @@ void sorted_insert1(struct node **sorted, struct node *temp)
 		rider->next = temp;
 	}
 }
-void insertion_sort(struct node* rider)
+void insertion_sort(struct node** head)
 {
 	struct node *sorted = NULL;
+	struct node* rider = *head;
 	while (rider != NULL)
 	{
 		struct node *next = rider->next;
 		sorted_insert1(&sorted, rider);
 		rider = next;
 	}
-	start = sorted;
+	*head = sorted;
 }
 
-void reverse1(struct node** Dhead)
+void FrontBackSplit(struct node* head, struct node** first, struct node** second)
 {
-	struct node* rider = (*Dhead);
-	struct node* prev = NULL;
-	struct node* temp;
-	while(rider != NULL)
+    struct node* slowptr = head;
+	struct node* fastptr = head;
+	while(fastptr->next != NULL && fastptr->next->next != NULL)
 	{
-		temp = rider->next;
-		rider->next = prev;
-		prev = rider;
-		rider = temp;
+		slowptr = slowptr->next;
+		fastptr = fastptr->next->next;
 	}
-	(*Dhead) = prev;
+	
+    *first = head;
+    *second = slowptr->next;
+    slowptr->next = NULL;
 }
 struct node *mergeSortedLists(struct node *a, struct node *b) 
 {
@@ -633,23 +664,42 @@ struct node *mergeSortedLists(struct node *a, struct node *b)
 		return b;
 	}
 } 
-void sortAscendDescendList(struct node *head)
+void merge_sort(struct node** head)
 {
-	struct node *Ahead, *Dhead;
-	splitList(head, &Ahead, &Dhead);
-	reverse1(&Dhead);
-	start = mergeSortedLists(Ahead, Dhead);
+	struct node* a;
+	struct node* b;
+ 
+	if((*head) == NULL || (*head)->next == NULL)
+		return;
+
+	FrontBackSplit(*head, &a, &b); 
+ 
+	merge_sort(&a);
+	merge_sort(&b);
+ 
+	*head = mergeSortedLists(a, b);
 }
 
-int getnth(struct node* rider, int n)
+void sortAscendDescendList(struct node** head)
+{
+	if((*head) == NULL || (*head)->next == NULL)
+		return;
+		
+	struct node *Ahead, *Dhead;
+	AlternateSplit(*head, &Ahead, &Dhead);
+	reverse(&Dhead);
+	*head = mergeSortedLists(Ahead, Dhead);
+}
+
+int getnth(struct node* head, int n)
 {
 	int count = 0; // 0 indexed
-	while(rider != NULL)
+	while(head != NULL)
 	{
 		if(count == n)
-			return rider->data;
+			return head->data;
 		count++;
-		rider = rider->next;
+		head = head->next;
 	}
 } 
 
@@ -668,36 +718,41 @@ int printmid(struct node* head)
 	return slowptr->data;
 }  
 
-int printnthfromend(struct node* rider, int n)
+int printnthfromend(struct node* head, int n)
 {
-	int count = 0, i;
-	while(rider != NULL)
+	if(head == NULL)
+		return -1;
+		
+	struct node* slowptr = head;
+	struct node* fastptr = head;
+
+	for(int i = 1; i <= n - 1; i ++)
+		fastptr = fastptr->next;
+
+	while(fastptr->next != NULL)
 	{
-		rider = rider->next;
-		count++;
-	}
-	rider = start;
-	for(i = 1; i < count - n + 1; i++)
-		rider = rider->next;
-	return rider->data;
+		slowptr = slowptr->next;
+		fastptr = fastptr->next;
+	}	
+	return slowptr->data;
 }
 
-int dupcount(struct node* rider, int n)
+int dupcount(struct node* head, int n)
 {
 	int count = 0;
-	while(rider != NULL)
+	while(head != NULL)
 	{
-		if(rider->data == n)
+		if(head->data == n)
 			count++;
-		rider = rider->next;
+		head = head->next;
 	}
 	return count;
 }  
 
-int detectloop(struct node* rider)
+int detectloop(struct node* head)
 {
-	struct node* slowptr = rider;
-	struct node* fastptr = rider;
+	struct node* slowptr = head;
+	struct node* fastptr = head;
 	while(slowptr != NULL && fastptr != NULL && fastptr->next != NULL)
 	{
 		slowptr = slowptr->next;
@@ -706,12 +761,12 @@ int detectloop(struct node* rider)
 			return 1;
 	}
 	return 0;
-}    
+} 
 
-void detectandRemoveloop(struct node* rider)
+void detectandRemoveloop(struct node* head)
 {
-	struct node* slowptr = rider;
-	struct node* fastptr = rider->next;
+	struct node* slowptr = head;
+	struct node* fastptr = head;
 	while(slowptr != NULL && fastptr != NULL && fastptr->next != NULL)
 	{
 		slowptr = slowptr->next;
@@ -722,8 +777,8 @@ void detectandRemoveloop(struct node* rider)
 
 	if(slowptr == fastptr)
 	{
-		slowptr = rider;
-		while(slowptr != fastptr->next)
+		slowptr = head;
+		while(slowptr->next != fastptr->next)
 		{
 			slowptr = slowptr->next;
 			fastptr = fastptr->next;
@@ -732,57 +787,75 @@ void detectandRemoveloop(struct node* rider)
 	}
 }    
 
-int decimalValue(struct node* rider)
+int countNodesLoopUtil(struct node* head)
+{
+	int count = 1;
+	struct node* rider = head;
+	while(rider->next != head)
+	{
+		count++;
+		rider = rider->next;	
+	}
+	return count;
+}
+int countNodesLoop(struct node* head)
+{
+	struct node* slowptr = head;
+	struct node* fastptr = head;
+	while(slowptr != NULL && fastptr != NULL && fastptr->next != NULL)
+	{
+		slowptr = slowptr->next;
+		fastptr = fastptr->next->next;
+		if(slowptr == fastptr)
+			return countNodesLoopUtil(slowptr);
+	}
+	return 0;
+}
+
+int decimalValue(struct node* head)
 {
 	int res = 0;
-	while(rider != NULL)
+	while(head != NULL)
 	{
-		res = (res << 1) + rider->data;
-		rider = rider->next;	
+		res = (res << 1) + head->data;
+		head = head->next;	
 	}	
 	return res;
 }
 
-void swapNodes(struct node *start, int x, int y)
+void swap(struct node** a, struct node** b)
+{
+	printf("\n%d %d\n", (*a)->data, (*b)->data);
+	struct node* temp = *a;
+	*a = *b;
+	*b = temp;
+}
+void swapNodes(struct node** head, int x, int y)
 {	
 	if(x == y) 
 		return;
 
-	struct node *prevX;
-	struct node *currX = start;
-	while(currX && currX->data != x)
+	struct node* rider = *head;
+	struct node* a = NULL;
+	struct node* b = NULL;
+	
+	while(rider != NULL)
 	{
-		prevX = currX;
-		currX = currX->next;
+		if(rider->data == x)
+			a = rider;
+		else if(rider->data == y)
+			b = rider;
+		rider = rider->next;
 	}
-
-	struct node *prevY;
-	struct node *currY = start;
-	while(currY && currY->data != y)
+	
+	if(a != NULL && b != NULL)
 	{
-		prevY = currY;
-		currY = currY->next;
+		swap(a, b);
+		//display(*head);
+		swap(&(a->next), &(b->next));
 	}
-
-	if(currX == NULL || currY == NULL)
-		return;
-
-	if(prevX != NULL)
-		prevX->next = currY;
-	else 
-		start = currY;  
-
-	if(prevY != NULL)
-		prevY->next = currX;
-	else  
-		start = currX;
-
-	struct node *temp = currY->next;
-	currY->next = currX->next;
-	currX->next  = temp;
 }
-
-
+   
 void swap(int* a, int* b)
 {
 	int temp = *a;
@@ -807,56 +880,54 @@ void pairwiseSwapRec(struct node* head)
 	}  
 }
 
-int addWithCarry(struct node *rider)
+void addOneUtil(struct node *head)
 {
-	if(rider == NULL)
-		return 1;
-
-	int res = rider->data + addWithCarry(rider->next);
-
-	rider->data = res % 10;
-	return (res / 10);
-} 
-void addOneRec(struct node *rider)
-{
-	int carry = addWithCarry(rider);
-	if(carry)
-	{
-		struct node *temp = (struct node*)malloc(sizeof(struct node));
-		temp->data = carry;
-		temp->next = rider;
-		start = temp;
-	}
-} 
-
-struct node *addOneUtil(struct node *rider)
-{
-	struct node* res = rider;
-	struct node *temp, *prev = NULL;
+	struct node* res = head;
+	struct node *temp;
 
 	int carry = 1, sum;
 
-	while(rider != NULL) 
+	while(head != NULL) 
 	{
-		sum = carry + rider->data;
+		sum = carry + head->data;
 		carry = (sum >= 10)? 1 : 0;
 		sum = sum % 10;
-		rider->data = sum;
-		temp = rider;
-		rider = rider->next;
+		head->data = sum;
+		temp = head;
+		head = head->next;
 	}
 
-	if (carry > 0)
+	if(carry > 0)
 		temp->next = newNode(carry);
-
-	return res;
+		
 }
-void addOne(struct node *rider)
+void addOne(struct node** head)
 {
-	reverse(rider);
-	rider = addOneUtil(start);
-	reverse(rider);
+	reverse(head);
+	addOneUtil(*head);
+	reverse(head);
 }
+
+int addWithCarry(struct node *head)
+{
+	if(head == NULL)
+		return 1;
+
+	int res = head->data + addWithCarry(head->next);
+
+	head->data = res % 10;
+	return (res / 10);
+} 
+void addOneRec(struct node** head)
+{
+	int carry = addWithCarry(*head);
+	if(carry)
+	{
+		struct node *temp = newNode(carry);
+		temp->next = *head;
+		*head = temp;
+	}
+} 
 
 void zigZag(struct node* head)
 {
@@ -879,14 +950,14 @@ void zigZag(struct node* head)
 	}
 }
 
-void rearrangeEvenOdd(struct node *head)
+void rearrangeEvenOdd(struct node* head)
 {
 	if(head == NULL)
 		return;
 
-	struct node *odd = head;
-	struct node *even = head->next;
-	struct node *evenFirst = even;
+	struct node* odd = head;
+	struct node* even = head->next;
+	struct node* evenFirst = even;
 	struct node* temp;
 
 	while(odd != NULL && even != NULL)
@@ -1003,6 +1074,89 @@ int sum_last_Nnodes(struct node* head, int n)
 	return (sum1 - sum2);
 }
 
+int isSorted(struct node* head)
+{
+	if(head == NULL)
+		return 1;
+		
+	while(head->next != NULL)
+	{
+		if(head->data > head->next->data)
+			return 0;
+		head = head->next;
+	}
+	
+	return 1;
+}
+
+int isSortedRec(struct node* head)
+{
+	if(head == NULL || head->next == NULL)
+		return 1;
+		
+	return (head->data <= head->next->data && isSortedRec(head->next));
+}
+
+int identical(struct node *a, struct node *b)
+{
+    while(1)
+    {
+    	if(a == NULL && b == NULL)
+            return 1;
+        if(a == NULL && b != NULL)
+            return 0; 
+        if(a != NULL && b == NULL)
+            return 0; 
+        if(a->data != b->data)
+            return 0; 
+        a = a->next;
+        b = b->next; 
+    }          
+}   
+int isPalindrome(struct node* head)
+{
+	if(head == NULL || head->next == NULL)
+		return 0;
+
+	struct node* slowptr = head;
+	struct node* fastptr = head;
+	struct node* prev_slowptr;
+	struct node* mid_node = NULL;
+	
+	while(fastptr != NULL && fastptr->next != NULL)
+	{
+		prev_slowptr = slowptr;
+		slowptr = slowptr->next;
+		fastptr = fastptr->next->next;
+	}
+	
+	if(fastptr != NULL) //odd
+	{
+		mid_node = slowptr;
+		slowptr = slowptr->next;
+	}
+		
+	prev_slowptr->next = NULL;
+	struct node* a = head;
+	struct node* b = slowptr;
+	
+	reverse(&b);
+	int result = identical(a, b);
+	reverse(&b);
+	
+	if(mid_node != NULL)
+	{
+		prev_slowptr->next = mid_node;
+		mid_node->next = b;
+	}
+	else
+		prev_slowptr->next = b;
+	
+	return result;
+}
+
+
+
 int main()
 {
 	int n, oldv, newv, index, nend, n1, k, kalt, key, position, x, y, M, N;
@@ -1015,8 +1169,7 @@ int main()
 	scanf("%d", &i->data);
 	i->next = NULL;
 	struct node* head = i;
-	start = i;
-
+	
 	while(1)
 	{
 		printf("\n\n LIST OF OPERATIONS");
@@ -1049,50 +1202,55 @@ int main()
 		printf("\n 28.Reverse by k nodes");
 		printf("\n 29.Reverse by k nodes alternately");
 		printf("\n 30.Remove duplicates(sorted)");
-		printf("\n 31.Remove duplicates(unsorted)");
-		printf("\n 32.Alternatively split a list");
-		printf("\n 33.Sort 0s,1s,2s");
-		printf("\n 34.Sort 0s,1s,2s by changing links");
-		printf("\n 35.Sort by actual values(absoulte sorted)");
-		printf("\n 36.Insertion sort");
-		printf("\n 37.Merge sort");
-		printf("\n 38.Quick sort");
-		printf("\n 39.Sort a list that is sorted alternating ascending and descending orders");
-		printf("\n 40.Get nth node");
-		printf("\n 41.Print middle");
-		printf("\n 42.Print nth node from end");
-		printf("\n 43.Number of times a node has occurred");
-		printf("\n 44.Detect a loop(insert 5 nodes)");
-		printf("\n 45.Detect and remove loop");
-		printf("\n 46.Decimal Equivalent");
-		printf("\n 47.Swap nodes without swapping data");
-		printf("\n 48.Pairwise Swap");
-		printf("\n 49.Pairwise Swap Recursive");
-		printf("\n 50.Add one");
-		printf("\n 51.Add one Recursive");
-		printf("\n 52.ZigZag a < b > c < d > ..");
-		printf("\n 53.Rearrange odd and even positioned nodes together");
-		printf("\n 54.Move last node to front");
-		printf("\n 55.Move middle node to front");
-		printf("\n 56.Move first node to last");
-		printf("\n 57.Count Rotations");
-		printf("\n 58.Sum of last two nodes");
-		printf("\n 59.Exit");
+		printf("\n 31.Remove duplicates(sorted) Recursive");
+		printf("\n 32.Remove duplicates(unsorted)");
+		printf("\n 33.Alternatively split a list");
+		printf("\n 34.Sort 0s,1s,2s");
+		printf("\n 35.Sort 0s,1s,2s by changing links");
+		printf("\n 36.Sort by actual values(absoulte sorted)");
+		printf("\n 37.Insertion sort");
+		printf("\n 38.Merge sort");
+		printf("\n 39.Quick sort");
+		printf("\n 40.Sort a list that is sorted alternating ascending and descending orders");
+		printf("\n 41.Get nth node");
+		printf("\n 42.Print middle");
+		printf("\n 43.Print nth node from end");
+		printf("\n 44.Number of times a node has occurred");
+		printf("\n 45.Detect a loop(insert 5 nodes)");
+		printf("\n 46.Detect and remove loop");
+		printf("\n 47.No of nodes in loop");
+		printf("\n 48.Decimal Equivalent");
+		printf("\n 49.Swap nodes without swapping data");
+		printf("\n 50.Pairwise Swap");
+		printf("\n 51.Pairwise Swap Recursive");
+		printf("\n 52.Add one");
+		printf("\n 53.Add one Recursive");
+		printf("\n 54.ZigZag a < b > c < d > ..");
+		printf("\n 55.Rearrange odd and even positioned nodes together");
+		printf("\n 56.Move last node to front");
+		printf("\n 57.Move middle node to front");
+		printf("\n 58.Move first node to last");
+		printf("\n 59.Count Rotations");
+		printf("\n 60.Sum of last two nodes");
+		printf("\n 61.Check if list is sorted");
+		printf("\n 62.Check if list is sorted Recursive");
+		printf("\n 63.Check if list is palindrome");
+		printf("\n 64.Exit");
 		printf("\n Enter the choice:");
 		scanf("%d", &n);
 		switch(n)
 		{
-			case 1: addatbeg();
-					display(start);
+			case 1: addatbeg(&head);
+					display(head);
 					break;
-			case 2: addatend(start);
-					display(start);
+			case 2: addatend(&head);
+					display(head);
 					break;
-			case 3: addatmid(start);
-					display(start);
+			case 3: addatmid(head);
+					display(head);
 					break;
-			case 4: sorted_insert(start);
-					display(start);
+			case 4: sorted_insert(&head);
+					display(head);
 					break;
 			case 5: scanf("%d", &n);
 					insert_middle(head);
@@ -1102,45 +1260,45 @@ int main()
 					insert_nth_from_last(head, n);
 					display(head);
 					break;
-			case 7: delatbeg();
-					display(start);
+			case 7: delatbeg(&head);
+					display(head);
 					break;
-			case 8: delatend(start);
-					display(start);
+			case 8: delatend(&head);
+					display(head);
 					break;
-			case 9: delatmid(start);
-					display(start);
+			case 9: delatmid(head);
+					display(head);
 					break;
 			case 10: delMidNode(&head);
 					 display(head);
 					 break;
-			case 11: delalt(start);
-					 display(start);
+			case 11: delalt(head);
+					 display(head);
 					 break;
-			case 12: delaltRec(start);
-					 display(start);
+			case 12: delaltRec(head);
+					 display(head);
 					 break;
-			case 13: deletelist(start);
-					 display(start);
+			case 13: deletelist(&head);
+					 display(head);
 					 break;
-			case 14: delNode(start->next->next);
-					 display(start);
+			case 14: delNode(head->next->next);
+					 display(head);
 					 break;
 			case 15: printf("\n Enter the position: ");
 					 scanf("%d", &position);
-					 delposition(start, position);
-					 display(start);
+					 delposition(&head, position);
+					 display(head);
 					 break;
 			case 16: printf("\n Enter the key: ");
-				 scanf("%d", &key);
-				 delLastOcc(start, key);
-				 display(start);
-				 break;
+					 scanf("%d", &key);
+					 delLastOcc(head, key);
+					 display(head);
+					 break;
 			case 17: printf("\n Enter m and n: ");
-				 scanf("%d%d", &M, &N);
-				 skipMdeleteN(start, M, N);
-				 display(start);
-				 break;
+					 scanf("%d%d", &M, &N);
+					 skipMdeleteN(head, M, N);
+					 display(head);
+					 break;
 			case 19: printf("\n No. of nodes: %d",count(head));
 					 break;
 			case 20: printf("\n No. of nodes: %d",countRec(head));
@@ -1151,130 +1309,154 @@ int main()
 					 	printf("Odd length");
 					 break;
 			case 22: printf("\n Enter the element to be searched for:");
-				 scanf("%d", &x);
-				 if(search(start, x))
-					 printf("\n Found");
-				 else
-					 printf("\n Not found");
-				 break;
+					 scanf("%d", &x);
+					 if(search(head, x))
+						printf("\n Found");
+					 else
+						printf("\n Not found");
+					 break;
 			case 23: printf("\n Enter the element to be searched for:");
-				 scanf("%d", &x);
-				 if(searchRec(start, x))
-					 printf("\n Found");
-				 else
-					 printf("\n Not found");
-				 break;
+					 scanf("%d", &x);
+					 if(searchRec(head, x))
+						printf("\n Found");
+					 else
+						printf("\n Not found");
+					 break;
 			case 24: printf("\n Enter the value to be replaced:");
-				 scanf("%d", &oldv);
-				 printf("\n Enter the new value:");
-				 scanf("%d", &newv);
-				 modify(oldv, newv, start);
-				 display(start);
-				 break;
-			case 25: printReverse(start);
-				 break;
-			case 26: reverse(start);
-				 display(start);
-				 break;
-			case 27: reverseRec(start);
-				 display(start);
-				 break;
-			case 28: printf("\n Enter the factor: ");
-				 scanf("%d", &k);
-				 start = revk(start, k);
-				 display(start);
-				 break;
-			case 29: printf("\n Enter the factor: ");
-				 scanf("%d", &kalt);
-				 start = revkalt(start, kalt);
-				 display(start);
-				 break;
-			case 30: removedupsort(start);
-				 display(start);
-				 break;
-			case 31: removedupunsort(start);
-				 display(start);
-				 break;
-			case 32: splitList(start, &first, &second);
-				 display(first);
-				 printf("\n");
-				 display(second);
-				 break;
-			case 33: sort012(start);
-				 display(start);
-				 break;
-			case 35: sort_actual(start);
-				 display(start);
-				 break;
-			case 36: insertion_sort(start);
-				 display(start);
-				 break;
-			case 39: sortAscendDescendList(start);
-				 display(start);
-				 break;
-			case 40: printf("\n Enter the index: ");
-				 scanf("%d", &index);
-				 printf("\n The node at %d position is %d", index, getnth(start, index));
-				 break;
-			case 41: printf("\n The middle node is %d", printmid(head));
-				 break;
-			case 42: printf("\n Enter the nth node: ");
-				 scanf("%d", &nend);
-				 printf("\n The %dth node from end is %d", nend, printnthfromend(start, nend));
-				 break;
-			case 43: printf("\n Enter a number: ");
-				 scanf("%d", &n1);
-				 printf("\n %d has occurred %d times", n1, dupcount(start, n1));
-				 break;
-			case 44: start->next->next->next->next = start;
-				 if(detectloop(start))
-					 printf("Loop is detected");
-				 break;
-			case 45: start->next->next->next->next = start;
-				 //display(start);
-				 detectandRemoveloop(start);
-				 display(start);
-				 break;
-			case 46: printf("%d", decimalValue(start));
-				 break;
-			case 47: printf("\n Enter the nodes to be swapped: ");
-				 scanf("%d%d", &x, &y);
-				 swapNodes(start, x, y);
-				 display(start);
-				 break;
-			case 48: pairwiseSwap(head);
+					 scanf("%d", &oldv);
+					 printf("\n Enter the new value:");
+					 scanf("%d", &newv);
+					 modify(oldv, newv, head);
 					 display(head);
 					 break;
-			case 49: pairwiseSwapRec(head);
+			case 25: printReverse(head);
+				 	 break;
+			case 26: reverse(&head);
 					 display(head);
 				 	 break;
-			case 50: addOne(start);
-				 display(start);
-				 break;
-			case 51: addOneRec(start);
-				 display(start);
-				 break;
-			case 52: zigZag(head);
+			case 27: reverseRec(&head);
+				 	 display(head);
+				 	 break;
+			case 28: printf("\n Enter the factor: ");
+					 scanf("%d", &k);
+					 head = revk(head, k);
 					 display(head);
 					 break;
-			case 53: rearrangeEvenOdd(head);
+			case 29: printf("\n Enter the factor: ");
+					 scanf("%d", &kalt);
+					 head = revkalt(head, kalt);
 					 display(head);
 					 break;
-			case 54: moveLastToFront(&head);
+			case 30: removedupsort(head);
+				 	 display(head);
+				   	 break;
+			case 31: head = removedupsortRec(head);
 					 display(head);
 					 break;
-			case 55: moveMiddleToFront(&head);
+			case 32: removedupunsort(head);
+				 	 display(head);
+				 	 break;
+			case 33: AlternateSplit(head, &first, &second);
+					 display(first);
+					 printf("\n");
+					 display(second);
+					 break;
+			case 34: sort012(head);
 					 display(head);
 					 break;
-			case 56: moveFirstToLast(&head);
+			case 36: sort_actual(&head);
 					 display(head);
 					 break;
-			case 57: printf("%d",countRotations(head));
+			case 37: insertion_sort(&head);
+					 display(head);
 					 break;
-			case 58: scanf("%d", &n);
+			case 38: merge_sort(&head);
+					 display(head);
+					 break;
+			case 40: sortAscendDescendList(&head);
+					 display(head);
+					 break;
+			case 41: printf("\n Enter the index: ");
+				 	 scanf("%d", &index);
+				 	 printf("\n The node at %d position is %d", index, getnth(head, index));
+				 	 break;
+			case 42: printf("\n The middle node is %d", printmid(head));
+					 break;
+			case 43: printf("\n Enter the index: ");
+					 scanf("%d", &index);
+					 printf("\n The %dth node from end is %d", index, printnthfromend(head, index));
+				 	 break;
+			case 44: printf("\n Enter a number: ");
+					 scanf("%d", &n);
+					 printf("\n %d has occurred %d times", n, dupcount(head, n));
+				 	 break;
+			case 45: head->next->next->next->next = head->next;
+					 if(detectloop(head))
+					 	printf("Loop is detected");
+				 	 break;
+			case 46: head->next->next->next->next = head->next;
+					 //display(start);
+					 detectandRemoveloop(head);
+					 display(head);
+					 break;
+			case 47: head->next->next->next->next = head->next;
+					 printf("%d", countNodesLoop(head));
+					 break;
+			case 48: printf("%d", decimalValue(head));
+					 break;
+			case 49: printf("\n Enter the nodes to be swapped: ");
+					 scanf("%d%d", &x, &y);
+					 swapNodes(&head, x, y);
+					 display(head);
+					 break;
+			case 50: pairwiseSwap(head);
+					 display(head);
+					 break;
+			case 51: pairwiseSwapRec(head);
+					 display(head);
+				 	 break;
+			case 52: addOne(&head);
+					 display(head);
+					 break;
+			case 53: addOneRec(&head);
+					 display(head);
+					 break;
+			case 54: zigZag(head);
+					 display(head);
+					 break;
+			case 55: rearrangeEvenOdd(head);
+					 display(head);
+					 break;
+			case 56: moveLastToFront(&head);
+					 display(head);
+					 break;
+			case 57: moveMiddleToFront(&head);
+					 display(head);
+					 break;
+			case 58: moveFirstToLast(&head);
+					 display(head);
+					 break;
+			case 59: printf("%d",countRotations(head));
+					 break;
+			case 60: scanf("%d", &n);
 					 printf("%d", sum_last_Nnodes(head, n));
 					 break;
-			case 59: goto exit;
+			case 61: if(isSorted(head))
+					 	printf("List is sorted");
+					 else
+					 	printf("Not sorted");
+					 break;
+			case 62: if(isSortedRec(head))
+					 	printf("List is sorted");
+					 else
+					 	printf("Not sorted");
+					 break;
+			case 63: if(isPalindrome(head))
+					 	printf("List is Palindrome");
+					 else
+					 	printf("Not palindrome");
+					 break;			 
+			case 64: goto exit;
 		}
 	}
 	exit:
