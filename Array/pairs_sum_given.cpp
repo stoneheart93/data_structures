@@ -1,16 +1,18 @@
 #include<stdio.h>
+#include<unordered_set>
+using namespace std;
  
 void printPairs(int a[], int n, int sum)
 {
 	int i, temp;
-  	static int binMap[100000];
-  
-  	for(i = 0; i < n; i++)
+	unordered_set<int> hash;
+	
+	for(i = 0; i < n; i++)
   	{
-  		temp = sum - a[i];
-      	if (temp >= 0 && binMap[temp] == 1)
+		temp = sum - a[i];
+		if (hash.find(temp) != hash.end())
         	printf("Pair with given sum %d is (%d, %d) \n", sum, a[i], temp);
-      	binMap[a[i]] = 1;
+      	hash.insert(a[i]);
   	}
 }
  

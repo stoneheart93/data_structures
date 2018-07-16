@@ -1,4 +1,4 @@
-#include<map>
+#include<unordered_map>
 using namespace std;
 
 int max(int a, int b)
@@ -9,7 +9,7 @@ int max(int a, int b)
 int subarray01(int a[], int n)
 {
 	int i, count = 0, maxlen = 0;
-	map<int, int> m;
+	unordered_map<int, int> m;
 	for(i = 0; i < n; i++)
 	{
 		count += (a[i] == 0) ? -1 : 1;

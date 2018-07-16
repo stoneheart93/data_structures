@@ -2,17 +2,18 @@
 #include<unordered_map>
 using namespace std;
  
-void firstNonRepeating(int a[], int n)
+int firstNonRepeating(int a[], int n)
 {
     unordered_map<int, int> hash;
     for(int i = 0; i < n; i++)
     	hash[a[i]]++;
  
-    for(auto it = hash.begin(); it != hash.end(); it++)
+    for(int i = 0; i < n; i++)
 	{
-	    if(it->second == 1) 
-			printf("%d ", it->first);
+		if(hash[a[i]] == 1) 
+			return a[i];
     }
+    return -1;
 }
  
 int main()
@@ -22,6 +23,6 @@ int main()
 	scanf("%d", &n);
 	for(int i = 0; i < n; i++)
 		scanf("%d", &a[i]);
-	firstNonRepeating(a, n);
+	printf("%d", firstNonRepeating(a, n));
     return 0;    
 }
