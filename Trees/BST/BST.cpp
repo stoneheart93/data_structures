@@ -853,6 +853,38 @@ int maxProductLevel(struct node* root)
 	}
 }
 
+int maxNodesLevel(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+	
+	int max = 0;	
+	queue<struct node*> q;
+	q.push(root);
+	
+	while(1)	
+	{
+		int n = q.size();
+		
+		if(n == 0)
+			return max;
+		
+		if(n > max)
+			max = n;
+		
+		for(int i = 1; i <= n; i++)
+		{
+			struct node* temp = q.front();
+			q.pop();
+			
+			if(temp->left != NULL)
+				q.push(temp->left);
+			if(temp->right != NULL)
+				q.push(temp->right);
+		}
+	}
+}
+
 void leftView(struct node* root)
 {
 	if(root == NULL)
@@ -1359,6 +1391,19 @@ void rootLeafPath(struct node* root, int path[], int index)
 	rootLeafPath(root->right, path, index);
 }
 
+int rootLeafPathSum(struct node* root, int sum, int s)
+{
+	if(root == NULL)
+		return 0;
+	
+	s += root->data;
+	
+	if(root->left == NULL && root->right == NULL && s == sum)
+		return 1;
+		
+	return rootLeafPathSum(root->left, sum, s) || rootLeafPathSum(root->right, sum, s);
+}
+
 int main()
 {
 	int key, choice, k, k1, k2, c, oldVal, newVal, sum, n;
@@ -1414,10 +1459,11 @@ int main()
 		printf("\n40.nth Node in Preorder");
 		printf("\n41.nth Node in Postorder");
 		printf("\n42.Maximum Product level");
-		printf("\n43.Left view");
-		printf("\n44.Right view");
-		printf("\n45.Top view");
-		printf("\n46.Bottom view");
+		printf("\n43.Level with maximum nodes");
+		printf("\n46.Left view");
+		printf("\n47.Right view");
+		printf("\n48.Top view");
+		printf("\n49.Bottom view");
 		printf("\n50.Kth Smallest");
 		printf("\n51.Kth Largest");
 		printf("\n52.Sum of elements lesser than or equal to kth smallest element");
@@ -1432,6 +1478,7 @@ int main()
 		printf("\n66.Pairs with given sum");
 		printf("\n67.Contains Dead End - Recur");
 		printf("\n69.Root to leaf paths");
+		printf("\n70.Root to leaf path with given sum");
 		printf("\n77.Exit\n");
 		scanf("%d", &choice);
 		switch(choice)
@@ -1543,13 +1590,15 @@ int main()
 					 break;
 			case 42: printf("%d", maxProductLevel(root));
 					 break;
-			case 43: leftView(root);
+			case 43: printf("%d", maxNodesLevel(root));
+				     break;
+			case 46: leftView(root);
 					 break;
-			case 44: rightView(root);
+			case 47: rightView(root);
 					 break;
-			case 45: topView(root);
+			case 48: topView(root);
 					 break;
-			case 46: bottomView(root);
+			case 49: bottomView(root);
 					 break;
 			case 50: scanf("%d", &k);
 					 printf("%d", kthsmallest(root, k));
@@ -1596,6 +1645,12 @@ int main()
                     	printf("No dead end");
 					 break;    
 			case 69: rootLeafPath(root, path, 0);
+					 break;
+			case 70: scanf("%d", &sum);
+					 if(rootLeafPathSum(root, sum, 0))
+					 	printf("Path exists");
+					 else
+						printf("Path doesnt exist");
 					 break;
 			case 77: goto exit;
 		}
