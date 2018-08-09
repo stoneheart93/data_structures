@@ -1,19 +1,24 @@
-#include<unordered_set>
+#include<unordered_map>
 using namespace std;
 
-int subarraySum0(int a[], int n)
+int max(int a, int b)
 {
-	int i, sum = 0;
-	unordered_set<int> s;
+	return ((a > b)? a : b);
+}
+
+int subarray0(int a[], int n)
+{
+	int i, sum = 0, maxlen = 0;
+	unordered_map<int, int> m;
 	for(i = 0; i < n; i++)
 	{
 		sum += a[i];
-		if(sum == 0 || s.find(sum) != s.end())
-			return 1;
+		if(m.find(sum) != m.end())
+			maxlen = max(maxlen, i - m[sum]);
 		else
-			s.insert(sum);
+			m[sum] = i;
 	}
-	return 0;
+	return maxlen;
 }
 
 int main() 
@@ -23,9 +28,6 @@ int main()
 	scanf("%d", &n);
 	for(i = 0; i < n; i++)
 		scanf("%d", &a[i]);
-	if(subarraySum0(a, n))
-		printf("Subarray with sum 0 exists");
-	else
-		printf("Subarray doesnt exist");
+	printf("%d", subarray0(a, n));
 	return 0;
 }

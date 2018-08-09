@@ -12,7 +12,7 @@ void print2smallest(int a[], int n)
 			sec_min = first_min;
 			first_min = a[i];
 		}
-		if(a[i] < sec_min && a[i] != first_min)
+		if(a[i] < sec_min)
 			sec_min = a[i];
 	}
 	printf("%d %d", first_min, sec_min);

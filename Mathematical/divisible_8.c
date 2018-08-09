@@ -18,7 +18,6 @@ int isDivisibleBy8(char* str)
  
 }
  
-// Driver code
 int main()
 {
     char str[20];

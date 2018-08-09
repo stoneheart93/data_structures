@@ -11,7 +11,7 @@ int minPlatforms(int a[], int d[], int n)
 	int platforms = 0, result = 0;
 	while(i < n && j < n)
 	{
-		if(a[i] < d[j])
+		if(a[i] <= d[j])
 		{
 			i++;
 			platforms++;

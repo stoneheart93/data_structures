@@ -17,7 +17,12 @@ int pairs_sum(int a[], int n, int sum)
 		if(a[l] + a[r] == sum)
 		{
 			printf("%d, %d\n", a[l], a[r]);
-			return;
+			
+			if(l == (r - 1 + n) % n)
+            	return;
+             
+            l = (l + 1) % n;
+            r = (r - 1 + n) % n;
         }
 		else if(a[l] + a[r] < sum)
             l = (l + 1) % n;
