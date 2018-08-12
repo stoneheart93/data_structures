@@ -1,13 +1,12 @@
 #include<stdio.h>
-#define INIT_MAX 999999
-#define INIT_MIN 0
+#include<limits.h>
  
 int findMaxDiff(int a[], int n)
 {
     if(n < 2)
         return 0;
     
-	int min_val = INIT_MAX, max_val = INIT_MIN;
+	int min_val = INT_MAX, max_val = INT_MIN;
 	int i;
 	
     for(i = 0; i < n; i++)
