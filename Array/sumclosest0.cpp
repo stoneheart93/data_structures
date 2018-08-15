@@ -1,13 +1,13 @@
 #include<iostream>
 #include<algorithm>
+#include<limits.h>
 using namespace std;
-#define INIT_MAX 9999999
 
 void sumclosest0(int a[], int n)
 {
 	sort(a, a + n);
 	int l = 0, r = n - 1;
-	int sum, min_sum = INIT_MAX, min_l, min_r;
+	int sum, min_sum = INT_MAX, min_l, min_r;
 	while(l < r)
 	{
 		sum = a[l] + a[r];

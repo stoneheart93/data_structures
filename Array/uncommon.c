@@ -6,17 +6,9 @@ int printUncommon(int a1[], int a2[], int n1, int n2)
     while (i < n1 && j < n2) 
 	{
 		if(a1[i] < a2[j]) 
-		{
-        	printf("%d ", a1[i]);
-            i++;
-            k++;
-        }
+	 		printf("%d ", a1[i++]);
         else if(a2[j] < a1[i]) 
-		{
-        	printf("%d ", a2[j]);
-            j++;
-            k++;
-        }
+			printf("%d ", a2[j++]);
         else 
 		{
             i++;
@@ -24,17 +16,9 @@ int printUncommon(int a1[], int a2[], int n1, int n2)
         }
     }
     while(i < n1) 
-	{
-    	printf("%d ", a1[i]);
-        i++;
-        k++;
-    }
+		printf("%d ", a1[i++]);
     while(j < n2) 
-	{
-    	printf("%d ", a2[j]);
-        j++;
-        k++;
-    }
+		printf("%d ", a2[j++]);
 }
   
 int main()
