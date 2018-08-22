@@ -2,7 +2,7 @@
 #include<stack>
 using namespace std;
 
-int findDupParenthesis(char* str)
+int findDupParenthesis(char* str) // assume it is balanced
 {
     stack<char> s;
  
@@ -10,18 +10,18 @@ int findDupParenthesis(char* str)
     {
         if(str[i] == ')')
         {
-        	char top = s.top();
+        	char element = s.top();
             s.pop();
-            if(top == '(')
-            	return 1;
-			else
+            
+            int count = 0;
+            while(element != '(')
             {
-                while(top != '(')
-                {
-                    top = s.top();
-                    s.pop();
-                }
+            	count++;
+                element = s.top();
+             	s.pop();
             }
+            if(count == 0)
+            	return 1;
         }
         else
         	s.push(str[i]);
