@@ -31,35 +31,32 @@ int isoperator(char symbol)
 }
 int convert(char* infix, char* postfix)
 {
-    int symbol,j=0;
     stack<char> s;
-    for(int i = 0; infix[i]; i++)
+    
+    int j = 0;
+	for(int i = 0; infix[i]; i++)
     {
-        symbol = infix[i];
-        if(!isoperator(symbol)) //operand
-            postfix[j++] = symbol;
-    	else if(symbol == '(')
-            s.push(symbol);
-        else if(symbol == ')')
+        if(!isoperator(infix[i])) //operand
+            postfix[j++] = infix[i];
+    	else if(infix[i] == '(')
+            s.push(infix[i]);
+        else if(infix[i] == ')')
     	{
             while(!s.empty() && s.top() != '(')
             {
                 postfix[j++] = s.top();
                 s.pop();
             }
-        	if(!s.empty() && s.top() != '(')
-                return -1;
-        	else
-            	s.pop(); //for removing (
+        	s.pop(); //for removing (
         }
         else
         {
-            while(!s.empty() && prcd(symbol) <= prcd(s.top()))
+            while(!s.empty() && prcd(infix[i]) <= prcd(s.top()))
             {
                 postfix[j++] = s.top();
                 s.pop();
             }
-        	s.push(symbol);
+        	s.push(infix[i]);
     	}
     }
     while(!s.empty())// adding the remaining contents on stack to postfix

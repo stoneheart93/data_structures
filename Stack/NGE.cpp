@@ -15,11 +15,9 @@ void printNGE(int a[], int n)
         {
             element = s.top();
             s.pop();
-            while(element < next)
+            while(!s.empty() && element < next)
             {
                 printf("\n %d --> %d", element, next);
-                if(s.empty())
-                	break;
                 element = s.top();
                 s.pop();
             }

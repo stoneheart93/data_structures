@@ -14,7 +14,7 @@ int findDupParenthesis(char* str) // assume it is balanced
             s.pop();
             
             int count = 0;
-            while(element != '(')
+            while(element != '(') // no need of checking stack empty, since it is assumed that the exp is balanced
             {
             	count++;
                 element = s.top();
