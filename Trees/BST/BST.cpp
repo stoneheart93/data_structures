@@ -142,14 +142,16 @@ struct node* deleteLeafWithK(struct node* root, int k)
 	return root;
 }
 
-void deleteTree(struct node* root)
+struct node* deleteTree(struct node* root)
 {
 	if(root == NULL)
-		return;
+		return NULL;
 		
-	deleteTree(root->left);
-	deleteTree(root->right);
+	root->left = deleteTree(root->left);
+	root->right = deleteTree(root->right);
+	
 	free(root);
+	return NULL;
 }
 
 void FloorCeilRec(struct node* root, struct node** floor, struct node** ceil, int key)
@@ -338,6 +340,50 @@ int halfnodeCount(struct node* root)
 	if((root->left != NULL && root->right == NULL) || (root->left == NULL && root->right != NULL))
 		return 1 + halfnodeCount(root->left) + halfnodeCount(root->right);
 	return halfnodeCount(root->left) + halfnodeCount(root->right);
+}
+
+int sumNodes(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+
+	return root->data + sumNodes(root->left) + sumNodes(root->right);
+}
+
+int isLeaf(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+		
+	if(root->left == NULL && root->right == NULL)
+		return 1;
+	else
+		return 0;
+}
+int sumLeftLeafNodes(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+		
+	return (isLeaf(root->left) ? root->left->data : 0) + sumLeftLeafNodes(root->left) + sumLeftLeafNodes(root->right);
+}
+
+int sumRightLeafNodes(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+		
+	return (isLeaf(root->right) ? root->right->data : 0) + sumRightLeafNodes(root->left) + sumRightLeafNodes(root->right);
+}
+
+int sumLeafNodes(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+		
+	if(root->left == NULL && root->right == NULL)
+		return root->data;
+	return sumLeafNodes(root->left) + sumLeafNodes(root->right);
 }
 
 void inorder(struct node* root)
@@ -885,6 +931,120 @@ int maxNodesLevel(struct node* root)
 	}
 }
 
+int sumMinLevel(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+	
+	int sum = 0;
+	int flag = 0;
+	queue<struct node*> q;
+	q.push(root);
+	
+	while(1)
+	{
+		int n = q.size();
+		
+		for(int i = 1; i <= n; i++)
+		{
+			struct node* temp = q.front();
+			q.pop();
+			
+			if(temp->left == NULL && temp->right == NULL)
+			{
+				sum += temp->data;
+				flag = 1;
+			}
+			
+			if(temp->left != NULL)
+				q.push(temp->left);
+			if(temp->right != NULL)
+				q.push(temp->right);
+		}
+		if(flag == 1)
+			return sum;
+	}
+}
+
+int maxSumLevel(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+	
+	int maxsum = INT_MIN;
+
+	queue<struct node*> q;
+	q.push(root);
+	
+	while(1)
+	{
+		int n = q.size();
+		
+		if(n == 0)
+			break;
+		
+		int sum = 0;
+		for(int i = 1; i <= n; i++)
+		{
+			struct node* temp = q.front();
+			q.pop();
+			
+			sum += temp->data;
+			
+			if(temp->left != NULL)
+				q.push(temp->left);
+			if(temp->right != NULL)
+				q.push(temp->right);
+		}
+		if(sum > maxsum)
+			maxsum = sum;
+	}
+	return maxsum;
+}
+
+int oddNodesLevel(struct node* root)
+{
+	if(root == NULL)
+		return 0;
+	
+	int oddflag = 1;
+
+	queue<struct node*> q;
+	q.push(root);
+	
+	while(1)
+	{
+		int n = q.size();
+		
+		if(n == 0)
+			break;
+		
+		for(int i = 1; i <= n; i++)
+		{
+			struct node* temp = q.front();
+			q.pop();
+			
+			if(oddflag)
+				printf("%d ",temp->data);
+			
+			if(temp->left != NULL)
+				q.push(temp->left);
+			if(temp->right != NULL)
+				q.push(temp->right);
+		}
+		oddflag = !oddflag;
+	}
+}
+
+int findLevel(struct node* root, int k, int level)
+{
+	if(root == NULL)
+		return 0;
+	if(root->data == k)
+		return level;
+	return findLevel(root->left, k, level + 1) | findLevel(root->right, k, level + 1); 
+}
+
 void leftView(struct node* root)
 {
 	if(root == NULL)
@@ -1190,12 +1350,11 @@ void range(struct node* root, int k1, int k2)
 	}
 }
 
-
-/*
 int median(struct node* root)
 {
 	struct node* current = root;
-	int count = size(root);
+	struct node* prev;
+	int count = sizeIter(root);
 	int current_count = 0;
 	
 	while(current != NULL)
@@ -1203,15 +1362,14 @@ int median(struct node* root)
 		if(current->left == NULL)
 		{
 			current_count++;
+			
 			if(count % 2 != 0 && current_count == (count + 1)/2)
         		return prev->data;
  
-            // Even case
-            else if (count % 2 == 0 && currCount == (count/2)+1)
+            else if (count % 2 == 0 && current_count == (count/2)+1)
                 return (prev->data + current->data)/2;
  
-			if(current->data >= k1 && current->data <= k2)
-				printf("%d ", current->data);
+			prev = current;
 			current = current->right;
 		}
 		else
@@ -1228,14 +1386,22 @@ int median(struct node* root)
 			else
 			{
 				pre->right = NULL;
-				if(current->data >= k1 && current->data <= k2)
-				 	printf("%d ", current->data);
+				prev = pre;
+				
+				current_count++;
+			
+				if(count % 2 != 0 && current_count == (count + 1)/2)
+	        		return current->data;
+	 
+	            else if (count % 2 == 0 && current_count == (count/2)+1)
+	                return (prev->data + current->data)/2;
+	 
+				prev = current;
 				current = current->right;
 			}
 		}
 	}
 }
-*/
 
 struct node* inorderSucPre(struct node* root, struct node** suc, struct node** pre, int key)
 {
@@ -1404,9 +1570,62 @@ int rootLeafPathSum(struct node* root, int sum, int s)
 	return rootLeafPathSum(root->left, sum, s) || rootLeafPathSum(root->right, sum, s);
 }
 
+void longestRootLeafPathSum(struct node* root, int sum, int* maxsum, int len, int* maxlen)
+{
+	if(root == NULL)
+		return;
+	
+	sum += root->data;
+	len += 1;
+	 
+	if(root->left == NULL && root->right == NULL)
+	{
+		if(len > *maxlen) 
+		{
+	        *maxlen = len;
+            *maxsum = sum;
+    	} 
+		else if(len == *maxlen && sum > *maxsum)
+            *maxsum = sum;
+    }
+		
+	longestRootLeafPathSum(root->left, sum, maxsum, len, maxlen);
+	longestRootLeafPathSum(root->right, sum, maxsum, len, maxlen);
+}
+
+void rootLeafPathMaxSum(struct node* root, int sum, int* maxsum)
+{
+	if(root == NULL)
+		return;
+	
+	sum += root->data;
+	 
+	if(root->left == NULL && root->right == NULL)
+	{
+		if(sum > *maxsum) 
+	        *maxsum = sum;
+	}
+		
+	rootLeafPathMaxSum(root->left, sum, maxsum);
+	rootLeafPathMaxSum(root->right, sum, maxsum);
+}
+
+void fullNodes(struct node* root)
+{
+	if(root == NULL)
+		return;
+	
+	fullNodes(root->left);
+	if(root->left != NULL && root->right != NULL)
+		printf("%d ", root->data);
+	fullNodes(root->right);
+}
+
 int main()
 {
 	int key, choice, k, k1, k2, c, oldVal, newVal, sum, n;
+	int maxsum = INT_MIN, maxlen = INT_MIN;
+					 
 	struct node* root = NULL;
 	struct node* temp;
 	struct node* suc = NULL, *pre = NULL;
@@ -1442,11 +1661,15 @@ int main()
 		printf("\n19.No of non leaves");
 		printf("\n20.No of full nodes");
 		printf("\n21.No of half nodes");
-		printf("\n25.Inorder");
-		printf("\n26.Preorder");
-		printf("\n27.Postorder");
-		printf("\n28.Morris(Inorder without stack and recursion)");
-		printf("\n29.Iterative Preorder");
+		printf("\n22.Sum of all nodes");
+		printf("\n23.Sum of all left leaf nodes");
+		printf("\n24.Sum of all right leaf nodes");
+		printf("\n25.Sum of leaf nodes");
+		printf("\n26.Inorder");
+		printf("\n27.Preorder");
+		printf("\n28.Postorder");
+		printf("\n29.Morris(Inorder without stack and recursion)");
+		printf("\n30.Iterative Preorder");
 		printf("\n31.Reverse Morris");
 		printf("\n32.Level Order");
 		printf("\n33.Level Order line by line");
@@ -1460,16 +1683,20 @@ int main()
 		printf("\n41.nth Node in Postorder");
 		printf("\n42.Maximum Product level");
 		printf("\n43.Level with maximum nodes");
-		printf("\n46.Left view");
-		printf("\n47.Right view");
-		printf("\n48.Top view");
-		printf("\n49.Bottom view");
-		printf("\n50.Kth Smallest");
-		printf("\n51.Kth Largest");
-		printf("\n52.Sum of elements lesser than or equal to kth smallest element");
-		printf("\n53.Sum of elements greater than or equal to kth largest element");
-		printf("\n54.Print keys within range");
-		printf("\n55.Median");
+		printf("\n44.Sum of leaf nodes at minimum level");
+		printf("\n45.Level with maximum sum");
+		printf("\n46.Nodes at odd level");
+		printf("\n47.Level of a given node");
+		printf("\n48.Left view");
+		printf("\n49.Right view");
+		printf("\n50.Top view");
+		printf("\n51.Bottom view");
+		printf("\n52.Kth Smallest");
+		printf("\n53.Kth Largest");
+		printf("\n54.Sum of elements lesser than or equal to kth smallest element");
+		printf("\n55.Sum of elements greater than or equal to kth largest element");
+		printf("\n56.Print keys within range");
+		printf("\n57.Median");
 		printf("\n61.Inorder Successor and Inorder Predecessor");
 		printf("\n62.Count Special Digits");
 		printf("\n63.Lowest Common Ancestor - Recur");
@@ -1479,6 +1706,9 @@ int main()
 		printf("\n67.Contains Dead End - Recur");
 		printf("\n69.Root to leaf paths");
 		printf("\n70.Root to leaf path with given sum");
+		printf("\n71.Sum of the longest Root to leaf path");
+		printf("\n72.Root to leaf path with maximum sum");
+		printf("\n76.Full nodes");
 		printf("\n77.Exit\n");
 		scanf("%d", &choice);
 		switch(choice)
@@ -1510,8 +1740,7 @@ int main()
 					root = deleteLeafWithK(root, k);
 					inorder(root);
 					break;
-			case 7: deleteTree(root);
-					root = NULL;
+			case 7: root = deleteTree(root);
 					inorder(root);
 					break;
 			case 8: scanf("%d%d", &oldVal, &newVal);
@@ -1551,15 +1780,23 @@ int main()
 				     break;
 			case 21: printf("%d", halfnodeCount(root));
 				     break;
-			case 25: inorder(root);
+			case 22: printf("%d",sumNodes(root));
 					 break;
-			case 26: preorder(root);
+			case 23: printf("%d",sumLeftLeafNodes(root));
 					 break;
-			case 27: postorder(root);
+			case 24: printf("%d",sumRightLeafNodes(root));
 					 break;
-			case 28: morris(root);
+			case 25: printf("%d",sumLeafNodes(root));
 					 break;
-			case 29: iterativePreorder(root);
+			case 26: inorder(root);
+					 break;
+			case 27: preorder(root);
+					 break;
+			case 28: postorder(root);
+					 break;
+			case 29: morris(root);
+					 break;
+			case 30: iterativePreorder(root);
 					 break;
 			case 31: reverseMorris(root);
 					 break;
@@ -1592,31 +1829,40 @@ int main()
 					 break;
 			case 43: printf("%d", maxNodesLevel(root));
 				     break;
-			case 46: leftView(root);
+			case 44: printf("%d", sumMinLevel(root));
 					 break;
-			case 47: rightView(root);
+			case 45: printf("%d", maxSumLevel(root));
+				     break;
+			case 46: oddNodesLevel(root);
+				     break;
+			case 47: scanf("%d", &k);
+					 printf("%d", findLevel(root, k, 0));
 					 break;
-			case 48: topView(root);
+			case 48: leftView(root);
 					 break;
-			case 49: bottomView(root);
+			case 49: rightView(root);
 					 break;
-			case 50: scanf("%d", &k);
-					 printf("%d", kthsmallest(root, k));
+			case 50: topView(root);
 					 break;
-			case 51: scanf("%d", &k);
-					 printf("%d", kthlargest(root, k));
+			case 51: bottomView(root);
 					 break;
 			case 52: scanf("%d", &k);
-					 printf("%d", sumLEkthsmallest(root, k));
+					 printf("%d", kthsmallest(root, k));
 					 break;
 			case 53: scanf("%d", &k);
+					 printf("%d", kthlargest(root, k));
+					 break;
+			case 54: scanf("%d", &k);
+					 printf("%d", sumLEkthsmallest(root, k));
+					 break;
+			case 55: scanf("%d", &k);
 					 printf("%d", sumGEkthlargest(root, k));
 					 break;
-			case 54: scanf("%d%d", &k1, &k2);
+			case 56: scanf("%d%d", &k1, &k2);
 					 range(root, k1, k2);
 					 break;
-			/*case 29: printf("%d", median(root));
-					 break;*/
+			case 57: printf("%d", median(root));
+					 break;
 			case 61: scanf("%d", &key);
 				     inorderSucPre(root, &suc, &pre, key);
 					 printf("Inorder Successor: %d\tPreorder Successor: %d", suc->data, pre->data);
@@ -1651,6 +1897,15 @@ int main()
 					 	printf("Path exists");
 					 else
 						printf("Path doesnt exist");
+					 break;
+			case 71: longestRootLeafPathSum(root, 0, &maxsum, 0, &maxlen);
+					 printf("%d", maxsum);
+					 break;
+			case 72: maxsum = INT_MIN;
+					 rootLeafPathMaxSum(root, 0, &maxsum);
+					 printf("%d", maxsum);
+					 break;
+			case 76: fullNodes(root);
 					 break;
 			case 77: goto exit;
 		}

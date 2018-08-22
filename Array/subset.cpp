@@ -3,14 +3,13 @@ using namespace std;
 
 int subset(int a1[], int m, int a2[], int n)
 {
-	unordered_set<int> s;
+	unordered_set<int> hash;
 	for(int i = 0; i < m; i++)
-	{
-		s.insert(a1[i]);
-	}
+		hash.insert(a1[i]);
+
 	for(int i = 0; i < n; i++)
 	{
-		if(s.find(a2[i]) == s.end())
+		if(hash.find(a2[i]) == hash.end())
 			return 0;
 	}
 	return 1;

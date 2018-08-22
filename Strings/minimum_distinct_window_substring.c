@@ -2,40 +2,46 @@
 #include<string.h>
 #include<limits.h>
 
-void minWindow(char* S, char* T) 
+void minDistinctWindow(char* S) 
 {
-	static int needToFind[256];
+	
+	static int visited[256];
 	static int hasFound[256];
 	
 	int sLen = strlen(S);
-	int tLen = strlen(T);
+	int distinctLen = 0;
 	
 	int minWindowLen = INT_MAX;
 	int count = 0;
 	int i, begin, end;
 	int minWindowBegin, minWindowEnd;
 	
-	for(i = 0; i < tLen; i++)
-		needToFind[T[i]]++;
- 
+	for(i = 0; i < sLen; i++)
+	{
+		if(!visited[S[i]])
+		{
+			visited[S[i]] = 1;
+			distinctLen++;
+		}
+	}
   	
 	for(begin = 0, end = 0; end < sLen; end++) 
 	{
     	// skip characters not in T
-    	if(needToFind[S[end]] == 0) 
+    	if(!visited[S[end]]) 
 			continue;
     	hasFound[S[end]]++;
-    	if(hasFound[S[end]] <= needToFind[S[end]])
+    	if(hasFound[S[end]] == 1)
       		count++;
  
     	// if window constraint is satisfied
-    	if(count == tLen) 
+    	if(count == distinctLen) 
 		{
       		// advance begin index as far right as possible,
       		// stop when advancing breaks window constraint.
-      		while (needToFind[S[begin]] == 0 || hasFound[S[begin]] > needToFind[S[begin]]) 
+      		while(!visited[S[begin]] || hasFound[S[begin]] > 1) 
 			{
-        		if (hasFound[S[begin]] > needToFind[S[begin]])
+        		if (hasFound[S[begin]] > 1)
           			hasFound[S[begin]]--;
         		begin++;
 			}
@@ -52,14 +58,13 @@ void minWindow(char* S, char* T)
 	
 	for(i = minWindowBegin; i <= minWindowEnd; i++)
     	printf("%c", S[i]);
+    printf("\nMinimum window length: %d", minWindowLen);
 }
 
 int main()
 {
     char S[20];
-    char T[20];
     gets(S);
-    gets(T);
-    minWindow(S, T);
+    minDistinctWindow(S);
     return 0;
 }

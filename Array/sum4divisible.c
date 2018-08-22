@@ -1,3 +1,10 @@
+/*
+There are only three condition that can arise whose sum is divisible by 4
+1) If both are divisible by 4.
+2) If one of them is equal to 1 modulo 4 and other is 3 modulo 4. 
+3) If both of them is equal to 2 modulo 4
+*/
+
 #include<stdio.h>
 
 int sum4Divisible(int a[], int n)
