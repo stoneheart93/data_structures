@@ -19,18 +19,6 @@ void reverseRows(int M[10][10], int m, int n)
 	}
 }
 
-void reverseColumns(int M[10][10], int m, int n)
-{
-	int i, j, k;
-	for(i = 0; i < n; i++)
-	{
-		for(j = 0, k = n - 1; j < k; j++, k--)
-		{
-			swap(&M[j][i], &M[k][i]);
-		}
-	}
-}
-
 void transpose(int M[10][10], int m, int n)
 {
 	int i, j;
@@ -43,17 +31,17 @@ void transpose(int M[10][10], int m, int n)
 	}
 }
 
-/*void rotate90(int M[10][10], int m, int n) //anti-clockwise
+void rotate90(int M[10][10], int m, int n) //anti-clockwise
 {
+	reverseRows(M, m, n);
 	transpose(M, m, n);
-	reverseColumns(M, m, n);
-}*/
+}
 
-void rotate90(int M[10][10], int m, int n) //clockwise
+/*void rotate90(int M[10][10], int m, int n) //clockwise
 {
 	transpose(M, m, n);
 	reverseRows(M, m, n);
-}
+}*/
 
 int main() 
 {

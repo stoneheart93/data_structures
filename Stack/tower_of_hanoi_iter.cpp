@@ -5,30 +5,22 @@ using namespace std;
 
 void moveDisksBetweenTwoPoles(stack<int>& src, stack<int>& dest, char s, char d)
 {
-    if(src.empty())
-    {
-    	int pole2TopDisk = dest.top();
-		dest.pop(); 
- 
-    	src.push(pole2TopDisk);
-    	return;
-    }
-    else if(dest.empty())
-    {
-    	int pole1TopDisk = src.top();
-    	src.pop();
-    
-        dest.push(pole1TopDisk);
-    	printf("\nMove disk %d from rod %c to rod %c", pole1TopDisk, s, d);
-    	return;
-    }
-    
     int pole1TopDisk = src.top();
     src.pop();
 	int pole2TopDisk = dest.top();
 	dest.pop(); 
  
-    if(pole1TopDisk > pole2TopDisk)
+    if(pole1TopDisk == INT_MIN)
+    {
+        src.push(pole2TopDisk);
+    	printf("\nMove disk %d from rod %c to rod %c", pole2TopDisk, d, s);
+    }
+ 	else if(pole2TopDisk == INT_MIN)
+    {
+        dest.push(pole1TopDisk);
+    	printf("\nMove disk %d from rod %c to rod %c", pole1TopDisk, s, d);
+    }
+ 	else if(pole1TopDisk > pole2TopDisk)
     {
         src.push(pole1TopDisk);
         src.push(pole2TopDisk);
