@@ -46,23 +46,18 @@ void display(struct node* head)
     }     
 }
 
+// O(n) since traversal of both entire lists
 int identical(struct node *a, struct node *b)
 {
-    while(1)
-    {
-    	if(a == NULL && b == NULL)
-            return 1;
-        if(a == NULL && b != NULL)
-            return 0; 
-        if(a != NULL && b == NULL)
-            return 0; 
-        if(a->data != b->data)
-            return 0; 
-        a = a->next;
-        b = b->next; 
-    }          
+    if(a == NULL && b == NULL)
+    	return 1;
+    else if(a != NULL && b != NULL)
+    	return (a->data == b->data) && identical(a->next, b->next);
+    else
+    	return 0;
 }   
 
+// O(m + n) since traversal of both entire lists
 struct node *mergeSortedLists(struct node *a, struct node *b) 
 {
     if(a == NULL) 
@@ -83,6 +78,7 @@ struct node *mergeSortedLists(struct node *a, struct node *b)
     }
 } 
 
+// O(m + n) since traversal of both entire lists
 struct node *intersectSortedLists(struct node *a, struct node *b)
 {
     if(a == NULL || b == NULL)

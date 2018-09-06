@@ -1,3 +1,4 @@
+// O(n) and O(1) space
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -37,7 +38,7 @@ struct node* clone(struct node *org_start)
     }
  
     rider = org_start;
-    while(rider)
+    while(rider != NULL)
     {
         rider->next->random = rider->random->next;
         rider = rider->next? rider->next->next : rider->next;
