@@ -163,15 +163,10 @@ void delMidNode(struct node** head)
 	if(*head == NULL)
 		return;
 
-	if((*head)->next == NULL)
-	{
-		free(*head);
-		*head = NULL;
-	}
-
 	struct node* slowptr = *head;
 	struct node* fastptr = *head;
 	struct node* prev = NULL;
+
 	while(fastptr != NULL && fastptr->next != NULL)
 	{
 		prev = slowptr;
