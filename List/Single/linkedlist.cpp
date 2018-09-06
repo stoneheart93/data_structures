@@ -158,13 +158,13 @@ void delatmid(struct node* head)
 	free(temp);
 }   
 
-void delMidNode(struct node** head)
+void delMidNode(struct node* head)
 {
-	if(*head == NULL)
+	if(head == NULL)
 		return;
 
-	struct node* slowptr = *head;
-	struct node* fastptr = *head;
+	struct node* slowptr = head;
+	struct node* fastptr = head;
 	struct node* prev = NULL;
 
 	while(fastptr != NULL && fastptr->next != NULL)
@@ -1264,7 +1264,7 @@ int main()
 			case 9: delatmid(head);
 					display(head);
 					break;
-			case 10: delMidNode(&head);
+			case 10: delMidNode(head);
 					 display(head);
 					 break;
 			case 11: delalt(head);
