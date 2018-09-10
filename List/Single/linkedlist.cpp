@@ -238,14 +238,14 @@ void delposition(struct node** head, int position)
 
 	if(position == 0)
 	{
-		free(*head);
-		*head = NULL;               
+		struct node* temp = *head;
+		*head = (*head)->next;
+		free(temp);
 		return;
 	}
 
-	int i;
 	struct node* rider = *head;
-	for(i = 0; rider != NULL && i < position - 1; i++)
+	for(int i = 0; rider != NULL && i < position - 1; i++)
 		rider = rider->next;
 	struct node* temp = rider->next;
 	rider->next = temp->next;
@@ -287,7 +287,7 @@ void skipMdeleteN(struct node* head, int m, int n)
 
 	while(head != NULL)
 	{
-		for(count = 1; count < m && head != NULL; count++)
+		for(count = 1; count <= m - 1 && head != NULL; count++)
 			head = head->next;
 
 		if(head == NULL)
@@ -408,18 +408,18 @@ void reverse(struct node** head)
 	*head = prev;
 }
 
-void reverseRec(struct node** head)
+struct node* reverseRec(struct node* head)
 {
-	if((*head) == NULL || (*head)->next == NULL)
-		return;
+	if(head == NULL || head->next == NULL)
+		return head;
 		
-	struct node* first = *head;
+	struct node* first = head;
 	struct node* rest = first->next; 
 	
-	reverseRec(&rest);
+	struct node* final = reverseRec(rest);
 	first->next->next = first;
-	first->next = NULL;
-	*head = rest;
+	first->next = NULL; // first node's next should point to null, else there will be a cycle
+	return final;
 }
 
 struct node* revk(struct node* head, int k)
@@ -1329,7 +1329,7 @@ int main()
 			case 26: reverse(&head);
 					 display(head);
 				 	 break;
-			case 27: reverseRec(&head);
+			case 27: head = reverseRec(head);
 				 	 display(head);
 				 	 break;
 			case 28: printf("\n Enter the factor: ");
