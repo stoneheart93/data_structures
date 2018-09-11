@@ -425,15 +425,15 @@ struct node* reverseRec(struct node* head)
 struct node* revk(struct node* head, int k)
 {
 	struct node* rider = head;
-	struct node* temp;
+	struct node* r_next;
 	struct node* prev = NULL;
 	int count = 0;   
 	while(rider != NULL && count < k)
 	{
-		temp = rider->next;
+		r_next = rider->next;
 		rider->next = prev;
 		prev = rider;
-		rider = temp;
+		rider = r_next;
 		count++;
 	}
 	if(rider != NULL)
@@ -444,26 +444,24 @@ struct node* revk(struct node* head, int k)
 struct node *revkalt(struct node* head, int k)
 {
 	struct node* rider = head;
-	struct node* temp;
+	struct node* r_next;
 	struct node* prev = NULL;
 	int count = 0;   
 	while(rider != NULL && count < k)
 	{
-		temp = rider->next;
+		r_next = rider->next;
 		rider->next = prev;
 		prev = rider;
-		rider = temp;
-		count++;
-	}
-	if(head != NULL)
-		head->next = rider;   
-	count = 0;
-	while(count < k-1 && rider != NULL)
-	{
-		rider = rider->next;
+		rider = r_next;
 		count++;
 	}
 	if(rider != NULL)
+		head->next = rider;   
+	
+	for(count = 1; count <= k-1 && rider != NULL; count++)
+		rider = rider->next;
+	
+	if(rider != NULL && rider->next != NULL)
 		rider->next = revkalt(rider->next, k); 
 	return prev;
 }
