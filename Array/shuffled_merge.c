@@ -14,12 +14,12 @@ void moveToEnd(int mPlusN[], int size)
     }
 }
  
-int merge(int mPlusN[], int N[], int m, int n)
+void merge(int mPlusN[], int N[], int m, int n)
 {
 	int i = n, j = 0, k = 0; 
-	while (k < (m + n))
+	while(k < (m + n))
   	{	
-    	if ((i < (m + n) && mPlusN[i] <= N[j]) || (j == n))
+    	if(mPlusN[i] <= N[j] || j == n)
     	{
       		mPlusN[k] = mPlusN[i];
       		k++;

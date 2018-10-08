@@ -13,7 +13,8 @@ int kadane(int a[], int n)
  
 	for(i = 1; i < n; i++)
 	{
-        curr_max = max(a[i], curr_max + a[i]);
+	    curr_max = max(a[i], //the subarray could start from the element
+					curr_max + a[i]); //the subarray could contain the previous sum + this element
         max_so_far = max(max_so_far, curr_max);
 	}
    	return max_so_far;

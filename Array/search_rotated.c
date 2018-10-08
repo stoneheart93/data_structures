@@ -1,31 +1,52 @@
 #include<stdio.h>
- 
-int search_rotated(int a[], int low, int high, int key)
+
+int binary_search(int a[], int low, int high, int key)
 {
-	if(high >= low)
+	while(low <= high)
 	{
 		int mid = low + (high - low)/2;
-    	if(key == a[mid])
-			return mid;
-    	
-		if(a[low] <= a[mid])
-    	{
-        	if(key >= a[low] && key < a[mid])
-				return search_rotated(a, low, mid - 1, key);
-			else
-				return search_rotated(a, mid + 1, high, key);
-    	}
- 		else
- 		{
-			if (key > a[mid] && key <= a[high])
-        		return search_rotated(a, mid + 1, high, key);
-			else
-    			return search_rotated(a, low, mid - 1, key);
-		}
-    }
-    return -1;
+	    if(key == a[mid])
+	        return mid;
+	    else if(key < a[mid])
+	        high = mid - 1;
+	    else
+	        low = mid + 1;
+   }
+   return -1;
 }
- 
+
+int findPivot(int a[], int low, int high)
+{
+	while(low <= high)
+	{
+		int mid = low + (high - low)/2;
+	    if(mid < high && a[mid] > a[mid + 1])
+	        return mid;
+	    else if(mid >  low && a[mid] < a[mid - 1])
+	        return mid - 1;
+	
+	    if(a[low] <= a[mid])
+	    	low = mid + 1;
+	    else
+	        high = mid - 1;
+   }
+   return -1;
+}
+
+int searchSortedRotated(int a[], int n, int key)
+{
+	int pivot = findPivot(a, 0, n - 1);
+	if(pivot == -1)
+	    return binary_search(a, 0, n - 1, key);
+	
+	if(a[pivot] == key)
+	    return pivot;
+	else if(key <= a[0])
+	    return binary_search(a, pivot + 1, n - 1, key);
+	else
+	    return binary_search(a, 0, pivot - 1, key);
+}
+
 int main()
 {
 	int n, i, key;
@@ -34,7 +55,7 @@ int main()
 	for(i = 0; i < n; i++)
 		scanf("%d", &a[i]);
 	scanf("%d", &key);
-	printf("%d", search_rotated(a, 0, n - 1, key));
+	printf("%d", searchSortedRotated(a, n, key));
 	return 0;
 }
 
