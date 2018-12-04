@@ -6,7 +6,7 @@ int isPermutedMatrix(int M[10][10], int n)
 {
     string str_cat = "";
     for(int j = 0 ; j < n ; j++)
-    	str_cat = str_cat + "-" + to_string(M[0][j]);
+    	str_cat += to_string(M[0][j]);
  
     str_cat = str_cat + str_cat;
  
@@ -14,7 +14,7 @@ int isPermutedMatrix(int M[10][10], int n)
     {
 		string curr_str = "";
         for(int j = 0 ; j < n; j++)
-        	curr_str = curr_str + "-" + to_string(M[i][j]);
+        	curr_str += to_string(M[i][j]);
  		
 		if(str_cat.find(curr_str) == string::npos)
         	return 0;
