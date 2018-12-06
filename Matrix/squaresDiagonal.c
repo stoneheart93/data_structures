@@ -1,19 +1,19 @@
 #include<stdio.h>
 
-int symmetry(int M[10][10], int n)
+void squaresDiagonal(int M[10][10], int n)
 {
 	int i, j;
 	for(i = 0; i < n; i++)
-    {
-    	for(j = i+1; j < n; j++)
-        {
-        	if(M[i][j] != M[j][i])
-        		return 0;
-		}
+	{
+		printf("%d ", M[i][i] * M[i][i]);
 	}
-	return 1;
+	printf("\n");
+	for(i = 0; i < n; i++)
+	{
+		printf("%d ", M[i][n-1-i] * M[i][n-1-i]);
+	}
 }
- 
+
 int main() 
 {
 	int i, j, n;
@@ -26,6 +26,8 @@ int main()
 			scanf("%d", &M[i][j]);
 		}
 	}
-	printf("%d", symmetry(M, n));
+	squaresDiagonal(M, n);
+	
 	return 0;
 }
+

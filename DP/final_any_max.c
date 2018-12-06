@@ -1,14 +1,12 @@
 #include<stdio.h>
 char M[50][50];
-int DP[50][50];
+int DP[50][50][2];
 int m, n;
 
 int isSafe(int x, int y)
 {
 	return (x >= 0 && x < m
-		&& y >= 0 && y < n
-		&& M[x][y] != '#'
-		&& !DP[x][y]);
+		&& y >= 0 && y < n);
 }
 
 int max(int a, int b)
@@ -18,18 +16,21 @@ int max(int a, int b)
 
 int getMaxUtil(int x, int y, int dir)
 {	
-	if(isSafe(x, y))
-	{
-		int temp = (M[x][y] == 'C') ? 1 : 0;
+	if(!isSafe(x, y) || M[x][y] == '#')
+		return 0;
 		
-		if(dir == 1) // right
-			DP[x][y] = temp + max(getMaxUtil(x, y+1, 1), 
+	if(DP[x][y][dir] != -1)
+		return DP[x][y][dir];
+		 
+	int temp = (M[x][y] == 'C') ? 1 : 0;
+		
+	if(dir == 1) // right
+		DP[x][y][dir] = temp + max(getMaxUtil(x, y+1, 1), 
 								  getMaxUtil(x+1, y, 0));
-		else
-			DP[x][y] = temp + max(getMaxUtil(x, y-1, 0), 
+	else
+		DP[x][y][dir] = temp + max(getMaxUtil(x, y-1, 0), 
 								  getMaxUtil(x+1, y, 1));
-	}
-	return DP[x][y];
+	return DP[x][y][dir];
 }
 
 int getMax()
@@ -39,13 +40,15 @@ int getMax()
 	{
 		for(j = 0; j < n; j++)
 		{
-			DP[i][j] = 0;
+			for(k = 0; k < 2; k++)
+			{
+				DP[i][j][k] = -1;
+			}
 		}
 	}
 	
 	return getMaxUtil(0, 0, 1);
 }
-
 
 int main() 
 {
@@ -55,7 +58,7 @@ int main()
 	{
 		for(j = 0; j < n; j++) 
 		{
-			scanf("%c", &M[i][j]);
+			scanf(" %c", &M[i][j]);
 		}
 	}
 	printf("%d", getMax());

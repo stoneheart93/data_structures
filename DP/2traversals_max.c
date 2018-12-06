@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<limits.h>
 int M[50][50];
 int DP[50][50][50];
 int m, n;
@@ -7,8 +8,7 @@ int isSafe(int x, int y1, int y2)
 {
 	return (x >= 0 && x < m
 		&& y1 >= 0 && y1 < n
-		&& y2 >= 0 && y2 < n 
-		&& !DP[x][y1][y2]);
+		&& y2 >= 0 && y2 < n);
 }
 
 int max(int a, int b)
@@ -24,29 +24,32 @@ int max9(int a, int b, int c, int d, int e, int f, int g, int h, int i)
 
 int getMaxUtil(int x, int y1, int y2)
 {
+	if(!isSafe(x, y1, y2))
+		return INT_MIN;
+	
 	if(x == m - 1 && y1 == 0 && y2 == n - 1)
 		return (y1 == y2) ? M[x][y1] : M[x][y1] + M[x][y2];
-		
-	if(x == m - 1) //necessary as both the traversals are at the last row but not at their destination
-		return -1;
 	
-	if(isSafe(x, y1, y2))
-	{
-		int temp = (y1 == y2) ? M[x][y1] : M[x][y1] + M[x][y2];
+	if(x == m - 1) //necessary as both the traversals are at the last row but not at their destination
+		return INT_MIN;
 		
-		DP[x][y1][y2] = temp + max9(getMaxUtil(x+1, y1, y2), 
-								   getMaxUtil(x+1, y1, y2+1),
-								   getMaxUtil(x+1, y1, y2-1),
+	if(DP[x][y1][y2] != -1)
+		return DP[x][y1][y2];
+		
+	int temp = (y1 == y2) ? M[x][y1] : M[x][y1] + M[x][y2];
+		
+	DP[x][y1][y2] = temp + max9(getMaxUtil(x+1, y1, y2), 
+							    getMaxUtil(x+1, y1, y2+1),
+							    getMaxUtil(x+1, y1, y2-1),
 								    
-								   getMaxUtil(x+1, y1+1, y2), 
-								   getMaxUtil(x+1, y1+1, y2+1), 
-								   getMaxUtil(x+1, y1+1, y2-1),
+							    getMaxUtil(x+1, y1+1, y2), 
+							    getMaxUtil(x+1, y1+1, y2+1), 
+							    getMaxUtil(x+1, y1+1, y2-1),
 								   
-								   getMaxUtil(x+1, y1-1, y2), 
-								   getMaxUtil(x+1, y1-1, y2+1), 
-								   getMaxUtil(x+1, y1-1, y2-1));
-								   
-	}
+							    getMaxUtil(x+1, y1-1, y2), 
+							    getMaxUtil(x+1, y1-1, y2+1), 
+							    getMaxUtil(x+1, y1-1, y2-1));
+	
 	return DP[x][y1][y2];
 }
 
@@ -59,7 +62,7 @@ int getMax()
 		{
 			for(k = 0; k < n; k++)
 			{
-				DP[i][j][k] = 0;
+				DP[i][j][k] = -1;
 			}
 		}
 	}
