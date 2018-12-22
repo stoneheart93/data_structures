@@ -11,7 +11,7 @@ void get2repeating(int a[], int n, int* x, int* y)
   	for(i = 1; i <= n - 2; i++)
     	Xor ^= i;   
  
-  	set_bit_no = Xor & -Xor;
+  	set_bit_no = Xor & ~(Xor - 1);
  
  	for(i = 0; i < n; i++)
   	{

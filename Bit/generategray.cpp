@@ -13,7 +13,7 @@ void generateGrayCodes(int n)
     arr.push_back("0");
     arr.push_back("1");
  
-    for(int i = 2; i < (1 << n); i = i << 1) // generates 2*i codes from previously generated i codes
+    for(int i = 2; i < (1 << n); i = 2*i) // generates 2*i codes from previously generated i codes
     {
         for (int j = i - 1 ; j >= 0 ; j--)
             arr.push_back(arr[j]);
