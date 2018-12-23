@@ -1,15 +1,20 @@
 #include<stdio.h>
 
+int isPowerOf2(int n)
+{
+	return n && !(n & (n - 1));
+}
 int nextPowerOf2(int n)
 {
-    n--;
-    n |= n >> 1;
-    n |= n >> 2;
-    n |= n >> 4;
-    n |= n >> 8;
-    n |= n >> 16;
-    return n + 1;
+    if(isPowerOf2(n))
+    	return n;
+    
+    int p = 1;
+    while(p < n)
+    	p <<= 1;
+    return p;
 }  
+
 int main()
 {
     int n;

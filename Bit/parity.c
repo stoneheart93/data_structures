@@ -1,15 +1,20 @@
 #include <stdio.h>
 
+int countSetBits(int n)
+{
+    int count = 0;
+    while(n != 0)
+    {
+        n = n & (n - 1);
+        count++;
+    }
+    return count;
+}
 int parity(int n)
 {
-    int parity=0;
-    while(n)
-    {
-        parity = !parity;
-        n = n & (n - 1);
-    }
-    return parity;
+    return (countSetBits(n) % 2)== 0 ? 0 : 1; 
 }
+
 int main()
 {
     int n;
