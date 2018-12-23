@@ -13,8 +13,7 @@ char invert(char c)
  
 string binarytoGray(string binary)
 {
-    string gray = "";
-    gray += binary[0];
+    string gray = binary[0];
     for (int i = 1; i < binary.length(); i++)
     {
         gray += Xor(binary[i - 1], binary[i]);
@@ -24,8 +23,7 @@ string binarytoGray(string binary)
  
 string graytoBinary(string gray)
 {
-    string binary  = "";
-    binary += gray[0];
+    string binary = gray[0];
     for (int i = 1; i < gray.length(); i++)
     {
         if (gray[i] == '0')

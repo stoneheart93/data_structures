@@ -2,7 +2,7 @@
 
 int reverseBits(int num)
 {
-    int NO_OF_BITS = sizeof(num) * 8; 
+    int NO_OF_BITS = 32; 
     int reverse_num = 0, i, temp;
     for (i = 0; i < NO_OF_BITS; i++)
     {

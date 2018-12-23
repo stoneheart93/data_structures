@@ -10,12 +10,13 @@ int isMultipleOf3(int n)
         return 1;
     if(n == 1)
         return 0;
-    while(n)
+    while(n != 0)
     {
         if(n & 1)
             odd_count++;
         n = n >> 1;
-        if(n&1)
+        
+        if(n & 1)
             even_count++;
         n = n >> 1;
     }
