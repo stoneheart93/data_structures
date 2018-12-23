@@ -3,7 +3,7 @@
 
 int rightMostSetBitPos(int n)
 {
-   return log2(n & - n) + 1;
+   return log2( n & ~(n-1) ) + 1;
 }
  
 int main()

@@ -11,7 +11,7 @@ void repeatMiss(int a[], int n, int* x, int* y)
   	for(i = 1; i <= n; i++)
     	Xor ^= i;   
  
-  	set_bit_no = Xor & -Xor;
+  	set_bit_no = Xor & ~(Xor - 1);
  
  	for(i = 0; i < n; i++)
   	{
