@@ -1,20 +1,16 @@
 #include<stdio.h>
+#include<math.h>
 
 int isPowerOfTwo(int n)
 {
     return (n && (! (n & (n - 1))) );
 }
+
 int position(int n)
 {
-    int count=0;
     if(!isPowerOfTwo(n))
 		return -1;
-	while(n) 
-    {
-        n >>= 1;
-        count+=1;
-    }
-    return count;
+	return log2(n) + 1;
 }    
 int main()
 {
