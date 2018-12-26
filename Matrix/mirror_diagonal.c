@@ -12,7 +12,7 @@ void mirror_diagonal(int M[10][10], int n)
     int i, j;
 	for(i = 0; i < n; i++)
 	{
-        for(j = 0; j <= i; j++) 
+        for(j = 0; j < i; j++) 
         {
             swap(&M[i][j], &M[j][i]);
 		}
