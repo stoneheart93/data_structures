@@ -1,9 +1,8 @@
 #include<stdio.h>
 
-void symmetry(int M[10][10], int m, int n)
+int horizontalSymmetry(int M[10][10], int m, int n)
 {
-	int i, k, j, l;
-	int horizontal = 1, vertical = 1;
+	int i, j, k;
 	
 	for(i = 0, k = m - 1; i < m/2; i++, k--)
 	{
@@ -11,11 +10,16 @@ void symmetry(int M[10][10], int m, int n)
 		{
 			if(M[i][j] != M[k][j])
 			{
-				horizontal = 0;
-				break;
+				return 0;
 			}
 		}
 	}
+	return 1;
+}
+
+int verticalSymmetry(int M[10][10], int m, int n)
+{
+	int i, j, l;
 	
 	for(j = 0, l = n - 1; j < n/2; j++, l--)
 	{
@@ -23,22 +27,13 @@ void symmetry(int M[10][10], int m, int n)
 		{
 			if(M[i][j] != M[i][l])
 			{
-				vertical = 0;
-				break;
+				return 0;
 			}
 		}
 	}
-	
-	if(horizontal && vertical)
-		printf("Both");
-	else if(horizontal && !vertical)
-		printf("Horizontal");
-	else if(!horizontal && !vertical)
-		printf("Vertical");
-	else
-		printf("No");
-		
+	return 1;
 }
+
 int main() 
 {
 	int i, j, m, n;
@@ -51,7 +46,17 @@ int main()
 			scanf("%d", &M[i][j]);
 		}
 	}
-	symmetry(M, m, n);
+
+	if(horizontalSymmetry(M, m, n))
+		printf("Horizontal Symmetry");
+	else
+		printf("Not horizontal symmetry");
+		
+	if(verticalSymmetry(M, m, n))
+		printf("Vertical Symmetry");
+	else
+		printf("Not vertical symmetry");
+	
 	return 0;
 }
 

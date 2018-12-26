@@ -6,12 +6,10 @@ void modifyMatrix(int M[10][10], int m, int n)
     int col[n];
     int i, j;
  
-    for(i = 0; i < m; i++)
-       row[i] = 0;
-    for(j = 0; j < n; j++)
-       col[j] = 0;
- 
-    for(i = 0; i < m; i++)
+    memset(row, 0, sizeof(row));
+	memset(col, 0, sizeof(col));
+		
+	for(i = 0; i < m; i++)
     {
         for(j = 0; j < n; j++)
         {

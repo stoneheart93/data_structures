@@ -2,9 +2,9 @@
 
 #include<stdio.h>
 
-int multiply(int A[10][10], int n, int C[10][10])
+void multiply(int A[10][10], int n, int C[10][10])
 {
-	int i, j, k = 0;
+	int i, j, k;
 	  
    	for(i = 0; i < n; i++) 
 	{
