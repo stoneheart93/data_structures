@@ -903,7 +903,7 @@ void addOneUtil(struct node *head)
 		head = head->next;
 	}
 
-	if(carry > 0)
+	if(carry)
 		temp->next = newNode(carry);
 		
 }
