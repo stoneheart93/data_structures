@@ -890,7 +890,6 @@ void pairwiseSwapRec(struct node* head)
 
 void addOneUtil(struct node *head)
 {
-	struct node* res = head;
 	struct node *temp;
 
 	int carry = 1, sum;
