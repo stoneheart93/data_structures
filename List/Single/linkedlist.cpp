@@ -111,6 +111,7 @@ void insert_nth_from_last(struct node* head, int n)
 	struct node* slowptr = head;
 	struct node* fastptr = head;
 
+	// for going to the nth node, there would be n-1 jumps
 	for(int i = 1; i <= n - 1; i ++)
 		fastptr = fastptr->next;
 
@@ -255,7 +256,7 @@ void delposition(struct node** head, int position)
 	{
 	
 		struct node* rider = *head;
-		for(int i = 0; rider != NULL && i < position - 1; i++)
+		for(int i = 0; rider != NULL && i < position - 1; i++) 
 			rider = rider->next;
 		struct node* temp = rider->next;
 		rider->next = temp->next;
@@ -298,22 +299,21 @@ void delLastOcc(struct node* head, int key)
 void skipMdeleteN(struct node* head, int m, int n)
 {
 	struct node* d;
-	int count;
 
 	while(head != NULL)
 	{
-		for(count = 1; count <= m - 1 && head != NULL; count++)
+		for(int count = 1; count <= m - 1 && head != NULL; count++)
 			head = head->next;
 
 		if(head == NULL)
 			return;
 
 		d = head->next;
-		for(count = 1; count <= n && d != NULL; count++)
+		for(int count = 1; count <= n && d != NULL; count++)
 		{
-			struct node *temp = d;
-			d = d->next;
-			free(temp);
+			struct node *next_node = d->next;
+			free(d);
+			d = next_node;
 		}
 		head->next = d; 
 		head = d;
@@ -356,16 +356,16 @@ int countRec(struct node* head)
 	return 1 + countRec(head->next);
 }
 
-int lengthEvenOdd(struct node* head)
+void lengthEvenOdd(struct node* head)
 {
 	while(head != NULL && head->next != NULL)
 	{
 		head = head->next->next;
 	}
 	if(head == NULL)
-		return 1;
+		printf("Even length");
 	else
-		return 0;
+		printf("Odd length");
 }
 
 int search(struct node* head, int x)
@@ -1311,10 +1311,7 @@ int main()
 					 break;
 			case 20: printf("\n No. of nodes: %d",countRec(head));
 				 	 break;
-			case 21: if(lengthEvenOdd(head))
-						printf("Even length");
-					 else
-					 	printf("Odd length");
+			case 21: lengthEvenOdd(head);
 					 break;
 			case 22: printf("\n Enter the element to be searched for:");
 					 scanf("%d", &x);
