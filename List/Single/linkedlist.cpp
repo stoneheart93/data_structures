@@ -1043,16 +1043,23 @@ int countRotations(struct node* head)
 		return 0;
 
 	int k = 0;	
-	int num = head->data;
+	int rotate = 0;
+	int min = head->data;
 
-	while(head->next != NULL)
+	while(head != NULL)
 	{
-		if(num > head->data)
+		if(min > head->data)
+		{
+			rotate = 1;
 			break;
+		}
 		k++;
 		head = head->next;
 	}
-	return k;
+	if(rotate)
+		return k;
+	else
+		return 0;
 }
 
 int sum_last_Nnodes(struct node* head, int n)
