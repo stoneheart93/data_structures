@@ -400,12 +400,12 @@ void modify(int old_value, int new_value, struct node* head)
 		head->data = new_value;      
 }
 
-void printReverse(struct node* rider)
+void printReverse(struct node* head)
 {
-	if(rider == NULL)
+	if(head == NULL)
 		return;
-	printReverse(rider->next);
-	printf("--->%d", rider->data);
+	printReverse(head->next);
+	printf("--->%d", head->data);
 }
 
 void reverse(struct node** head)
@@ -632,9 +632,9 @@ void insertion_sort(struct node** head)
 	struct node* rider = *head;
 	while (rider != NULL)
 	{
-		struct node *next = rider->next;
+		struct node *next_node = rider->next;
 		sorted_insert1(&sorted, rider);
-		rider = next;
+		rider = next_node;
 	}
 	*head = sorted;
 }
@@ -899,8 +899,7 @@ void addOneUtil(struct node *head)
 	{
 		sum = carry + head->data;
 		carry = (sum >= 10)? 1 : 0;
-		sum = sum % 10;
-		head->data = sum;
+		head->data = sum % 10;
 		temp = head;
 		head = head->next;
 	}
