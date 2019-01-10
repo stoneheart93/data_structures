@@ -250,19 +250,24 @@ void delposition(struct node** head, int position)
 		struct node* temp = *head;
 		*head = (*head)->next;
 		free(temp);
-		return;
 	}
-
-	struct node* rider = *head;
-	for(int i = 0; rider != NULL && i < position - 1; i++)
-		rider = rider->next;
-	struct node* temp = rider->next;
-	rider->next = temp->next;
-	free(temp);
+	else
+	{
+	
+		struct node* rider = *head;
+		for(int i = 0; rider != NULL && i < position - 1; i++)
+			rider = rider->next;
+		struct node* temp = rider->next;
+		rider->next = temp->next;
+		free(temp);
+	}
 }
 
 void delLastOcc(struct node* head, int key)
 {
+	if(head == NULL)
+		return;
+		
     struct node* rider = head;
     struct node* ptr = NULL;
 	while(rider != NULL) 
@@ -278,13 +283,14 @@ void delLastOcc(struct node* head, int key)
 		while(rider->next != ptr) 
 			rider = rider->next;       
 		rider->next = NULL;
+		free(ptr);
 	}
 
 	if(ptr != NULL && ptr->next != NULL) 
 	{
-		ptr->data = ptr->next->data;
 		rider = ptr->next;
-		ptr->next = ptr->next->next;
+		ptr->data = rider->data;
+		ptr->next = rider->next;
 		free(rider);
 	}
 }
