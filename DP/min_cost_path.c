@@ -2,12 +2,9 @@
 #define R 3
 #define C 3
  
-int min(int x, int y, int z)
+int min(int a, int b, int c)
 {
-	if(x < y)
-    	return (x < z)? x : z;
-	else
-    	return (y < z)? y : z;
+	return (a < b) ? ( a < c ? a : c) : (b < c ? b : c) ;
 }
  
 int minCost(int cost[R][C], int m, int n)

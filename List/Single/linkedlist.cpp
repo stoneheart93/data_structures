@@ -9,7 +9,6 @@ struct node
 {
 	int data;
 	struct node *next;
-
 };
 
 void addatbeg(struct node** head)
@@ -31,24 +30,29 @@ void addatend(struct node** head)
 	if((*head) == NULL)
 	{
 		*head = temp;
-		return;
 	}
-	
-	struct node* rider = *head;
-	while(rider->next != NULL)
-		rider = rider->next;  
-	rider->next = temp;
+	else
+	{
+		struct node* rider = *head;
+		while(rider->next != NULL)
+			rider = rider->next;  
+		rider->next = temp;
+	}
 }
-
 
 void addatmid(struct node* head)
 {
+	if(head == NULL)
+		return;
+		
 	int num;
 	struct node* temp = (struct node*)malloc(sizeof(struct node));
 	printf("Enter the data to be inserted at middle: ");
 	scanf("%d", &temp->data);
+	
 	printf("Enter the data succeeding the number to be inserted: ");
 	scanf("%d", &num);
+	
 	while(head->next->data != num)
 		head = head->next;
 	temp->next = head->next;
@@ -136,17 +140,22 @@ void delatend(struct node** head)
 		free(temp);
 		*head = NULL;
 	}
-	
-	struct node* rider = *head;
-	while(rider->next->next != NULL)         
-		rider = rider->next;
-	temp = rider->next;
-	rider->next = NULL;
-	free(temp);
+	else
+	{
+		struct node* rider = *head;
+		while(rider->next->next != NULL)         
+			rider = rider->next;
+		temp = rider->next;
+		rider->next = NULL;
+		free(temp);
+	}
 }
 
 void delatmid(struct node* head)
 {
+	if(head == NULL)
+		return;
+		
 	int num;
 	struct node* temp;
 	printf("Enter the number to be deleted: ");
@@ -184,14 +193,14 @@ void delalt(struct node* head)
 		return;
 
 	struct node* prev = head; 
-	struct node* node = head->next;
-	while(prev != NULL && node != NULL)
+	struct node* curr = head->next;
+	while(prev != NULL && curr != NULL)
 	{
-		prev->next = node->next;   
-		free(node);
+		prev->next = curr->next;   
+		free(curr);
 		prev = prev->next;
 		if(prev != NULL)
-			node = prev->next;
+			curr = prev->next;
 	}      
 }
 
@@ -200,13 +209,13 @@ void delaltRec(struct node* head)
 	if(head == NULL)
 		return;
 
-	struct node* node = head->next;
+	struct node* curr = head->next;
 
-	if(node == NULL)
+	if(curr == NULL)
 		return;
 
-	head->next = node->next;   
-	free(node);
+	head->next = curr->next;   
+	free(curr);
 	delaltRec(head->next);  
 }
 
