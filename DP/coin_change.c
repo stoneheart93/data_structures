@@ -2,23 +2,33 @@
  
 int coinChange(int amount, int coins[], int n)
 {
-	int C[n + 1][amount + 1];
+	int DP[n + 1][amount + 1];
 	int i, j;
     for(i = 0; i <= n; i++)
     {
         for(j = 0; j <= amount; j++)
         {
             if(i == 0)
-                C[i][j] = 0;  
+                DP[i][j] = 0;  
 			else if(j == 0)
-                C[i][j] = 1;
-            else if(coins[i] > j)
-            	C[i][j] = C[i-1][j];
-            else
-            	C[i][j] = C[i-1][j] + C[i][j-coins[i]];
+                DP[i][j] = 1;
+            else if(i == 1)
+            {
+            	if(j % coins[i] == 0)
+            		DP[i][j] = 1;
+            	else
+            		DP[i][j] = DP[i-1][j];
+			}
+            else 
+			{
+				if(coins[i] > j)
+            		DP[i][j] = DP[i-1][j];
+            	else
+            		DP[i][j] = DP[i-1][j] + DP[i][j-coins[i]];
+        	}
         }
     }
-    return C[n][amount];
+    return DP[n][amount];
 }
 
 int main()

@@ -21,17 +21,26 @@ int subsetSum(int sum, int a[], int n)
     return DP[n][sum];
 }
 
+int partition(int a[], int n)
+{
+	int i, sum = 0;
+	
+	for(i = 1; i <= n; i++)
+		sum += a[i];
+	if(sum % 2 == 0)
+		return subsetSum(sum/2, a, n);
+	else
+		return 0;
+}
+
 int main()
 {
-    int sum, n;
+    int n;
 	int a[100];
 	int i;
-	scanf("%d", &sum);
 	scanf("%d", &n);
 	for(i = 1; i <= n; i++)
 		scanf("%d", &a[i]);
-	printf("%d", subsetSum(sum, a, n));
+	printf("%d", partition(a, n));
     return 0;
 }
-
-

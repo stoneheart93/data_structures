@@ -8,33 +8,33 @@ int min(int a, int b)
  
 int minCoinChange(int amount, int coins[], int n)
 {
-	int dp[n + 1][amount + 1];
+	int DP[n + 1][amount + 1];
 	int i, j;
     for(i = 0; i <= n; i++)
     {
         for(j = 0; j <= amount; j++)
         {
             if(i == 0)
-                dp[i][j] = INT_MAX;  
+                DP[i][j] = INT_MAX;  
 			else if(j == 0)
-                dp[i][j] = 0;
+                DP[i][j] = 0;
             else if(i == 1)
             {
             	if(j % coins[i] == 0)
-            		dp[i][j] = j / coins[i];
+            		DP[i][j] = j / coins[i];
             	else
-            		dp[i][j] = dp[i-1][j];
+            		DP[i][j] = DP[i-1][j];
 			}
             else
 			{
 				if(coins[i] > j)
-            		dp[i][j] = dp[i-1][j];
+            		DP[i][j] = DP[i-1][j];
             	else
-            		dp[i][j] = min(dp[i-1][j], 1 + dp[i][j-coins[i]]);
+            		DP[i][j] = min(DP[i-1][j], 1 + DP[i][j-coins[i]]);
             }
         }
     }
-    return dp[n][amount];
+    return DP[n][amount];
 }
 
 int main()

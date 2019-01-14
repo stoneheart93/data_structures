@@ -1,5 +1,5 @@
 #include<stdio.h>
-#define INIT_MAX 999999
+#include<limits.h>
  
 int max(int a, int b) 
 { 
@@ -8,7 +8,7 @@ int max(int a, int b)
  
 int eggDrop(int n, int k)
 {
-    int C[n + 1][k + 1];
+    int DP[n + 1][k + 1];
     int res, i, j, x;
  
     for(i = 1; i <= n; i++)
@@ -16,24 +16,24 @@ int eggDrop(int n, int k)
         for(j = 0; j <= k; j++)
         {
         	if(j == 0)
-        		C[i][j] = 0;
+        		DP[i][j] = 0;
         	else if(j == 1)
-        		C[i][j] = 1;
+        		DP[i][j] = 1;
         	else if(i == 1)
-        		C[i][j] = j;
+        		DP[i][j] = j;
         	else
         	{
-            	C[i][j] = INIT_MAX;
+            	DP[i][j] = INT_MAX;
             	for(x = 1; x <= j; x++)
             	{
-                	res = 1 + max(C[i - 1][x - 1], C[i][j - x]);
-                	if (res < C[i][j])
-                    	C[i][j] = res;
+                	res = 1 + max(DP[i - 1][x - 1], DP[i][j - x]);
+                	if (res < DP[i][j])
+                    	DP[i][j] = res;
                 }
             }
         }
     }
- 	return C[n][k];
+ 	return DP[n][k];
 }
  
 int main()

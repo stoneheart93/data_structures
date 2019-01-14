@@ -1,40 +1,54 @@
 #include<stdio.h>
-int DP[20][20];
 
 int max(int a, int b)
 {
 	return (a > b) ? a : b;
 }
 
-int wine_sale_util(int a[], int n, int start, int end)
+int min(int a, int b)
 {
-	if(DP[start][end] != -1)
-		return DP[start][end];
-		
-	int year = n - (end-start);
-	
-	if(start == end)
-		return year * a[start];
-	else
-	{
-		DP[start][end] = max( year*a[start] + wine_sale_util(a, n, start+1, end), 
-							  year*a[end] + wine_sale_util(a, n, start, end-1) );
-		return DP[start][end];	
-	}	
+	return (a < b) ? a : b;
 }
 
-int wine_sale(int a[], int n)
+int wineProblem(int a[], int n)
 {
-	int i, j;
-	for(i = 0; i < n; i++)
-	{
-		for(j = 0; j < n; j++)
-		{
-			DP[i][j] = -1;
-		}
-	}
+	int DP[n][n];
+	int prefix[n];
 	
-	return wine_sale_util(a, n, 0, n-1);
+	int i, j, L;
+
+	//calculate prefix sum
+	prefix[0] = a[0];
+	for(i = 1; i < n; i++) 
+	{
+    	prefix[i] = prefix[i-1] + a[i];
+  	}
+	
+	// 1 item
+	for(i = 0; i < n; i++) 
+	{
+    	DP[i][i] = a[i];
+  	}
+
+	// 2 items
+  	for(i = 0; i < n -1; i++) 
+	{
+		DP[i][i+1] = min(a[i], a[i+1]) + 2*max(a[i], a[i+1]);
+  	}
+
+  	
+  	// from 3 to N items
+	for(L = 3; L <= n; L++) 
+	{
+    	for(i = 0; i < n -L + 1; i++) 
+		{
+     		int j = i + L -1;
+     		int iPlus1_jMinus1 = prefix[j] - prefix[i] - a[j];
+     		DP[i][j] = max( (a[i] + DP[i+1][j] + iPlus1_jMinus1 + a[j]) ,
+                       		(a[j] + DP[i][j-1] + iPlus1_jMinus1 + a[i]));
+    	}
+  	}
+	return DP[0][n-1];
 }
 
 int main()
@@ -44,6 +58,6 @@ int main()
 	scanf("%d", &n);
 	for(i = 0; i < n; i++)
 		scanf("%d", &a[i]);
-    printf("%d", wine_sale(a,n));
+    printf("%d", wineProblem(a,n));
     return 0;
 }
