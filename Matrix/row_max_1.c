@@ -2,18 +2,16 @@
 
 int first(int a[], int low, int high)
 {
-	if(high >= low)
+	while(low < high)
 	{
 		int mid = low + (high - low)/2; 
 		if( (mid == 0 || a[mid-1] == 0) && a[mid] == 1)
-     		return mid;
- 
+     		return mid; 
     	else if(a[mid] == 0)
-      		return first(a, mid + 1, high);
- 
-    	else
-			return first(a, low, (mid -1));
-  	}
+    		low = mid + 1;
+		else
+			high = mid - 1;
+	}
   	return -1;
 }
  
@@ -28,7 +26,7 @@ int rowmax1(int M[10][10], int m, int n)
     	j = n - 1;
  
 	int i; 
-    for(i = 1; i <= m; i++)
+    for(i = 1; i < m; i++)
     {
         while(j >= 0 && M[i][j] == 1)
         {
