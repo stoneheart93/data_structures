@@ -7,10 +7,10 @@ void swap(int *a, int *b)
 	*b = temp;
 }
 
-void transpose(int M[10][10], int m, int n)
+void transpose(int M[10][10], int n)
 {
 	int i, j;
-	for(i = 0; i < m; i++)
+	for(i = 0; i < n; i++)
     {
     	for(j = i + 1; j < n; j++)
         {
@@ -21,20 +21,20 @@ void transpose(int M[10][10], int m, int n)
  
 int main() 
 {
-	int i, j, m, n;
+	int i, j, n;
 	int M[10][10];
-	scanf("%d%d", &m, &n);
-	for(i = 0; i < m; i++) 
+	scanf("%d", &n);
+	for(i = 0; i < n; i++) 
 	{
 		for(j = 0; j < n; j++) 
 		{
 			scanf("%d", &M[i][j]);
 		}
 	}
-	transpose(M, m, n);
+	transpose(M, n);
 	for(i = 0; i < n; i++) 
 	{
-		for(j = 0; j < m; j++) 
+		for(j = 0; j < n; j++) 
 		{
 			printf("%d ", M[i][j]);
 		}

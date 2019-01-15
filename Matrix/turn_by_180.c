@@ -7,19 +7,7 @@ void swap(int* a, int* b)
 	*b = temp;	
 }
 
-void reverseRows(int M[10][10], int m, int n)
-{
-	int i, j, k;
-	for(i = 0; i < m; i++)
-	{
-		for(j = 0, k = m - 1; j < k; j++, k--)
-		{
-			swap(&M[i][j], &M[i][k]);
-		}
-	}
-}
-
-void reverseColumns(int M[10][10], int m, int n)
+void reverseColumns(int M[10][10], int n)
 {
 	int i, j, k;
 	for(i = 0; i < n; i++)
@@ -31,40 +19,40 @@ void reverseColumns(int M[10][10], int m, int n)
 	}
 }
 
-void transpose(int M[10][10], int m, int n)
+void transpose(int M[10][10], int n)
 {
 	int i, j;
-	for(i = 0; i < m; i++)
+	for(i = 0; i < n; i++)
 	{
-		for(j = i; j < n; j++)
+		for(j = i + 1; j < n; j++)
 		{
 			swap(&M[i][j], &M[j][i]);
 		}
 	}
 }
 
-void rotate180(int M[10][10], int m, int n) 
+void rotate180(int M[10][10], int n) 
 {
-	transpose(M, m, n);
-	reverseColumns(M, m, n);
-	transpose(M, m, n);
-	reverseColumns(M, m, n);
+	transpose(M, n);
+	reverseColumns(M, n);
+	transpose(M, n);
+	reverseColumns(M, n);
 }
 
 int main() 
 {
-	int i, j, m, n;
+	int i, j, n;
 	int M[10][10];
-	scanf("%d%d", &m, &n);
-	for(i = 0; i < m; i++) 
+	scanf("%d", &n);
+	for(i = 0; i < n; i++) 
 	{
 		for(j = 0; j < n; j++) 
 		{
 			scanf("%d", &M[i][j]);
 		}
 	}
-	rotate180(M, m, n);
-	for(i = 0; i < m; i++) 
+	rotate180(M, n);
+	for(i = 0; i < n; i++) 
 	{
 		for(j = 0; j < n; j++) 
 		{
@@ -77,7 +65,7 @@ int main()
 
 /*
 ip
-3 3
+3 
 1 2 3
 4 5 6
 7 8 9

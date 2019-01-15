@@ -1,6 +1,6 @@
 #include<stdio.h>
 
-int sub(int A[10][10], int B[10][10], int m, int n, int C[10][10])
+void sub(int A[10][10], int B[10][10], int m, int n, int C[10][10])
 {
 	int i, j;
 	  

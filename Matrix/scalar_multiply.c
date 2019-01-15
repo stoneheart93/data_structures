@@ -1,6 +1,6 @@
 #include<stdio.h>
 
-int scalar_multiply(int M[10][10], int m, int n, int k)
+void scalar_multiply(int M[10][10], int m, int n, int k)
 {
 	int i, j;
 	  
