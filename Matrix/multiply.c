@@ -1,6 +1,6 @@
 #include<stdio.h>
 
-int multiply(int A[10][10], int m, int n, int B[10][10], int p, int q, int C[10][10])
+void multiply(int A[10][10], int m, int n, int B[10][10], int p, int q, int C[10][10])
 {
 	int i, j, k = 0;
 	  
