@@ -1128,7 +1128,7 @@ int identical(struct node *a, struct node *b)
 }   
 int isPalindrome(struct node* head)
 {
-	if(head == NULL || head->next == NULL)
+	if(head == NULL)
 		return 0;
 
 	struct node* slowptr = head;

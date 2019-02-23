@@ -1,6 +1,5 @@
 #include<stdio.h>
 
-
 int floor_search(int a[], int n, int key)
 {
 	int low = 0, high = n - 1;

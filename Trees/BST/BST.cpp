@@ -480,6 +480,39 @@ void iterativePreorder(struct node* root)
 	}
 }
 
+void iterativePostorder(struct node* root)
+{
+	struct node* current = root;
+	
+	stack<struct node*> s;
+	
+	while(current != NULL || !s.empty())
+	{
+		if(current != NULL)
+		{
+			s.push(current);
+			current = current->left;
+		}
+		else
+		{
+			struct node* temp = (s.top())->right;
+			
+			if(temp == NULL)
+			{
+				temp = s.top();
+				s.pop();
+				while(!s.empty() && temp == (s.top())->right)
+				{
+					temp = s.top();
+					s.pop();
+					printf("%d ", temp->data);
+				}
+			}
+			else
+				current = temp;
+		}
+	}
+}
 
 void reverseMorris(struct node* root)
 {
@@ -1670,33 +1703,34 @@ int main()
 		printf("\n28.Postorder");
 		printf("\n29.Morris(Inorder without stack and recursion)");
 		printf("\n30.Iterative Preorder");
-		printf("\n31.Reverse Morris");
-		printf("\n32.Level Order");
-		printf("\n33.Level Order line by line");
-		printf("\n34.Level Order spiral");
-		printf("\n35.Level Order direction change for every 2 traversals");
-		printf("\n36.Reverse Level Order Traversal");
-		printf("\n37.Vertical Order Traversal");
-		printf("\n38.Boundary Traversal");
-		printf("\n39.nth Node in Inorder");
-		printf("\n40.nth Node in Preorder");
-		printf("\n41.nth Node in Postorder");
-		printf("\n42.Maximum Product level");
-		printf("\n43.Level with maximum nodes");
-		printf("\n44.Sum of leaf nodes at minimum level");
-		printf("\n45.Level with maximum sum");
-		printf("\n46.Nodes at odd level");
-		printf("\n47.Level of a given node");
-		printf("\n48.Left view");
-		printf("\n49.Right view");
-		printf("\n50.Top view");
-		printf("\n51.Bottom view");
-		printf("\n52.Kth Smallest");
-		printf("\n53.Kth Largest");
-		printf("\n54.Sum of elements lesser than or equal to kth smallest element");
-		printf("\n55.Sum of elements greater than or equal to kth largest element");
-		printf("\n56.Print keys within range");
-		printf("\n57.Median");
+		printf("\n31.Iterative Postorder");
+		printf("\n32.Reverse Morris");
+		printf("\n33.Level Order");
+		printf("\n34.Level Order line by line");
+		printf("\n35.Level Order spiral");
+		printf("\n36.Level Order direction change for every 2 traversals");
+		printf("\n37.Reverse Level Order Traversal");
+		printf("\n38.Vertical Order Traversal");
+		printf("\n39.Boundary Traversal");
+		printf("\n40.nth Node in Inorder");
+		printf("\n41.nth Node in Preorder");
+		printf("\n42.nth Node in Postorder");
+		printf("\n43.Maximum Product level");
+		printf("\n44.Level with maximum nodes");
+		printf("\n45.Sum of leaf nodes at minimum level");
+		printf("\n46.Level with maximum sum");
+		printf("\n47.Nodes at odd level");
+		printf("\n48.Level of a given node");
+		printf("\n49.Left view");
+		printf("\n50.Right view");
+		printf("\n51.Top view");
+		printf("\n52.Bottom view");
+		printf("\n53.Kth Smallest");
+		printf("\n54.Kth Largest");
+		printf("\n55.Sum of elements lesser than or equal to kth smallest element");
+		printf("\n56.Sum of elements greater than or equal to kth largest element");
+		printf("\n57.Print keys within range");
+		printf("\n58.Median");
 		printf("\n61.Inorder Successor and Inorder Predecessor");
 		printf("\n62.Count Special Digits");
 		printf("\n63.Lowest Common Ancestor - Recur");
@@ -1798,70 +1832,72 @@ int main()
 					 break;
 			case 30: iterativePreorder(root);
 					 break;
-			case 31: reverseMorris(root);
+			case 31: iterativePostorder(root);
 					 break;
-			case 32: levelOrder(root);
+			case 32: reverseMorris(root);
 					 break;
-			case 33: levelOrder1by1(root);
+			case 33: levelOrder(root);
 					 break;
-			case 34: levelOrderSpiral(root);
+			case 34: levelOrder1by1(root);
 					 break;
-			case 35: levelOrderDirectionChange(root);
+			case 35: levelOrderSpiral(root);
 					 break;
-			case 36: reverseLevelOrder(root);
+			case 36: levelOrderDirectionChange(root);
 					 break;
-			case 37: verticalOrder(root);
+			case 37: reverseLevelOrder(root);
+					 break;
+			case 38: verticalOrder(root);
 				  	 break;
-			case 38: boundary(root);
-					 break;
-			case 39: scanf("%d", &n);
-					 nInorder(root, n);
+			case 39: boundary(root);
 					 break;
 			case 40: scanf("%d", &n);
-					 c = 0;
-					 nPreorder(root, n, &c);
+					 nInorder(root, n);
 					 break;
 			case 41: scanf("%d", &n);
 					 c = 0;
+					 nPreorder(root, n, &c);
+					 break;
+			case 42: scanf("%d", &n);
+					 c = 0;
 					 nPostorder(root, n, &c);
 					 break;
-			case 42: printf("%d", maxProductLevel(root));
+			case 43: printf("%d", maxProductLevel(root));
 					 break;
-			case 43: printf("%d", maxNodesLevel(root));
+			case 44: printf("%d", maxNodesLevel(root));
 				     break;
-			case 44: printf("%d", sumMinLevel(root));
+			case 45: printf("%d", sumMinLevel(root));
 					 break;
-			case 45: printf("%d", maxSumLevel(root));
+			case 46: printf("%d", maxSumLevel(root));
 				     break;
-			case 46: oddNodesLevel(root);
+			case 47: oddNodesLevel(root);
 				     break;
-			case 47: scanf("%d", &k);
+			case 48: scanf("%d", &k);
 					 printf("%d", findLevel(root, k, 0));
 					 break;
-			case 48: leftView(root);
+			case 49: leftView(root);
 					 break;
-			case 49: rightView(root);
+			case 50: rightView(root);
 					 break;
-			case 50: topView(root);
+			case 51: topView(root);
 					 break;
-			case 51: bottomView(root);
-					 break;
-			case 52: scanf("%d", &k);
-					 printf("%d", kthsmallest(root, k));
+			case 52: bottomView(root);
 					 break;
 			case 53: scanf("%d", &k);
-					 printf("%d", kthlargest(root, k));
+					 printf("%d", kthsmallest(root, k));
 					 break;
 			case 54: scanf("%d", &k);
-					 printf("%d", sumLEkthsmallest(root, k));
+					 printf("%d", kthlargest(root, k));
 					 break;
 			case 55: scanf("%d", &k);
+					 printf("%d", sumLEkthsmallest(root, k));
+					 break;
+			case 56: scanf("%d", &k);
 					 printf("%d", sumGEkthlargest(root, k));
 					 break;
-			case 56: scanf("%d%d", &k1, &k2);
+			case 57: scanf("%d%d", &k1, &k2);
 					 range(root, k1, k2);
 					 break;
-			case 57: printf("%d", median(root));
+			case 58: printf("%d", median(root));
 					 break;
 			case 61: scanf("%d", &key);
 				     inorderSucPre(root, &suc, &pre, key);
