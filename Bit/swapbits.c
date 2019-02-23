@@ -1,22 +1,23 @@
 #include <stdio.h>
  
-int swapPositionBits(int x, int p1, int p2, int n)
+int swapPositionBits(int n, int p1, int p2)
 {
-	int set1 = (x >> p1) & ((1U << n) - 1);
-	int set2 = (x >> p2) & ((1U << n) - 1);
+	int p1_bit = 1 << p1;
+	int p2_bit = 1 << p2;
 	
-	int xor_bits = set1 ^ set2;
-	xor_bits = (xor_bits << p1) | (xor_bits << p2);
-	
-	return (x ^ xor_bits);
+	//For same bits, there would be no change
+	if( (n & p1_bit) ^ (n & p2_bit) )
+	{
+		n ^= p1_bit;
+		n ^= p2_bit;	
+	}
+	return n;
 }
 
 int main()
 {
-    int x = 28; 
-	int p1 = 0;
-	int p2 = 3;
-	int n = 2;
-	printf("%d", swapPositionBits(x, p1, p2, n));
+    int n, p1, p2;
+	scanf("%d %d %d", &n, &p1, &p2);
+	printf("%d", swapPositionBits(n, p1, p2));
 	return 0;
 }
