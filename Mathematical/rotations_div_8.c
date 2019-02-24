@@ -2,16 +2,12 @@
 
 int countRotationsby8(char* str)
 {
-	int len, count = 0;
-	for(len = 0; str[len]; len++);
+	int len = strlen(str);
+	int count = 0;
 	
 	if(len == 1)
 	{
-		int digit = str[0] = '0';
-		if(digit % 8 == 0)
-			return 1;
-		else
-			return 0;
+		return ((str[0] - '0') % 8 == 0 );
 	}
 	else if(len == 2)
 	{
