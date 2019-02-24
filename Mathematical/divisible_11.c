@@ -2,8 +2,8 @@
 
 int isDivisibleBy11(char* str)
 {
-	int len, i, oddsum = 0, evensum = 0;
-	for(len = 0; str[len]; len++);
+	int i, oddsum = 0, evensum = 0;
+	int len = strlen(str);
 	
 	for(i = 0; i < len; i++)
 	{
@@ -15,7 +15,7 @@ int isDivisibleBy11(char* str)
 	return ((oddsum - evensum) % 11 == 0);
 }
  
-// Driver code
+
 int main()
 {
     char str[20];

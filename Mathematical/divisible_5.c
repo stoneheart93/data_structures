@@ -2,13 +2,12 @@
 
 int isDivisibleBy5(char* str)
 {
-	int len, i, sum = 0;
-	for(len = 0; str[len]; len++);
+	int len = strlen(str);
+	int i, sum = 0;
 	
 	return ((str[len - 1] - '0') % 5 == 0);
 }
  
-// Driver code
 int main()
 {
     char str[20];

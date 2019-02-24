@@ -2,14 +2,14 @@
 
 int isDivisibleBy36(char* str)
 {
-	int len, i, sum = 0;
-	for(len = 0; str[len]; len++);
+	int len = strlen(str);
+	int i, sum = 0;
 	
 	if(len == 0)
     	return 0;
  
-    if(len == 1 && (str[0] - '0') % 4 != 0)
-    	return 0;
+    if(len == 1 && str[0] == '0')
+    	return 1;
  
 	if(((str[len - 2] - '0') * 10 + (str[len - 1] - '0')) % 4 != 0)
 		return 0;
@@ -21,7 +21,6 @@ int isDivisibleBy36(char* str)
 	return (sum % 9 == 0);
 }
  
-// Driver code
 int main()
 {
     char str[20];

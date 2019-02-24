@@ -2,8 +2,8 @@
 
 int isDivisibleBy6(char* str)
 {
-	int len, i, sum = 0;
-	for(len = 0; str[len]; len++);
+	int len = strlen(str);
+	int i, sum = 0;
 	
 	if((str[len - 1] - '0') % 2 != 0)
        return 0;
@@ -15,7 +15,6 @@ int isDivisibleBy6(char* str)
 	return (sum % 3 == 0);
 }
  
-// Driver code
 int main()
 {
     char str[20];

@@ -2,8 +2,8 @@
 
 int isDivisibleBy3(char* str)
 {
-	int len, i, sum = 0;
-	for(len = 0; str[len]; len++);
+	int len = strlen(str);
+	int i, sum = 0;
 	
 	for(i = 0; i < len; i++)
 	{
