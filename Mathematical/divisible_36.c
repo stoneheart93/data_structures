@@ -8,8 +8,8 @@ int isDivisibleBy36(char* str)
 	if(len == 0)
     	return 0;
  
-    if(len == 1 && str[0] == '0')
-    	return 1;
+    if(len == 1 && str[0] != '0')
+    	return 0;
  
 	if(((str[len - 2] - '0') * 10 + (str[len - 1] - '0')) % 4 != 0)
 		return 0;

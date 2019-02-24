@@ -2,9 +2,7 @@
 
 int isDivisibleBy5(char* str)
 {
-	int len = strlen(str);
-	int i, sum = 0;
-	
+	int len = strlen(str);	
 	return ((str[len - 1] - '0') % 5 == 0);
 }
  

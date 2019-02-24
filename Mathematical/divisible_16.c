@@ -6,8 +6,8 @@ int isDivisibleBy16(char* str)
 	
 	if(len == 0)
 		return 0;
-	else if(len == 1 && str[0] == '0')
-    	return 1;
+	else if(len == 1)
+    	return (str[0] == '0')
     else if(len == 2)
     	return (((str[len - 2] - '0') * 10 + (str[len - 1] - '0')) % 16 == 0);
  	else if(len == 3)
