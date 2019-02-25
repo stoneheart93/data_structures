@@ -12,19 +12,27 @@ void addatbeg(struct node *head)
 	struct node *temp = (struct node*)malloc(sizeof(struct node));
 	printf("\n Enter the data to be inserted in the beginning: ");
 	scanf("%d", &temp->data);
-	temp->next = head->next;
+	if(head->next == NULL)
+		temp->next = head;
+	else
+		temp->next = head->next;
 	head->next = temp;
 }
 
 void addatmid(struct node *head)
 {
-	struct node *rider = head;
+	if(head->next == NULL)
+		return;
+		
 	int num;
 	printf("\n Enter the number before which the value to be inserted: ");
 	scanf("%d", &num);
 	struct node *temp = (struct node*)malloc(sizeof(struct node));
 	printf("\n Enter the value to be inserted in the middle: ");
 	scanf("%d", &temp->data);
+	
+	struct node *rider = head->next;
+	
 	while(rider->next->data != num)
 		rider = rider->next;
 	temp->next = rider->next;
@@ -33,14 +41,24 @@ void addatmid(struct node *head)
 
 void addatend(struct node *head)
 {
-	struct node *rider = head->next;
 	struct node *temp = (struct node*)malloc(sizeof(struct node));
 	printf("\n Enter the data to be inserted at the end: ");
 	scanf("%d", &temp->data);
-	while(rider->next != head)
-		rider = rider->next;
-	temp->next = head;
-	rider->next = temp;
+	
+	struct node *rider = head->next;
+	
+	if(rider == NULL)
+	{
+		temp->next = head;
+		head->next = temp;
+	}
+	else
+	{
+		while(rider->next != head)
+			rider = rider->next;
+		temp->next = head;
+		rider->next = temp;
+	}	
 }
 
 void sorted_insert(struct node* head)
@@ -48,8 +66,10 @@ void sorted_insert(struct node* head)
 	struct node *temp = (struct node *)malloc(sizeof(struct node));
     printf("\n Enter the data to be inserted in sorted way: ");
     scanf("%d", &temp->data);
-    struct node *rider = head->next;
-    if(rider == NULL)
+    
+	struct node *rider = head->next;
+    
+	if(rider == NULL)
     {
         temp->next = head;
         head->next = temp;
@@ -70,6 +90,9 @@ void sorted_insert(struct node* head)
 
 void delatbeg(struct node *head)
 {
+	if(head->next == NULL)
+		return;
+		
 	struct node *temp = head->next;
 	head->next = temp->next;
 	free(temp);
@@ -77,10 +100,15 @@ void delatbeg(struct node *head)
 
 void delatmid(struct node *head)
 {
-    struct node *rider = head;  
-	int num;
+	if(head->next == NULL)
+		return;
+		
+    int num;
 	printf("\n Enter the number to be deleted: ");
 	scanf("%d", &num);
+	
+	struct node *rider = head->next;  
+	
 	while(rider->next->data != num)
     	rider=rider->next;
 	struct node *temp = rider->next;
@@ -90,19 +118,34 @@ void delatmid(struct node *head)
 
 void delatend(struct node *head)
 {
+	if(head->next == NULL)
+		return;
+		
 	struct node *rider = head->next;
-	while(rider->next->next != head)
-    	rider = rider->next;
-	struct node *temp = rider->next;
-	rider->next = head;
-	free(temp);
+	
+	if(rider->next == NULL)
+	{
+		struct node* temp = head->next;
+		head->next = NULL;
+		free(temp);
+	}
+	else
+	{
+		while(rider->next->next != head)
+	    	rider = rider->next;
+		struct node *temp = rider->next;
+		rider->next = head;
+		free(temp);
+	}
 }
 
 int count(struct node *head)
 {
     struct node *rider = head->next;
-    int count = 0;
-    while(rider != head) 
+    if(rider == NULL)
+		return;
+	int count = 0;
+	while(rider != head) 
 	{
         rider = rider->next;
 		count++;
@@ -113,6 +156,10 @@ int count(struct node *head)
 void display(struct node *head)
 {
 	struct node *rider = head->next;
+	
+	if(rider == NULL)
+		return;
+	
 	while(rider != head)
 	{
 		printf("--->%d",rider->data);
@@ -157,12 +204,14 @@ void exchangeNodes(struct node *head)
     while(rider->next->next != head)
     	rider = rider->next;
      
-	struct node* temp = head->next;
+	struct node* first = head->next;
+	struct node* last = rider->next;
 	
-	rider->next->next = head->next->next;
-	head->next = rider->next;
-    rider->next = temp;
-	temp->next = head;
+	last->next = first->next;
+	head->next = last;
+	
+    first->next = head;
+	rider->next = first;
 }
 
 int main()
