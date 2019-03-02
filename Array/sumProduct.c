@@ -1,3 +1,13 @@
+/*
+Given an array, find the sum of product of each element with each element after it in the array.
+
+Insight:
+(p*a + p*b + .. + p*y + p*z) = p*(a + b + .. + y + z)
+
+Precompute the suffix sum
+
+*/
+
 #include <stdio.h>
  
 int sumProduct(int a[], int n)
@@ -6,9 +16,10 @@ int sumProduct(int a[], int n)
 	int sum[n];
 	
 	sum[n - 1] = a[n - 1];
+	
 	for(i = n - 2; i >= 0; i--)
 	{
-		sum[i] = sum[i + 1] + a[i];
+		sum[i] = a[i] + sum[i + 1];
 	}
 	
 	for(i = 0; i < n - 1; i++)

@@ -1,9 +1,9 @@
 #include<stdio.h>
 
-int printUncommon(int a1[], int a2[], int n1, int n2)
+void printUncommon(int a1[], int a2[], int m, int n)
 {
-	int i = 0, j = 0, k = 0;
-    while (i < n1 && j < n2) 
+	int i = 0, j = 0;
+    while (i < m && j < n) 
 	{
 		if(a1[i] < a2[j]) 
 	 		printf("%d ", a1[i++]);
@@ -15,25 +15,25 @@ int printUncommon(int a1[], int a2[], int n1, int n2)
             j++;
         }
     }
-    while(i < n1) 
+    while(i < m) 
 		printf("%d ", a1[i++]);
-    while(j < n2) 
+    while(j < n) 
 		printf("%d ", a2[j++]);
 }
   
 int main()
 {
-	int i, n1, n2;
+	int i, m, n;
 	int a1[100], a2[100];
 	
-	scanf("%d %d", &n1, &n2);
-	for(i = 0; i < n1; i++)
+	scanf("%d %d", &m, &n);
+	for(i = 0; i < m; i++)
 		scanf("%d", &a1[i]);
 	
-	for(i = 0; i < n2; i++)
+	for(i = 0; i < n; i++)
 		scanf("%d", &a2[i]);
 	
-	printUncommon(a1, a2, n1, n2);
+	printUncommon(a1, a2, m, n);
 	return 0;
 
 }
