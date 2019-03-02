@@ -16,7 +16,6 @@ void reverseWords(char* s)
     char* temp = s; 
     while(*temp)
     {
-        temp++;
         if(*temp == '\0')
         {
             reverse(word_begin, temp-1);
@@ -26,6 +25,7 @@ void reverseWords(char* s)
         	reverse(word_begin, temp - 1);
             word_begin = temp + 1;
         }
+        temp++;
     }
     reverse(s, temp-1);
 }

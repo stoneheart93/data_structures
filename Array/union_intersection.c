@@ -1,6 +1,6 @@
 #include<stdio.h>
 
-int printUnion(int a1[], int a2[], int m, int n)
+void printUnion(int a1[], int a2[], int m, int n)
 {
 	int i = 0, j = 0;
   	while (i < m && j < n)
@@ -21,7 +21,7 @@ int printUnion(int a1[], int a2[], int m, int n)
    		printf("%d ", a2[j++]);
 }
 
-int printIntersection(int a1[], int a2[], int m, int n)
+void printIntersection(int a1[], int a2[], int m, int n)
 {
 	int i = 0, j = 0;
   	while (i < m && j < n)

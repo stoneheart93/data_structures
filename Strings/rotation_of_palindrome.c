@@ -35,8 +35,6 @@ int findLongestPalindromicString(char* text, int size)
  	
 	int C = 1, R = 1; 
 	int Mirror, i; 
-	int maxLPSLength = 0, maxLPSCenterPosition = 0;
-	int start, end;
 	
 	for (i = 2; i < N; i++) 
 	{
@@ -46,12 +44,6 @@ int findLongestPalindromicString(char* text, int size)
 
 		while (text[i + 1 + L[i]] == text[i - 1 - L[i]])
 			L[i]++;
-
-		if(L[i] > maxLPSLength) 
-		{
-			maxLPSLength = L[i];
-			maxLPSCenterPosition = i;
-		}
 
 		if (i + L[i] > R) 
 		{
