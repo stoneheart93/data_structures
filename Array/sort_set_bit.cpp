@@ -16,7 +16,7 @@ int countSetBits(int n)
 void sortBySetBitCount(int a[], int n) 
 { 
     vector<vector<int> > count(32); 
-    int setbitcount = 0;
+    int setbitcount;
 	    
     for(int i = 0; i < n; i++) 
     { 
@@ -24,12 +24,12 @@ void sortBySetBitCount(int a[], int n)
         count[setbitcount].push_back(a[i]); 
     } 
   
-    int j = 0;
+    int k = 0;
 	for(int i = 31; i >= 0; i--) 
     { 
         vector<int> v1 = count[i]; 
-        for(int i = 0; i < v1.size(); i++) 
-            a[j++] = v1[i]; 
+        for(int j = 0; j < v1.size(); j++) 
+            a[k++] = v1[j]; 
     } 
 } 
   
