@@ -2,10 +2,9 @@
  
 void left_rotate(int a[], int n, int k)
 {
-	int mod = k % n;
 	int i;
-	for(i = 0; i < n; i++)
-		printf("%d ", a[(mod + i) % n]);
+	for(i = k; i < n + k; i++)
+		printf("%d ", a[i % n]);
 	printf("\n"); 
 }    
  

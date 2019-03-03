@@ -1,15 +1,19 @@
+/*
+Elements to be added so that all elements of a range are present in array
+*/
+
 #include<iostream>
 #include<unordered_set>
 using namespace std;
  
 int countNum(int a[], int n)
 {
-    unordered_set<int> s;
+    unordered_set<int> hash;
     int count = 0, max = INT_MIN, min = INT_MAX;
 
     for(int i = 0; i < n; i++) 
 	{
-        s.insert(a[i]);
+        hash.insert(a[i]);
         
 		if(a[i] < min)
         	min = a[i];
@@ -19,7 +23,7 @@ int countNum(int a[], int n)
     
     for(int i = min; i <= max; i++)
     {
-        if(s.find(i) == s.end())
+        if(hash.find(i) == hash.end())
         	count++;
     }
 	return count;
