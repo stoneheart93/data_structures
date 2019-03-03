@@ -3,7 +3,7 @@
  
 void moveToEnd(int mPlusN[], int size)
 {
-	int i = 0, j = size - 1;
+	int i, j = size - 1;
   	for(i = size - 1; i >= 0; i--)
     {
     	if(mPlusN[i] != NA)

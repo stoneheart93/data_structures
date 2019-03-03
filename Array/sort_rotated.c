@@ -14,7 +14,7 @@ void rev(int a[], int start, int end)
 void sort_rotated(int a[], int n)
 {
 	int i;
-	for(i = 0; i < n; i++)
+	for(i = 0; i < n - 1; i++)
 	{
 		if(a[i] > a[i + 1])
 		{
