@@ -13,12 +13,12 @@ void print3largest(int a[], int n)
 			sec_max = first_max;
 			first_max = a[i];
 		}
-		else if(a[i] > sec_max)
+		else if(a[i] > sec_max && a[i] != first_max)
 		{
 			third_max = sec_max;
 			sec_max = a[i];
 		}
-		else if(a[i] > third_max)
+		else if(a[i] > third_max && a[i] != first_max && a[i] != sec_max)
 			third_max = a[i];
 	}
 	printf("%d %d %d", first_max, sec_max, third_max);
