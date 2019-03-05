@@ -36,16 +36,19 @@ int random_partition(int a[], int low, int high)
 
 int quick_select(int a[], int low, int high, int k)
 {
-    if(low == high && k == low)
+    if(low == high && low == k - 1)
     	return a[low];
     
-	int p = random_partition(a, low, high);
-	if(p == k - 1)
-		return a[p];
-	else if(p > k - 1)	
-		return quick_select(a, low, p - 1, k);
-	else
-       	return quick_select(a, p + 1, high, k);
+    if(low < high)
+    {
+		int p = random_partition(a, low, high);
+		if(p == k - 1)
+			return a[p];
+		else if(p > k - 1)	
+			return quick_select(a, low, p - 1, k);
+		else
+       		return quick_select(a, p + 1, high, k);
+	}
 }
   
 int main() 

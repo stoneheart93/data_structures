@@ -1,8 +1,9 @@
 #include<stdio.h>
+#include<limits.h>
 
 int maxTripletSum(int a[], int n)
 {
-	int maxA = 0, maxB = 0, maxC = 0;
+	int maxA = INT_MIN, maxB = INT_MIN, maxC = INT_MIN;
 	int i;
  
     for(i = 0; i < n; i++) 

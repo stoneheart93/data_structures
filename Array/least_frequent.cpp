@@ -1,5 +1,6 @@
 #include<iostream>
 #include<unordered_map>
+#include<limits.h>
 using namespace std;
  
 int leastFrequent(int a[], int n)
@@ -8,7 +9,7 @@ int leastFrequent(int a[], int n)
     for(int i = 0; i < n; i++)
     	hash[a[i]]++;
  
-    int min_count = 9999999, res = -1;
+    int min_count = INT_MAX, res = -1;
     for(auto it = hash.begin(); it != hash.end(); it++)
 	{
 	    if(it->second < min_count) 
