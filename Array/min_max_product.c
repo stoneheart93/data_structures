@@ -1,17 +1,17 @@
 #include<stdio.h>
+#include<limits.h>
  
-int minMaxProduct(int a1[], int a2[], int n1, int n2)
+int minMaxProduct(int a1[], int a2[], int m, int n)
 {
-    int max = a1[0];
-	int min = a2[0];
+    int max = INT_MIN, min = INT_MAX;
     int i;
     
-    for(i = 1; i < n1; i++) 
+    for(i = 0; i < m; i++) 
 	{
         if(a1[i] > max)
         	max = a1[i];
 	}
-	for(i = 1; i < n1; i++) 
+	for(i = 0; i < n; i++) 
 	{
         if(a2[i] < min)
         	min = a2[i];
