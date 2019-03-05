@@ -1,35 +1,34 @@
 #include<stdio.h>
 #define NA -1
  
-void moveToEnd(int mPlusN[], int size)
+void moveToFront(int mPlusN[], int size)
 {
-	int i, j = size - 1;
-  	for(i = size - 1; i >= 0; i--)
+	int i, j = 0;
+  	for(i = 0; i < size; i++)
     {
     	if(mPlusN[i] != NA)
-    	{
-      		mPlusN[j] = mPlusN[i];
-      		j--;
-    	}
+      		mPlusN[j++] = mPlusN[i];
     }
+    while(j < size)
+    	mPlusN[j++] = NA;
 }
  
 void merge(int mPlusN[], int N[], int m, int n)
 {
-	int i = n, j = 0, k = 0; 
-	while(k < (m + n))
+	int i = m - 1, j = n - 1, k = m + n - 1; 
+	while(j >= 0)
   	{	
-    	if(mPlusN[i] <= N[j] || j == n)
+    	if(i >= 0 && mPlusN[i] > N[j])
     	{
       		mPlusN[k] = mPlusN[i];
-      		k++;
-      		i++;
+      		k--;
+      		i--;
     	}
     	else  
     	{
       		mPlusN[k] = N[j];
-      		k++;
-      		j++;
+      		k--;
+      		j--;
     	}
  	}
 }
@@ -40,7 +39,7 @@ int main()
 	int mPlusN[] = {2, 8, NA, NA, NA, 13, NA, 15, 20};
 	int N[] = {5, 7, 9, 25};
   
-	moveToEnd(mPlusN, m + n);
+	moveToFront(mPlusN, m + n);
 	merge(mPlusN, N, m, n);
  
 	for(i = 0; i < m + n; i++)
