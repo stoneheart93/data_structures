@@ -36,8 +36,7 @@ int random_partition(int a[], int low, int high)
 
 int quick_select(int a[], int low, int high, int k)
 {
-	int i;
-    if(low == high)
+    if(low == high && k == low)
     	return a[low];
     
 	int p = random_partition(a, low, high);
