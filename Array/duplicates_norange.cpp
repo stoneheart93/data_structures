@@ -8,19 +8,11 @@ void printDuplicates(int a[], int n)
     for(int i = 0; i < n; i++)
         hash[a[i]]++;
  
- 
- 	bool dup = false;
-    for(auto it = hash.begin(); it != hash.end(); it++)
+ 	for(auto it = hash.begin(); it != hash.end(); it++)
 	{
 	    if(it->second > 1)
-        {
             printf("%d ", it->first);
-            dup = true;
-        }
     }
- 
-    if(dup == false)
-    	printf("-1");
 }
 
 int main()

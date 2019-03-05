@@ -10,9 +10,7 @@ int printDistinct(int a[], int n)
         hash.insert(a[i]);
  
     for(auto it = hash.begin(); it != hash.end(); it++)
-    {
     	printf("%d ",*it);
-	}
 }
  
 int main()

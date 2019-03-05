@@ -1,8 +1,9 @@
 #include<stdio.h>
+#include<limits.h>
  
 void bitonic(int a[], int n)
 {
-	int end_index = 0, max_len = 0;
+	int end_index = 0, max_len = INT_MIN;
 	int i = 0;
 	
 	while(i + 1 < n)
