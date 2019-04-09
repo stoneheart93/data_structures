@@ -2,10 +2,10 @@
 
 int singleThrice(int a[], int n) 
 {
-    int MAX_BITS = 4 * sizeof(int);
+    int MAX_BITS = 8 * sizeof(int);
     int i, j;
     int result = 0;
-    for(i = 0; i < n; i++)
+    for(i = 0; i < MAX_BITS; i++)
     {
         int x = 1 << i;
         int count = 0;
