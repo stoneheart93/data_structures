@@ -2,14 +2,16 @@
 
 int isMultipleOf3(int n)
 {
-    int odd_count = 0;
-    int even_count = 0;
     if(n < 0)
-        n=-n;
+        n = -n;
     if(n == 0)
         return 1;
     if(n == 1)
         return 0;
+        
+    int odd_count = 0;
+    int even_count = 0;
+    
     while(n != 0)
     {
         if(n & 1)

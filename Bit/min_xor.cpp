@@ -8,8 +8,7 @@ int minXOR(int a[], int n)
     sort(a, a + n); 
   
     int minXor = INT_MAX; 
-    int val = 0; 
-  
+    
     for(int i = 0; i < n - 1; i++) 
         minXor = min(minXor, a[i] ^ a[i+1]); 
   

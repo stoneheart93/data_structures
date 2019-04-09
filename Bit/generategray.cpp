@@ -5,9 +5,6 @@ using namespace std;
  
 void generateGrayCodes(int n)
 {
-    if (n <= 0)
-        return;
- 
     vector<string> arr;
  
     arr.push_back("0");
