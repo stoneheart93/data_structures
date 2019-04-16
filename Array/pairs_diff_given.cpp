@@ -2,19 +2,22 @@
 #include<unordered_set>
 using namespace std;
  
-void printPairs(int a[], int n, int diff)
+void printPairs(int a[], int n, int k)
 {
-	int i, temp;
 	unordered_set<int> hash;
 	
-	for(i = 0; i < n; i++)
+	for(int i = 0; i < n; i++)
       	hash.insert(a[i]);
 
-	for(i = 0; i < n; i++)
+	for(int i = 0; i < n; i++)
   	{
-		temp = diff + a[i];
-		if (hash.find(temp) != hash.end())
-        	printf("Pair with given difference %d is (%d, %d) \n", diff, a[i], temp);
+		if (hash.find(a[i] + k) != hash.end())
+        	printf("Pair with given difference %d is (%d, %d) \n", k, a[i], a[i] + k);
+        	
+        if (hash.find(a[i] - k) != hash.end())
+        	printf("Pair with given difference %d is (%d, %d) \n", k, a[i], a[i] - k);
+        	
+        hash.erase(a[i]);
   	}
 }
  

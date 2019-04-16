@@ -2,17 +2,18 @@
 #include<unordered_set>
 using namespace std;
  
-void printPairs(int a[], int n, int sum)
+void printPairs(int a[], int n, int k)
 {
-	int i, temp;
 	unordered_set<int> hash;
 	
-	for(i = 0; i < n; i++)
+	for(int i = 0; i < n; i++)
+  		hash.insert(a[i]);
+	
+	for(int i = 0; i < n; i++)
   	{
-		temp = sum - a[i];
-		if (hash.find(temp) != hash.end())
-        	printf("Pair with given sum %d is (%d, %d) \n", sum, a[i], temp);
-      	hash.insert(a[i]);
+		if (hash.find(k - a[i]) != hash.end())
+        	printf("Pair with given sum %d is (%d, %d) \n", k, a[i], k - a[i]);
+      	hash.erase(a[i]);
   	}
 }
  
