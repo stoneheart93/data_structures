@@ -18,7 +18,7 @@ void topologicalSortUtil(int u)
     	        topologicalSortUtil(v);
         }
 	}
-    Stack.push(u);
+    s.push(u);
 }
 void topologicalSort()
 {
@@ -29,10 +29,10 @@ void topologicalSort()
         if(!visited[i])
             topologicalSortUtil(i);
     }
-    while(!Stack.empty())
+    while(!s.empty())
     {
-    	cout << Stack.top() << " ";
-    	Stack.pop();
+    	cout << s.top() << " ";
+    	s.pop();
 	}
 }
 
