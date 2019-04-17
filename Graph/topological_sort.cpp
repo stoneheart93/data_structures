@@ -5,7 +5,7 @@ int N, E;
 int E1[1000], E2[1000];
 int visited[1000];
 int adj[1000][1000];
-stack<int>Stack;
+stack<int>s;
 
 void topologicalSortUtil(int u)
 {
