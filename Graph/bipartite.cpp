@@ -1,5 +1,5 @@
 #include<iostream>
-#include<list>
+#include<queue>
 using namespace std;
 int N, E;
 int E1[10000], E2[10000];
@@ -11,13 +11,13 @@ int isBipartite()
 	for(int i = 1; i <= N; i++)
 		colorArr[i] = -1;
 	
-	list<int> queue;
+	queue<int> q;
 	colorArr[1] = 1;
-	queue.push_back(1);
-	while(!queue.empty())
+	q.push(1);
+	while(!q.empty())
 	{
-		int u = queue.front();
-		queue.pop_front();
+		int u = q.front();
+		q.pop();
 		for(int v = 1; v <= N; v++)
 		{
 			if(adj[u][v])
@@ -25,7 +25,7 @@ int isBipartite()
 				if(colorArr[v] == -1)
 				{
 					colorArr[v] = 1 - colorArr[u];
-					queue.push_back(v);
+					q.push(v);
 				}
 				else if(colorArr[v] == colorArr[u])
 					return 0;
