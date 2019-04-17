@@ -1,8 +1,8 @@
 #include<stdio.h>
 
-int pairs_sum(int a[], int n, int sum)
+void pairs_sum(int a[], int n, int sum)
 {
-    int l, r, i;
+    int i;
     
     for(i = 0; i < n - 1; i++)
     {
@@ -10,8 +10,8 @@ int pairs_sum(int a[], int n, int sum)
         	break;
     }
     
-    l = (i + 1) % n;
-    r = i; 
+    int l = (i + 1) % n;
+    int r = i; 
     while(l != r)
     {
 		if(a[l] + a[r] == sum)

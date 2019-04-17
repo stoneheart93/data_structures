@@ -10,13 +10,13 @@ int isReachable(int s, int d)
 {
 	if(s == d)
 		return 1;
-	list<int> queue;
+	queue<int> q;
 	visited[s] = 1;
-	queue.push_back(s);
-	while(!queue.empty())
+	q.push(s);
+	while(!q.empty())
 	{
-		int u = queue.front();
-		queue.pop_front();
+		int u = q.front();
+		q.pop();
 		for(int v = 1; v <= N; v++)
 		{
 			if(adj[u][v])
@@ -26,7 +26,7 @@ int isReachable(int s, int d)
 				if(!visited[v])
 				{
 					visited[v] = 1;
-					queue.push_back(v);
+					q.push(v);
 				}
 			}
 		}

@@ -8,14 +8,14 @@ int visited[1000];
 
 void DFS(int src)
 {
-	stack<int> Stack;
+	stack<int> s;
 	visited[src] = 1;
-	Stack.push(src);
-	while(!Stack.empty())
+	s.push(src);
+	while(!s.empty())
 	{
-		int u = Stack.top();
+		int u = s.top();
 		cout << u << " ";
-		Stack.pop();
+		s.pop();
 		for(int v = 1; v <= N; v++)
 		{
 			if(adj[u][v])
@@ -23,7 +23,7 @@ void DFS(int src)
 				if(!visited[v])
 				{
 					visited[v] = 1;
-					Stack.push(v);
+					s.push(v);
 				}
 			}
 		}

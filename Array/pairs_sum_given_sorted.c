@@ -1,16 +1,16 @@
 #include<stdio.h>
 
-int pairs_sum(int a[], int n, int sum)
+void pairs_sum(int a[], int n, int sum)
 {
-    int l, r;
-    l = 0;
-    r = n - 1; 
-    while(l < r)
+    int l = 0, r = n - 1;
+    
+	while(l < r)
     {
 		if(a[l] + a[r] == sum)
 		{
 			printf("%d, %d\n", a[l], a[r]);
-			return;
+			l++;
+			r--;
         }
 		else if(a[l] + a[r] < sum)
             l++;

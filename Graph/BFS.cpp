@@ -1,5 +1,5 @@
 #include<iostream>
-#include<list>
+#include<queue>
 using namespace std;
 int N, E;
 int E1[10000], E2[10000];
@@ -8,14 +8,14 @@ int visited[1000];
 
 void BFS(int src)
 {
-	list<int> queue;
+	queue<int> q;
 	visited[src] = 1;
-	queue.push_back(src);
-	while(!queue.empty())
+	q.push(src);
+	while(!q.empty())
 	{
-		int u = queue.front();
+		int u = q.front();
 		cout << u << " ";
-		queue.pop_front();
+		q.pop();
 		for(int v = 1; v <= N; v++)
 		{
 			if(adj[u][v])
@@ -23,7 +23,7 @@ void BFS(int src)
 				if(!visited[v])
 				{
 					visited[v] = 1;
-					queue.push_back(v);
+					q.push(v);
 				}
 			}
 		}
