@@ -2,10 +2,10 @@
 #include<stack> 
 using namespace std; 
   
-struct Queue
+class Queue
 { 
 	stack<int> s1, s2; 
-  
+  public:
     void enqueue(int x) 
     {
 		while(!s1.empty()) 
