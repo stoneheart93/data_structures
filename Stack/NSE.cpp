@@ -2,7 +2,7 @@
 #include<stack>
 using namespace std;
 
-void printNGE(int a[], int n)
+void printNSE(int a[], int n)
 {
 	int element, next;
 	stack<int> s;
@@ -11,7 +11,7 @@ void printNGE(int a[], int n)
 	for(int i = 1; i < n; i++)
     {
         next = a[i];
-        while(!s.empty() && next > s.top())
+		while(!s.empty() && next < s.top())
         {
             element = s.top();
             s.pop();
@@ -35,6 +35,6 @@ int main()
 	scanf("%d", &n);
 	for(int i = 0; i < n; i++)
 		scanf("%d", &a[i]);
-	printNGE(a, n);
+	printNSE(a, n);
 	return 0;
 }

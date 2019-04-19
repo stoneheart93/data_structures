@@ -2,15 +2,15 @@
 #include<stack>
 using namespace std;
 
-int findMaxLen(char* str)
+int findMaxLen(char* exp)
 {
     stack<int> s;
     s.push(-1); 
     int result = 0;
 	
-	for(int i = 0; str[i]; i++)
+	for(int i = 0; exp[i]; i++)
     {
-        if(str[i] == '(')
+        if(exp[i] == '(')
         	s.push(i);
         else 
         {
