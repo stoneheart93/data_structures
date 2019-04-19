@@ -12,11 +12,12 @@ void push(int value)
     struct node *temp = (struct node*)malloc(sizeof(struct node));
     temp->data = value;
     temp->next = NULL;
-    if(start == NULL)
+    
+    rider = start;
+    if(rider == NULL)
     	start=temp;
     else
     {
-        rider = start;
         while(rider->next != NULL)
             rider = rider->next;
         rider->next=temp;
@@ -25,13 +26,16 @@ void push(int value)
 
 void pop()
 {
-    struct node *temp;
-    rider = start;
-    if(rider == NULL)
-        printf("\n Empty stack");
-    else if(rider->next == NULL)
+    if(isEmpty())
     {
-        temp = rider;
+        printf("\n Empty stack");
+    	return;
+    }
+	
+	rider = start;
+	if(rider->next == NULL)
+    {
+        struct node* temp = rider;
         free(temp);
         start = NULL;
     }
@@ -39,7 +43,7 @@ void pop()
     {
         while(rider->next->next != NULL)
             rider = rider->next;
-        temp = rider->next;
+        struct node* temp = rider->next;
         rider->next = NULL;
         free(temp);
     }
@@ -55,23 +59,27 @@ int isEmpty()
 
 int topp()
 {
-    rider = start;
-    while(rider->next!=NULL)
-        rider = rider->next;
-    return rider->data;
+	if(isEmpty())
+    	printf("\nEmpty Stack");
+    else
+    {
+	    rider = start;
+	    while(rider->next!=NULL)
+	        rider = rider->next;
+	    return rider->data;
+	}
 }
 
 int topandpop()
 {
-    int element;
-    if(start == NULL)
+    if(isEmpty())
     	printf("\nEmpty Stack");
     else
     {
         rider = start;
         while(rider->next != NULL)
             rider = rider->next;
-        element = rider->data;
+        int element = rider->data;
         pop();
         return element;
     }

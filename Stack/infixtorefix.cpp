@@ -2,6 +2,7 @@
 #include<iostream>
 #include<stack>
 #include<string>
+#include<algorithm>
 using namespace std;
 
 int prcd(char symbol)
@@ -67,13 +68,31 @@ string infixToPostfix(string infix)
     return postfix;
 }
 
+string infixToPrefix(string infix) 
+{ 
+    int l = infix.size(); 
+    reverse(infix.begin(), infix.end()); 
+  
+    for(int i = 0; infix[i]; i++) 
+	{ 
+    	if(infix[i] == '(') 
+	        infix[i] = ')'; 
+        else if (infix[i] == ')') 
+		    infix[i] = '('; 
+    } 
+  
+    string prefix = infixToPostfix(infix); 
+    reverse(prefix.begin(), prefix.end());   
+    return prefix; 
+} 
+
 int main()
 {
     string infix;
     printf("\nEnter the infix string: ");
     cin >> infix;
-	printf("\nThe postfix string: ");
-    cout << infixToPostfix(infix);
+	printf("\nThe prefix string: ");
+    cout << infixToPrefix(infix);
     return 0;
 }
 

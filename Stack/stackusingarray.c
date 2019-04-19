@@ -41,17 +41,19 @@ void pop()
 
 int topp()
 {
-    return stack[top];
+	if(isEmpty())
+        printf("\n Empty stack");
+    else
+	    return stack[top];
 }
 
 int topandpop()
 {
-    int element;
     if(isEmpty())
         printf("\n Empty Stack");
     else
     {
-        element = stack[top];
+        int element = stack[top];
         top--;
         return element;
     }
@@ -59,12 +61,12 @@ int topandpop()
 
 void display()
 {
-    int i;
-    if(top == -1)
-        printf("\nEmpty stack");
+    if(isEmpty())
+        printf("\n Empty Stack");
     else
     {
-        for(i = top;i >= 0;i--)
+    	int i;
+        for(i = top; i >= 0;i--)
     		printf("\n%d ",stack[i]);
     }
 }
