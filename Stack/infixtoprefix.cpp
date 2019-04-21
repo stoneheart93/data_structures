@@ -70,8 +70,7 @@ string infixToPostfix(string infix)
 
 string infixToPrefix(string infix) 
 { 
-    int l = infix.size(); 
-    reverse(infix.begin(), infix.end()); 
+	reverse(infix.begin(), infix.end()); 
   
     for(int i = 0; infix[i]; i++) 
 	{ 
