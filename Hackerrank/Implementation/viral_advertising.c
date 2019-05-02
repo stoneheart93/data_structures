@@ -1,16 +1,21 @@
 #include<stdio.h>
 
+int advertise(int n)
+{
+    int sum = 0, likes = 0, share = 5;
+    while(n--)
+    {
+        likes = share/2;
+        sum += likes; 
+        share = likes * 3;
+    }
+    return sum;
+}
+
 int main()
 {
-	int n, i;
-	scanf("%d", &n);
-	int like, share = 5, like_count = 0;
-	for(i = 0; i < n; i++)
-	{
-		like = share/2;
-		like_count += like;
-		share = like*3;
-	}
-	printf("%d", like_count);
-	return 0;
+    int n;
+    scanf("%d", &n);
+    printf("%d", advertise(n));
+    return 0;
 }
