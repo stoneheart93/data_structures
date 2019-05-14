@@ -100,11 +100,7 @@ int getIntesectionNodeUtil(int d, struct node* a, struct node* b)
 {
     int i;
     for(i = 0; i < d; i++)
-    {
-        if(a == NULL)
-        	return -1; 
         a = a->next;
-    }
     while(a != NULL && b != NULL)
     {
         if(a->data == b->data)
