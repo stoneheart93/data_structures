@@ -2,13 +2,16 @@
 
 int divideAndSum(int a[], int n)
 {
-	int sum = a[0], i;
+	int sum = 0, i;
 	
-    for(i = 1; i < n; i++) 
+    for(i = 0; i < n; i++) 
 	{
     	if(a[i] == 0) 
         	return -1;
-		sum += a[i] / a[i - 1];
+        if(i == 0)
+        	sum += a[i];
+        else
+			sum += a[i] / a[i - 1];
     }
     return sum;
 }

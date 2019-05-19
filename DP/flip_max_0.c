@@ -17,11 +17,10 @@ int findMax0(int a[], int n)
 		if(a[i] == 0)
 			zero++;
 		int val = (a[i] == 1) ? 1: -1;
-        curr_max = max(a[i], curr_max + val);
+        curr_max = max(val, curr_max + val);
         max_so_far = max(max_so_far, curr_max);
 	}
 	
-	max_so_far = max(max_so_far, 0);
 	return zero + max_so_far;
 }
 

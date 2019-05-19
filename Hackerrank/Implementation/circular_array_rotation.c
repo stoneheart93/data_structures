@@ -2,35 +2,33 @@
 
 void rev(int a[], int start, int end)
 {
-    int temp;
-    while(start < end)
-    {
-        temp = a[start];
-        a[start] = a[end];
-        a[end] = temp;
-        start++;
-        end--;
-    }
+    if(start >= end)
+    	return;
+    	
+   	int temp = a[start];
+    a[start] = a[end];
+    a[end] = temp;
+    rev(a, start + 1, end - 1);
 }
 
-void rightRotate(int a[], int d, int n)
+void rightRotate(int a[], int n, int k)
 {
-	rev(a, 0, n-1);
-    rev(a, 0, d-1);
-    rev(a, d, n-1);
+	int mod = k % n;
+	rev(a, 0, n - 1);
+    rev(a, 0, mod - 1);
+    rev(a, mod, n - 1);
 }
 
 int main()
 {
-	int n, d, q, i, index; 
-    scanf("%d%d%d", &n, &d, &q);
-    d = d % n;
+	int n, k, q, i, index; 
+    scanf("%d%d%d", &n, &k, &q);
     int a[n];
     for(i = 0; i < n; i++)
-	{
 		scanf("%d", &a[i]);
-    }
-    rightRotate(a, d, n);
+    
+	rightRotate(a, n, k);
+	
     for(i = 0; i < q; i++)
 	{
     	scanf("%d", &index);

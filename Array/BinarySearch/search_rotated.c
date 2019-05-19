@@ -41,7 +41,7 @@ int searchSortedRotated(int a[], int n, int key)
 	
 	if(a[pivot] == key)
 	    return pivot;
-	else if(key <= a[0])
+	else if(key < a[0])
 	    return binary_search(a, pivot + 1, n - 1, key);
 	else
 	    return binary_search(a, 0, pivot - 1, key);

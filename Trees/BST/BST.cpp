@@ -723,16 +723,16 @@ void reverseLevelOrder(struct node* root)
 		s.push(temp);
 		
 		if(temp->right != NULL)
-		q.push(temp->right);
+			q.push(temp->right);
 		if(temp->left != NULL)
-		q.push(temp->left);
+			q.push(temp->left);
 	}
 	
 	while(!s.empty())
 	{
-	   struct node* temp = s.top();
-	   s.pop();
-	   printf("%d ", temp->data);
+		struct node* temp = s.top();
+	   	s.pop();
+		printf("%d ", temp->data);
 	}
 }
 
@@ -812,7 +812,7 @@ void printBoundaryRight(struct node* root)
 	}
 	else if(root->left != NULL)
 	{
-		printBoundaryLeft(root->left);
+		printBoundaryRight(root->left);
 		printf("%d ", root->data);
 	}
 }
