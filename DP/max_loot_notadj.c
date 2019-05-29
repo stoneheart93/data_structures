@@ -10,7 +10,7 @@ int maxLoot(int a[], int n)
     int i;
     
     C[0] = a[0];
-    C[1] = max(C[0], C[1]);
+    C[1] = max(a[0], a[1]);
     
 	for(i = 2; i < n; i++)
         C[i] = max(a[i] + C[i - 2], //include

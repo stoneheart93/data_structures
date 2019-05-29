@@ -6,21 +6,16 @@ int max(int a, int b)
 }
 int maxSum_notadj(int a[], int n)
 {
-	int incl = a[0];
-	int excl = 0;
-	
-	int incl_new, excl_new;
-	
-	int i;
-	for(i = 1; i < n; i++)
-	{
-		incl_new = a[i] + excl; // include the element, and exclude the previous element since not adjacent
-		excl_new = max(incl, excl);
-		
-		incl = incl_new;
-		excl = excl_new;
-	}
-	return max(incl, excl);
+    int C[n];
+    int i;
+    
+    C[0] = a[0];
+    C[1] = max(a[0], a[1]);
+    
+	for(i = 2; i < n; i++)
+        C[i] = max(a[i] + C[i - 2], //include
+			   C[i - 1]); //exclude
+    return C[n - 1];
 }
 
 int main()

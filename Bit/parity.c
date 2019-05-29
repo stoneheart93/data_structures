@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+/*
+The time complexity is O(k) where k are the number of set bits
+
 int countSetBits(int n)
 {
     int count = 0;
@@ -13,6 +16,19 @@ int countSetBits(int n)
 int parity(int n)
 {
     return (countSetBits(n) % 2)== 0 ? 0 : 1; 
+}
+*/
+
+// O(log n)
+int parity(int n)
+{
+//	n ^= n >> 32; // for 64 bit/8 byte integer
+	n ^= n >> 16;
+	n ^= n >> 8;
+	n ^= n >> 4;
+	n ^= n >> 2;
+	n ^= n >> 1;
+	return n;
 }
 
 int main()
