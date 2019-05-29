@@ -25,7 +25,7 @@ int isMajority(int a[], int n, int key)
 	if(first == -1)
 		return 0;
 	
-	if(first + n/2 <= n-1 && a[first + n/2] == key)
+	if(first + n/2 < n && a[first] == a[first + n/2])
 		return 1;
 	else
 		return 0; 
