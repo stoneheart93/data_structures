@@ -1,29 +1,32 @@
 #include<stdio.h>
 
-int search(int M[10][10], int n, int x)
+int search(int M[20][20], int m, int n, int x) 
 {
-	int i = 0, j = n-1;  
-   	while(i < n && j >= 0)
-   	{
-    	if(M[i][j] == x)
-      	{
-        	printf("%d, %d", i, j);
-			return 1;
+    int low = 0, high = m*n - 1;
+    while(low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        int mid_i = mid / n;
+        int mid_j = mid % n;
+        if(x == M[mid_i][mid_j])
+        {
+        	printf("%d %d", mid_i, mid_j);
+        	return 1;
 		}
-		else if(M[i][j] > x)
-        	j--;
-		else //  if M[i][j] < x
-        	i++;
-	}
-	return 0;  
+        else if(x < M[mid_i][mid_j])
+            high = mid - 1;
+        else
+            low = mid + 1;
+    }
+    return 0;
 }
 
 int main() 
 {
-	int i, j, n, x;
-	int M[10][10];
-	scanf("%d", &n);
-	for(i = 0; i < n; i++) 
+	int i, j, m, n, x;
+	int M[20][20];
+	scanf("%d%d", &m, &n);
+	for(i = 0; i < m; i++) 
 	{
 		for(j = 0; j < n; j++) 
 		{
@@ -31,19 +34,9 @@ int main()
 		}
 	}
 	scanf("%d", &x);
-	if(!search(M, n, x))
+	if(!search(M, m, n, x))
 		printf("Not found");
+	else
+		printf("Found");
 	return 0;
 }
-
-/*
-ip
-4
-10 20 30 40
-15 25 35 45
-27 29 32 48
-32 33 39 50
-29
-op
-2, 1
-*/
