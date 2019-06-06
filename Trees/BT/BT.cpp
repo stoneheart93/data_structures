@@ -80,7 +80,30 @@ void commonAncestors(struct node* root, int k1, int k2)
  	printf("%d ", LCA->data);
     rootNodePath(root, LCA->data);
 }
+
+void mirror(struct node* root) 
+{
+    if(root == NULL)
+        return;
+    
+    mirror(root->left);
+    mirror(root->right);
+    
+    struct node* temp = root->left;
+    root->left = root->right;
+    root->right = temp;
+}
  
+void inorder(struct node* root)
+{
+	if(root == NULL)
+		return;
+	
+	inorder(root->left);
+	printf("%d ", root->data);
+	inorder(root->right);
+}
+
 int main()
 {
 	int choice;
@@ -113,6 +136,7 @@ int main()
 		printf("\n3.Root to node path");
 		printf("\n4.Ancestors of a node");
 		printf("\n5.Common Ancestors of two nodes");
+		printf("\n6.Convert to a mirror");
 		printf("\n10.Exit\n");
 		scanf("%d", &choice);
 		switch(choice)
@@ -133,6 +157,9 @@ int main()
 				    break;
 			case 5: scanf("%d %d", &k1, &k2);
 					commonAncestors(root, k1, k2);
+					break;
+			case 6: mirror(root);
+					inorder(root);
 					break;
 			case 10: goto exit;
 		}

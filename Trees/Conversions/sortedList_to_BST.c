@@ -51,11 +51,12 @@ struct Tnode* sortedListToBSTUtil(struct Lnode** head, int n)
 	struct Tnode* left = sortedListToBSTUtil(head, n/2);
 	
 	struct Tnode* root = newTNode((*head)->data);
-	root->left = left;
-	
 	(*head) = (*head)->next;
 	
-	root->right = sortedListToBSTUtil(head, n - n/2 - 1);
+	struct Tnode* right = sortedListToBSTUtil(head, n - n/2 - 1);
+	
+	root->left = left;
+	root->right = right;
 	
 	return root;
 }

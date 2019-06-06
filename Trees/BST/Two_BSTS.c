@@ -37,6 +37,19 @@ int identical(struct node* a, struct node* b)
 		return 0;
 }
 
+int subtree(struct node* a, struct node* b)
+{
+	if(a == NULL)
+		return 0;
+		
+	if(b == NULL)
+		return 1;
+	
+	if(identical(a, b))
+		return 1;
+		
+	return subtree(a->left, b) || subtree(a->right, b);
+}
 
 int main()
 {
@@ -71,6 +84,7 @@ int main()
 	{
 		printf("\nOperations:");
 		printf("\n1.Identical");
+		printf("\n2.Sub tree");
 		printf("\n10.Exit\n");
 		scanf("%d", &choice);
 		switch(choice)
@@ -79,6 +93,12 @@ int main()
 						printf("Identical");
 					else
 						printf("Not identical");
+					break;
+			case 2: if(subtree(root1, root2))
+						printf("Tree2 is sub tree of Tree1");
+					else
+						printf("Not a sub tree");
+					break;
 			case 10: goto exit;
 		}
 	}

@@ -1654,6 +1654,20 @@ void fullNodes(struct node* root)
 	fullNodes(root->right);
 }
 
+void printKdistance(struct node *root, int k)
+{
+    if(root == NULL)
+        return;
+        
+    if(k == 0)
+    {
+        printf("%d ", root->data);
+        return;
+    }
+    printKdistance(root->left, k - 1);
+    printKdistance(root->right, k - 1);
+}
+
 int main()
 {
 	int key, choice, k, k1, k2, c, oldVal, newVal, sum, n;
@@ -1743,7 +1757,8 @@ int main()
 		printf("\n71.Sum of the longest Root to leaf path");
 		printf("\n72.Root to leaf path with maximum sum");
 		printf("\n76.Full nodes");
-		printf("\n77.Exit\n");
+		printf("\n77.Print nodes at a distance k from root");
+		printf("\n78.Exit\n");
 		scanf("%d", &choice);
 		switch(choice)
 		{
@@ -1943,7 +1958,10 @@ int main()
 					 break;
 			case 76: fullNodes(root);
 					 break;
-			case 77: goto exit;
+			case 77: scanf("%d", &k);
+					 printKdistance(root, k);
+					 break;
+			case 78: goto exit;
 		}
 	}
 	exit:

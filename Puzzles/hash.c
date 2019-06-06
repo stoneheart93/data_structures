@@ -56,8 +56,6 @@ int main()
 	while(n--)
 	{
 		scanf("%s%s", str1, str2);
-		//scanf("%d%d", &key, &value);
-		//addToHash(key, value);
 		addToHash(str1, str2);
 	}
 	scanf("%d", &q);

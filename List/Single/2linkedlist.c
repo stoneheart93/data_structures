@@ -78,6 +78,50 @@ struct node *mergeSortedLists(struct node *a, struct node *b)
     }
 } 
 
+struct node* mergeSortedListsDescending(struct node* a, struct node* b)
+{
+    if(a == NULL || b == NULL)
+        return NULL;
+        
+    struct node* result = NULL;
+    
+    while(a != NULL && b != NULL)
+    {
+        if(a->data <= b->data)
+        {
+            struct node* temp = a->next;
+            a->next = result;
+            result = a;
+            a = temp;
+        }
+        else
+        {
+            struct node* temp = b->next;
+            b->next = result;
+            result = b;
+            b = temp; 
+        }
+    }
+    
+    while(a != NULL)
+    {
+        struct node* temp = a->next;
+        a->next = result;
+        result = a;
+        a = temp;
+    }
+    
+    while(b != NULL)
+    {
+        struct node* temp = b->next;
+        b->next = result;
+        result = b;
+        b = temp;
+    }
+    
+    return result;
+}
+
 // O(m + n) since traversal of both entire lists
 struct node *intersectSortedLists(struct node *a, struct node *b)
 {
@@ -155,9 +199,10 @@ int main()
     	printf("\n\n LIST OPERATIONS");
         printf("\n 1.Identical");
         printf("\n 2.Merge two sorted lists");
-        printf("\n 3.Intersect two sorted lists");
-        printf("\n 4.Intersection node");
-        printf("\n 5.Exit");
+        printf("\n 3.Merge two sorted lists in descending order");
+        printf("\n 4.Intersect two sorted lists");
+        printf("\n 5.Intersection node");
+        printf("\n 6.Exit");
         printf("\n Enter your choice:");
         scanf("%d", &choice);
         switch(choice)
@@ -170,12 +215,15 @@ int main()
         	case 2: res = mergeSortedLists(head1, head2);
                     display(res);
                     break;
-            case 3: res = intersectSortedLists(head1, head2);
+            case 3: res = mergeSortedListsDescending(head1, head2);
+                    display(res);
+                    break;
+            case 4: res = intersectSortedLists(head1, head2);
             		display(res);
             		break;
-            case 4: printf("\n The node of intersection is %d \n", getIntesectionNode(head1, head2)); 
+            case 5: printf("\n The node of intersection is %d \n", getIntesectionNode(head1, head2)); 
                     break;
-            case 5: goto exit;
+            case 6: goto exit;
     	}
     }
     exit:
