@@ -264,6 +264,35 @@ void delposition(struct node** head, int position)
 	}
 }
 
+void delAllOcc(struct node** head, int key)
+{
+	struct node* rider = *head;
+	struct node* prev;
+	while(rider != NULL && rider->data == key)
+	{
+		*head = rider->next;
+		free(rider);
+		rider = *head;
+	}
+	
+	while(rider != NULL)
+	{
+		while(rider != NULL && rider->data != key)
+		{
+			prev = rider;
+			rider = rider->next;
+		}
+		
+		if(rider == NULL)
+			return;
+		
+		prev->next = rider->next;
+		free(rider);
+		
+		rider = prev->next;
+	}
+}
+
 void delLastOcc(struct node* head, int key)
 {
 	if(head == NULL)
@@ -1201,8 +1230,9 @@ int main()
 		printf("\n 13.Delete entire list");
 		printf("\n 14.Delete given pointer to a node");
 		printf("\n 15.Delete at a given position");
-		printf("\n 16.Delete last occurence of an item");
-		printf("\n 17.Delete n nodes after m nodes");
+		printf("\n 16.Delete all occurences of an item");
+		printf("\n 17.Delete last occurence of an item");
+		printf("\n 18.Delete n nodes after m nodes");
 		printf("\n 19.Count");
 		printf("\n 20.Count Recursive");
 		printf("\n 21.Length even or odd");
@@ -1304,10 +1334,15 @@ int main()
 					 break;
 			case 16: printf("\n Enter the key: ");
 					 scanf("%d", &key);
+					 delAllOcc(&head, key);
+					 display(head);
+					 break;
+			case 17: printf("\n Enter the key: ");
+					 scanf("%d", &key);
 					 delLastOcc(head, key);
 					 display(head);
 					 break;
-			case 17: printf("\n Enter m and n: ");
+			case 18: printf("\n Enter m and n: ");
 					 scanf("%d%d", &M, &N);
 					 skipMdeleteN(head, M, N);
 					 display(head);
