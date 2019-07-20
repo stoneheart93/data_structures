@@ -8,21 +8,24 @@ int max(int a, int b)
 
 int countSubarray01(int a[], int n)
 {
-	int i, count = 0, maxlen = 0, sum = 0;
-	unordered_map<int, int> m;
-	for(i = 0; i < n; i++)
+	int count = 0, sum = 0;
+	unordered_map<int, int> hash;
+	
+	for(int i = 0; i < n; i++)
 	{
 		sum += (a[i] == 0) ? -1 : 1;
-		if(sum == 0)
-            count++;
-		if(m.find(sum) != m.end())
-			count++;
-		else
-			m[sum] = i;
+		hash[sum]++;
 	}
-	for (auto itr = m.begin(); itr != m.end(); itr++) {
- 		printf("%d %d\n", itr->first, itr->second);
- 	}
+	
+	if(hash.find(0) != hash.end())
+		count += hash[0];
+	
+	for(auto it = hash.begin(); it != hash.end(); it++) 
+	{
+		if(it->second > 1)
+			count += (it->second * (it->second - 1)) / 2;
+	}
+	
 	return count;
 }
 

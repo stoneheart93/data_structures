@@ -4,7 +4,7 @@ There are only three condition that can arise whose sum is divisible by 4
 2) If one of them is equal to 1 modulo 4 and other is 3 modulo 4. 
 3) If both of them is equal to 2 modulo 4
 
-2Cfreq0 + 2Cfreq2 + (freq1 . freq3)
+freq0 C 2 + freq2 C 2 + (freq1 . freq3)
 
 */
 

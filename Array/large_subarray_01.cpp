@@ -8,17 +8,19 @@ int max(int a, int b)
 
 int subarray01(int a[], int n)
 {
-	int i, count = 0, maxlen = 0;
-	unordered_map<int, int> m;
-	for(i = 0; i < n; i++)
+	int sum = 0, maxlen = 0;
+	unordered_map<int, int> hash;
+	
+	for(int i = 0; i < n; i++)
 	{
-		count += (a[i] == 0) ? -1 : 1;
-		if(count == 0)
+		sum += (a[i] == 0) ? -1 : 1;
+		if(sum == 0)
             maxlen = i + 1;
-		if(m.find(count) != m.end())
-			maxlen = max(maxlen, i - m[count]);
+            
+		if(hash.find(sum) != hash.end())
+			maxlen = max(maxlen, i - hash[sum]);
 		else
-			m[count] = i;
+			hash[sum] = i;
 	}
 	return maxlen;
 }

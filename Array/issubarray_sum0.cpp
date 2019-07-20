@@ -4,14 +4,14 @@ using namespace std;
 int subarraySum0(int a[], int n)
 {
 	int i, sum = 0;
-	unordered_set<int> s;
+	unordered_set<int> hash;
 	for(i = 0; i < n; i++)
 	{
 		sum += a[i];
-		if(sum == 0 || s.find(sum) != s.end())
+		if(sum == 0 || hash.find(sum) != hash.end())
 			return 1;
 		else
-			s.insert(sum);
+			hash.insert(sum);
 	}
 	return 0;
 }
