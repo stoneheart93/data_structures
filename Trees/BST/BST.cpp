@@ -497,35 +497,29 @@ void iterativePreorder(struct node* root)
 
 void iterativePostorder(struct node* root)
 {
-	struct node* current = root;
+	if(root == NULL)
+		return;
+		
+	stack<struct node*> child, parent;
+	child.push(root);
 	
-	stack<struct node*> s;
-	
-	while(current != NULL || !s.empty())
+	while(!child.empty())
 	{
-		if(current != NULL)
-		{
-			s.push(current);
-			current = current->left;
-		}
-		else
-		{
-			struct node* temp = (s.top())->right;
-			
-			if(temp == NULL)
-			{
-				temp = s.top();
-				s.pop();
-				while(!s.empty() && temp == (s.top())->right)
-				{
-					temp = s.top();
-					s.pop();
-					printf("%d ", temp->data);
-				}
-			}
-			else
-				current = temp;
-		}
+		struct node* temp = child.top();
+		child.pop();
+		parent.push(temp);
+		
+		if(temp->left != NULL)
+			child.push(temp->left);
+		if(temp->right != NULL)
+			child.push(temp->right);
+	}
+	
+	while(!parent.empty())
+	{
+		struct node* temp = parent.top();
+		parent.pop();
+		printf("%d", temp->data);
 	}
 }
 

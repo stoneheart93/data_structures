@@ -61,17 +61,13 @@ int min(int a, int b)
 }
 int hasOneChild(int pre[], int n)
 {
-	int max_so_far = pre[n-1];
-	int min_so_far = pre[n-1];
 	int i;
-	
-	for(i = n-2; i >=0; i--)
+	for(i = 0; i < n - 1; i++)
 	{
-		if(! ((min_so_far > pre[i]) || (max_so_far < pre[i])) ) 
+		int nextDiff = pre[i] - pre[i + 1];
+		int lastDiff = pre[i] - pre[n - 1];
+		if(nextDiff * lastDiff < 0)
 			return 0;
-		
-		min_so_far = min(min_so_far, pre[i]);
-		max_so_far = max(max_so_far, pre[i]);
 	}
 	return 1;
 }

@@ -5,9 +5,6 @@ using namespace std;
 void printPairs(int a[], int n, int k)
 {
 	unordered_set<int> hash;
-	
-	for(int i = 0; i < n; i++)
-      	hash.insert(a[i]);
 
 	for(int i = 0; i < n; i++)
   	{
@@ -17,7 +14,7 @@ void printPairs(int a[], int n, int k)
         if (hash.find(a[i] - k) != hash.end())
         	printf("Pair with given difference %d is (%d, %d) \n", k, a[i], a[i] - k);
         	
-        hash.erase(a[i]);
+        hash.insert(a[i]);
   	}
 }
  

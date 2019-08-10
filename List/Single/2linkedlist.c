@@ -80,7 +80,7 @@ struct node *mergeSortedLists(struct node *a, struct node *b)
 
 struct node* mergeSortedListsDescending(struct node* a, struct node* b)
 {
-    if(a == NULL || b == NULL)
+    if(a == NULL && b == NULL)
         return NULL;
         
     struct node* result = NULL;

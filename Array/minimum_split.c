@@ -19,7 +19,7 @@ int findMinSplit(int a[], int n)
     	sum -= a[i]; 
 		if(leftsum > sum)
 			minelement = min(minelement, leftsum - sum);
-		if(leftsum < sum)
+		else
 			minelement = min(minelement, sum - leftsum);
 
 	}	

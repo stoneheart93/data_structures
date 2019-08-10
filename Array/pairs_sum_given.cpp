@@ -7,13 +7,10 @@ void printPairs(int a[], int n, int k)
 	unordered_set<int> hash;
 	
 	for(int i = 0; i < n; i++)
-  		hash.insert(a[i]);
-	
-	for(int i = 0; i < n; i++)
   	{
 		if (hash.find(k - a[i]) != hash.end())
         	printf("Pair with given sum %d is (%d, %d) \n", k, a[i], k - a[i]);
-      	hash.erase(a[i]);
+      	hash.insert(a[i]);
   	}
 }
  

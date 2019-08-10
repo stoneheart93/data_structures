@@ -7,15 +7,17 @@ void swap(int *a, int *b)
     *b = temp;
 }
 
-void largePermutation(int a[], int n, long int k) 
+void largePermutation(int a[], int n, int k) 
 {
-    int pos[n];
-    for(int i = 0; i < n; i++)
+    int pos[n + 1];
+    int i, j;
+    
+    for(i = 0; i < n; i++)
         pos[a[i]] = i;
 
     int swaps = k > n ? n : k;
 
-    for(int i = 0, j = n; i < swaps && j >= 1; i++, j--)
+    for(i = 0, j = n; i < swaps && j >= 1; i++, j--)
     {
         if(a[i] == j)
         {
