@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<utility>
 #include<queue>
 using namespace std;
 
@@ -50,9 +49,6 @@ struct node* mergeKSortedLists(struct node* a[], int k)
 		struct node* temp = min_heap.top();
 		min_heap.pop();
 		
-		if(temp->next != NULL)
-			min_heap.push(temp->next);
-		
 		if(head == NULL)
 		{
 			head = temp;
@@ -63,6 +59,9 @@ struct node* mergeKSortedLists(struct node* a[], int k)
 			last->next = temp;
 			last = temp;
 		}
+		
+		if(temp->next != NULL)
+			min_heap.push(temp->next);
 	}	
 	return head;
 }
