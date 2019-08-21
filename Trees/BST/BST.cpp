@@ -211,7 +211,7 @@ int sizeIter(struct node* root)
     if(root == NULL)
     	return 0;
  
-	int size = 1;
+	int size = 0;
 	queue<struct node*> q;
 	q.push(root);
 		
@@ -219,17 +219,13 @@ int sizeIter(struct node* root)
     {
         struct node *temp = q.front();
         q.pop();
+        
+        size++;
  
         if(temp->left != NULL)
-        {
             q.push(temp->left);
-        	size++;
-        }
-		if(temp->right != NULL)
-        {
+        if(temp->right != NULL)
         	q.push(temp->right);
-        	size++;
-        }
     }
     return size;
 }
@@ -395,10 +391,8 @@ int sumLeafNodes(struct node* root)
 {
 	if(root == NULL)
 		return 0;
-		
-	if(root->left == NULL && root->right == NULL)
-		return root->data;
-	return sumLeafNodes(root->left) + sumLeafNodes(root->right);
+	
+	return (isLeaf(root) ? root->data : 0) + sumLeafNodes(root->left) + sumLeafNodes(root->right);
 }
 
 void inorder(struct node* root)
@@ -441,9 +435,6 @@ traversal (let’s call pre is predecessor node of its root node).
 */
 void morris(struct node* root)
 {
-	if(root == NULL)
-		return;
-	
 	struct node* current = root;
 	while(current != NULL)
 	{
@@ -525,9 +516,6 @@ void iterativePostorder(struct node* root)
 
 void reverseMorris(struct node* root)
 {
-	if(root == NULL)
-		return;
-	
 	struct node* current = root;
 	while(current != NULL)
 	{
@@ -838,9 +826,6 @@ void boundary(struct node* root)
 
 void nInorder(struct node* root, int n)
 {
-	if(root == NULL)
-		return;
-	
 	int c = 0;
 	struct node* current = root;
 	while(current != NULL)
@@ -912,7 +897,7 @@ int maxProductLevel(struct node* root)
 	if(root == NULL)
 		return 0;
 	
-	int max = 0, pro;	
+	int maxProduct = INT_MIN, pro;	
 	queue<struct node*> q;
 	q.push(root);
 	
@@ -921,7 +906,7 @@ int maxProductLevel(struct node* root)
 		int n = q.size();
 		
 		if(n == 0)
-			return max;
+			return maxProduct;
 		
 		pro = 1;
 		for(int i = 1; i <= n; i++)
@@ -929,15 +914,15 @@ int maxProductLevel(struct node* root)
 			struct node* temp = q.front();
 			q.pop();
 			
-			pro *= temp->data;
-			if(pro > max)
-				max = pro;	
+			pro *= temp->data;	
 			
 			if(temp->left != NULL)
 				q.push(temp->left);
 			if(temp->right != NULL)
 				q.push(temp->right);
 		}
+		
+		maxProduct = max(maxProduct, pro);
 	}
 }
 
@@ -946,7 +931,7 @@ int maxNodesLevel(struct node* root)
 	if(root == NULL)
 		return 0;
 	
-	int max = 0;	
+	int maxNodes = 0;	
 	queue<struct node*> q;
 	q.push(root);
 	
@@ -955,10 +940,9 @@ int maxNodesLevel(struct node* root)
 		int n = q.size();
 		
 		if(n == 0)
-			return max;
+			return maxNodes;
 		
-		if(n > max)
-			max = n;
+		maxNodes = max(maxNodes, n);
 		
 		for(int i = 1; i <= n; i++)
 		{
@@ -1023,7 +1007,7 @@ int maxSumLevel(struct node* root)
 		int n = q.size();
 		
 		if(n == 0)
-			break;
+			return maxsum;
 		
 		int sum = 0;
 		for(int i = 1; i <= n; i++)
@@ -1038,10 +1022,8 @@ int maxSumLevel(struct node* root)
 			if(temp->right != NULL)
 				q.push(temp->right);
 		}
-		if(sum > maxsum)
-			maxsum = sum;
+		maxsum = max(maxsum, sum);
 	}
-	return maxsum;
 }
 
 int oddNodesLevel(struct node* root)
