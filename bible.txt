@@ -1,0 +1,66 @@
+1. Write a program to calculate pow(x, n)
+2. Given only a pointer to a node to be deleted in a singly linked list, how do you delete it?
+3. Remove characters from the first string which are present in the second string
+4. Given an array A[] and a number x, check for pair in A[] with sum as x
+5. Majority element
+6. Write an Efficient Method to Check if a Number is Multiple of 3
+7. Position of rightmost set bit
+8. Find the Number Occurring Odd Number of Times
+9. Largest Sum Contiguous Subarray
+10. Find the Missing Number
+11. Write Code to Determine if Two Trees are Identical
+12. Write a Program to Find the Maximum Depth or Height of a Tree
+13. Convert a Binary Tree into its Mirror Tree / Invert the signs and get a new BST
+14. Find the middle of a given linked list
+15. Program for n’th node from the end of a Linked List 
+16. Write a program to print all permutations of a given string
+17. Write an Efficient C Program to Reverse Bits of a Number
+18. Reverse a linked list
+19. Detect loop in a linked list
+20. Lowest Common Ancestor in a Binary Search Tree
+21. Function to check if a singly linked list is palindrome
+22. Search an element in a sorted and rotated array
+23. Clone a linked list with next and random pointer
+24. Merge an array of size n into another array of size m+n
+25. Count number of bits to be flipped to convert A to B
+26. Given a string, find its first non-repeating character
+27. Given a linked list which is sorted, how will you insert in sorted way
+28. Median of two sorted arrays of same size
+29. Write a function to get the intersection point of two Linked Lists
+30. Find the two non-repeating elements in an array of repeating elements / Find the two numbers with odd occurrences in a n sorted array
+141. Given a number, find the next smallest palindrome
+142. Boundary Traversal of binary Tree
+143. Two nodes of a BST are swapped, correct the BST
+144. Convert a given Binary Tree to Doubly Linked list
+145. Pythagorean Triplet in an array
+146. Find the largest multiple of 3 from array of digits
+147. Print all elements in sorted order from row and column wise sorted matrix
+148. LRU Cache Implementation
+149. Print unique rows in a given boolean matrix
+150. Flattening a Linked List
+151. Find the element that appears once
+152. Count the number of possible triangles
+153. Longest Palindromic Substring
+154. Given a sequence of words, print all anagrams together
+155. Pascal's Triangle
+156. Expression Evaluation
+157. Tree Isomorphism Problem
+158. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
