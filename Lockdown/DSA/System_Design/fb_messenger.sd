@@ -3,7 +3,8 @@ Facebook messenger:
 REQUIREMENTS:
 Functional Requirements:
 1) one-on-one conversations
-2) offline/online statis
+2) offline/online status
+3) sent/delivered/read confirmation
 
 Non Functional Requirements:
 1) low latency
@@ -16,9 +17,110 @@ Extended Requirements:
 2) video call
 3) notifications
 
-WORKFLOW (HIGH LEVEL DESIGN):
-1) User-A sends a message to User-B through chat server.
-2) server receives the message and sends an acknowledgment to User-A.
-3) server stores the message in its DB and sends the message to User-B.
-4) User-B receives the message and sends the acknowledgment to the server.
-5) The server notifies User-A that the message has been delivered successfully to User-B.
+HIGH LEVEL DESIGN:
+two microservices
+- chat service: serving the traffic of online chat messages sent by active users. The service will check if the user to whom the message is sent is online or not. If the user is online, then the message will be forwarded to that user instantly.
+- transient service: responsible for maintaining all the messages (text or image) sent to offline users. The data will be stored in the Transient Storage temporarily until the offline user comes back online.
+
+SYSTEM API:
+sendMessage(senderId, recepientId, messageContent, clientMessageId)
+
+List<Conversation> fetchConversation(userId, pageNumber, pageSize, lastUpdatedTimestamp)
+Conversation 
+{
+conversationId,
+participants,
+snippet,
+lastUpdatedTimestamp
+}
+
+List<Message> fetchMessages(userId, pageNumber, pageSize, lastUpdatedTimestamp)
+Message 
+{
+messageId,
+senderId,
+participants,
+messageContent,
+sentTimestamp
+}
+
+DESIGN:
+1) Sending/Receiving messages
+	- To send messages, a user needs to connect to the server and post messages for the other users. 
+	- To get a message from the server, the user has two options:
+		1. Client Pull model: Users can periodically ask the server if there are any new messages for them.
+		2. Server Push model: Users can keep a connection open with the server and can depend upon the server to notify them whenever there are new messages.
+			- HTTP Long Polling
+			- Websockets - provides full-duplex communication channels over a single TCP connection. (for messenger)
+			- Server Sent events - one-way communication channel where events flow from server to client only.
+
+	- The LB can map each UserID to a server to redirect the request. The server will have a hash table, where “key” would be the UserID and “value” would be the connection object
+	- Ordering:
+		We can store a timestamp with 	each message, which is the time the message is received by the server. This will still not ensure correct ordering of messages for clients. The scenario where the server timestamp cannot determine the exact 	order of messages would look like this:
+		1. User-1 sends a message M1 to the server for User-2.
+		2. The server receives M1 at T1.
+		3. Meanwhile, User-2 sends a message M2 to the server for User-1.
+		4. The server receives the message M2 at T2, such that T2 > T1.
+		5. The server sends message M1 to User-2 and M2 to User-1.
+		So User-1 will see M1 first and then M2, whereas User-2 will see M2 first and then M1.
+
+		sequencing is maintained by having sequence number for each message in client side, so to have a consistent view across all devices
+
+	a) Online users:
+		Step 1: Alice sends a message to Bob which gets directed to the chat server with which Alice is connected.
+		Step 2: Alice gets an acknowledgement from the chat server it’s connected(i.e. Chat_Server_A) and the message is marked as SENT at Alice’s end.
+		Step 3: Chat_Server_A makes a request to the data-storage to fetch information about the chat server to which Bob is connected.
+		Step 4: Chat_Storage returns the information that Bob is connected to Chat_Server_B.
+		Step 5: Chat_Server_A forwards the message to Chat_Server_B.
+		Step 6: The message gets delivered to Bob using a push mechanism.
+		Step 7: Bob sends ACK back to Chat_Server_B.
+		Step 8: The ACK is forwarded to Chat_Server_A to which Alice is connected.
+		Step 9: The ACK gets delivered to Alice and is marked as DELIVERED.
+		Step 10: Another ACK is sent to Chat_Server_B when Bob reads the message (let’s say after 15 minutes).
+		Step 11: Chat_Server_B requests to fetch the server to which Alice is connected.
+		Step 12: Chat_Storage returns the information that Alice is connected to Chat_Server_A.
+		Step 13: Chat_Server_B forwards the read ACK to Chat_Server_A.
+		Step 14: The ACK is forwarded to Alice marking the request as READ.
+
+	b) Offline users:
+		Step 1: Alice sends an image to Bob which gets forwarded to Chat_Server_A, the server with which Alice is connected.
+		Step 2: Chat_Server_A uploads the image to a File Server where the file stored in a directory structure
+		Step 3: File Server returns the image url of the uploaded file to Chat_Server_A.
+		Step 4: The image url is returned to Alice which is used to render the image on Alice’s device. The image is marked as SENT on Alice’s end.
+		Step 5: Chat_Server_A makes request for the server to which Bob is connected.
+		Step 6: Chat_Storage returns information that Bob is offline.
+		Step 7: Chat_Server_A forwards the message containing the image-url to the transient server
+		Step 8: The transient sever stores the message containing the image-url in transient storage.
+		Step 9: Bob comes online and performs heart-beat (Webmaster Include Link) with Chat_Server_B.
+		Step 10: Chat_Server_B fetches transient messages for Bob from the transient server.
+		Step 11: Chat_Server_B forwards the transient messages to Bob.
+		Step 12: Bob fetches the image from the file server. At this point, the image gets delivered to Bob’s device and all the references to the transient messages are removed from the system.
+		Step 13: Bob’s device sends ACK for Alice’s image to Chat_Server_B
+		Step 14: Fetches information about the server to which Alice is connected; i.e. Chat_Server_A
+		Step 15: Forwards the ACK to Chat_Server_A
+		Step 16: The ACK gets delivered to Alice marking the message as DELIVERED.
+
+2) Storing messages in DB:
+NoSQL - wide column database
+asynchronous process
+
+every user would have his/her own copy of the mailbox. That means that we will store 2 copies of the message, one for each participant for every message send.
+
+3) Maintaing offline/online status:
+Once an initial connection is established between client and server, the communication switches to a bi-directional binary protocol. The connection is kept alive between client and server using heartbeats. We store the last time a heartbeat was received from a user in a database. The data-storage can then be queried to fetch the last time a user was active.
+
+DATA SHARDING:
+1) Based on hash(userID) % noofservers
+2) Based on messageID: inefficient, as we have to query multiple shards for fetching messages of a conversation
+
+CACHE:
+- cache messages visible in viewport(5) of latest conversations(15)
+- cache for a user should reside on one machine
+
+LOAD BALANCER:
+- in front of chat servers
+- in front of cahce servers
+
+FAULT TOLERANCE:
+- if a chat server goes down, instead of transfering connections to another chat server, clients can automatically reconnect if connection is lost
+- multiple copies of messages to achieve reliablity

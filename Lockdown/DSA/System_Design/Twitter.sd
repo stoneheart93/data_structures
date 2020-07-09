@@ -1,5 +1,6 @@
 Twitter
 
+REQUIREMENTS:
 Functional Requirements:
 1) post tweets
 2) follow other users
@@ -21,12 +22,11 @@ Extended Requirements:
 6) trending of tweets - localization
 7) DM
 
-APIs:
-
+DESIGN CONSIDERATIONS:
 tweet -> who posted, content, timestamp, no of favorites (show top 2 ppl - x, y and others)
+timeline -> fetch x number of tweets based on client device - mobile/web (viewport)
 
-timeline -> fetch x number of tweets based on client device - mobile/web
-
+SYSTEM API:
 1) postTweet(userID, tweetContent, timestamp)
 2) followUser(userID, toFollowUserID)
 3) favoriteTweet(userID, tweetID)
@@ -41,36 +41,23 @@ Tweet
 	topFavoriteNames
 }
 
-Analysis:
-I) higly available: 
-	- use multiple app servers with a load balancer
-	- replica for each shard 
-		- master-slave: master dies and slave takes over; but master's updates which the slave had not caught up - staleness
-		- primary-secondary: primary for writing and secondary for reading; asynchronous updates to secondary
-
-	Load Balancer:
-	- client and app server
-	- app servers and DB(shards and replicas)
-	- aggregation and cache servers ??
-	- ROUND ROBIN ?
-
-II) read-heavy system:
-DB:
-What to store?
+DATABASE SCHEMA:
 1) tweetTable - tweetID, userID, tweetContent, timestamp
 2) userTable - userID, userName, fname, lname, bdate, password, description
 3) connectionTable - followerID, followeeID
 4) favoritesTable - tweetID, userID
 
-Get the feed of a user - 
+DESIGN - NEWSFEED GENERATION:
+I. Naive:
+Get the feed of a user: 
 - get the userIds a user follows (connectionTable)
 - get their top tweets (tweetTable : userID - top tweets by timestamp)
 - for each tweet get users who have favorited the tweet (favoritesTable)
 
-SQL - winner
-	i) SQL - joins / handling relationships(followers)
+II. Hybrid
+(similar to insta)
 
-How to store?
+SHARDING:
 1) Sharding based on userID:
 	- tweetTable - userID's tweets
 	- userTable - userID
@@ -111,15 +98,26 @@ How to store?
 
 3) Hybrid:
 	- cache having recent tweets (timeline)
-	
-	CACHE SERVER:
-		- LRU
-		- store recent tweets of all users (maybe 3 days)
-		- replicate the cache servers and have a load balancer
-
 	- a DB sharded on userID
 
-III) Monitoring:
+CACHE SERVER:
+- LRU
+- store recent tweets of all users (maybe 3 days)
+- replicate the cache servers and have a load balancer
+
+LOAD BALANCERS:
+- in front of app servers
+- app servers and DB(shards and replicas)
+- aggregation and cache servers ??
+- round robin or some routing algorithm
+
+FAULT TOLERANCE:
+- multiple app servers; aggregation servers and cache servers
+- replica for each shard 
+	- master-slave: master dies and slave takes over; but master's updates which the slave had not caught up - staleness
+	- primary-secondary: primary for writing and secondary for reading; asynchronous updates to secondary
+
+MONITORING:
 	- logging agents 
 	- metrics/stats
 	- latency measuring logs/daily traffic assessment

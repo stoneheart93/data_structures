@@ -1,0 +1,64 @@
+Youtube
+
+REQUIREMENTS:
+Functional Requirements:
+1) upload videos
+2) share/view videos
+3) search based on video titles
+4) like/dislike and add comments
+5) stats - total views
+
+Non-functional Requirements:
+1) highly reliable
+2) highly available
+3) consistency can take ahit
+4) very low latency - real time experience
+
+Extended Requirements:
+1) video recommendations
+2) watch later
+3) favorites
+
+SYSTEM API:
+videojobid = uploadVideo(userID, video_title, video_description, tags[], category_id, default_language, recording_details, video_contents)
+searchVideo(userID, search_query, user_location, maximum_videos_to_return,
+page_token)
+streamVideo(userID, videoID, offset, codec, resolution)
+
+DATABASE SCHEMA:
+Video - videoID, title, description, size, thumbnailpath, userID, likes, dislikes, views
+Comment - commentID, videoID, userID, comment, timestamp
+userTable - userID, name, personalinfo
+
+ANALYSIS:
+- read heavy
+- metadata DB (master-slave) - can have staleness
+- read of thumbnail should be more efficient - wide column store
+
+DESIGN:
+I. Processing Queue: Each uploaded video will be pushed to a processing queue to be de-queued later for encoding, thumbnail generation, and storage.
+II. Encoder: To encode each uploaded video into multiple formats.
+III. Thumbnails generator: To generate a few thumbnails for each video.
+IV. Video and Thumbnail storage: To store video and thumbnail files in some distributed file storage.
+V. DB containing userTable and video metadata: 
+	- To store user’s information, e.g., name, email, address, etc.
+	- A metadata database to store all the information about videos like title, file path in the system, uploading user, total views, likes, dislikes, etc. It will also be used to store all the video comments.
+
+VIDEO DEDUPLICATION:
+- efficient data storage
+- caching unique content
+- low netowrk usage
+
+- Inline deduplication - can save a lot of resources that can encode, transfer and store the duplicated content
+- some video matching algorithm
+
+METADATA SHARDING:
+1) based on userID
+2) based on videoID
+
+CACHE:
+- cache hot db rows of metadata DB
+- LRU
+- use CDNS to serve globally distributed users
+- CDNs will have popular videos 
+- long tailed videos ?

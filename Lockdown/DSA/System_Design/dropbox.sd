@@ -64,6 +64,24 @@ COMPONENTS:
 
 5) Cloud/Block storage 
 
+DATA DEDUPLICATION:
+- used for eliminating duplicate copies of data to improve storage utilization. 
+- For each new incoming chunk, we can calculate a hash of it and compare that hash with all the
+hashes of the existing chunks to see if we already have the same chunk present in our storage.
+	1) Postprocess:
+		- new chunks are first stored on the storage device and later some process analyzes the data looking for duplication. 
+		- Pros: clients will not need to wait for the hash calculation or lookup to complete before storing the data, thereby ensuring that there is no degradation in storage performance. 
+		- Cons: We will unnecessarily be storing duplicate data, though for a short time; Duplicate data will be transferred consuming bandwidth.
+	2) Inline:
+		- hash is calculated before storing data. If duplicate is found, only a reference to the
+existing chunk will be added in the metadata, rather than a full copy of the chunk.
+
+SHARDING METADATA BD:
+1) Sharding based on first letter of file path:
+	- Hotspots
+2) Sharding based on hash of fileID % noofshards:
+	- can make use of consistent hashing to tackle horizontal scaling and overloaded partitions(replicas)
+
 CACHE:
 	- Before block storage for hot files/chunks with their hashes
 	- LRU eviction policy
@@ -71,9 +89,3 @@ CACHE:
 LOAD BALANCERS:
 	- in front of block servers
 	- in front of metadata servers
-
-SHARDING METADATA BD:
-1) Sharding based on first letter of file path:
-	- Hotspots
-2) Sharding based on hash of fileID % noofshards:
-	- can make use of consistent hashing to tackle horizontal scaling and overloaded partitions(replicas)

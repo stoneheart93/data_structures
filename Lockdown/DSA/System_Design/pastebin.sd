@@ -1,0 +1,75 @@
+Pastebin
+
+REQUIREMENTS:
+Functional Requirements:
+1) upload/paste data and get a unique URL
+2) On clicking, should redirect to URL containing the content
+3) Custom URL
+4) specify expiration time, if not, default 
+
+Non-functional Requirements:
+1) Highly available
+2) Low latency
+3) Highly reliable
+
+Extended Requirements:
+1) Analytics - how many times paste happened?
+
+DESIGN CONSIDERATIONS:
+1) content/pastes not more than 10 MB
+2) size limit on custom URLs
+
+SYSTEM API:
+URL = addPaste(userID, content, customURL=None, customLifeSpan=None)
+getPaste(userID, URL)
+
+WORKFLOW(HIGH LEVEL DESIGN):
+read heavy
+1) write query:
+	- client calls addPaste()
+	- App server interprets the API call and generates URL
+	- stores the contents in object storage 
+	- stores the URL-contentpath mapping in metadata DB
+	- URL is returned to client
+
+2) read query:
+	- client call getPaste()
+	- App server interprets the API call and fetches the contentPath from the metadata DB
+	- fetches the content from the object storage
+	- content is displayed
+
+DATABASE SCHEMA:
+METADATA:
+1) pasteTable - URL, contentPath, creationTime, expirationTime
+2) userTable - userID, name
+NoSQL - key-value store
+
+OBJECT STORAGE:
+for storing content
+
+DESIGN:
+1) Generating keys offline(URLS):
+	(similar to tinyurl)
+
+DB CLEANUP(to handle expired links):
+	- removal of expired links from DB and moving the key to unusedKeyTable
+	- lazy cleanup which can run periodically when user traffic is low
+	- If expired link is not removed from DB, and user access the shortURL, should throw an error(compare the expiration time)
+
+SHARDING:
+1) Range based (on first letter of originalURL or shortURL)
+	- unbalanced servers - hotspots
+2) Hash based (hash of originalURL or shortURL)
+	- can use consistent hashing
+
+CACHE:
+- For read query, can have cache servers that will cache frequently accessed URLS
+- For write query, KGS gives few unused keys to caches in app server
+- can cache approx 20% of daily traffic
+- LRU eviction policy
+
+LOAD BALANCER:
+1) client and app server
+2) app server and DB
+3) app server and cache servers
+- round robin
