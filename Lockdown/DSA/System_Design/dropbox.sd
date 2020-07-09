@@ -1,0 +1,79 @@
+Dropbox
+
+REQUIREMENTS:
+Functional Requirements:
+1) upload/download files
+2) share with other users
+3) automatic synchronization with other devices
+4) offline editing
+5) ACID
+
+Nonfunctional Requirements:
+1) reliable and durable
+2) consistent
+
+Extended Requirements:
+1) version control
+
+DESIGN CONSIDERATIONS:
+1) read-write same
+2) not a good idea to save the file as a whole; can be stored in chunks
+	- chunk size can be based on network bandwidth; avg file size in storage, etc
+	- Benefits in terms of bandwidth and latency
+	- in case of failed operations, only the failing chunk can be retried
+	- data exchange for updated chunks
+3) have metadata that can recreate the file with chunks
+
+COMPONENTS:
+1) Client Application:
+	I. Internal Metadata Database - track of all the files, chunks, their versions, and their location in the file system.
+
+	II. Chunker:
+		- split the files into chunks
+		- Responsible for reconstructing a file from its chunks
+		- Detect the parts of the files that have been modified by the user and only transfer those parts to the Cloud Storage
+
+	III. Watcher:
+		- monitor the local workspace folders and notify the Indexer of any modification performed by the users. 
+		- Listens to any changes happening on other clients broadcasted by Synchronization service.
+			- wastage of bandwidth; servers will be busy most times
+			- HTTP long polling: client requests information from the server with the expectation that the server may not respond immediately. If the server has no new data for the client when the poll is received, instead of sending an empty response, the server holds the request open and waits for response information to become available. Once it does have new information, the server immediately sends an HTTP/S response to the client, completing the open HTTP/S Request. Upon receipt of the server response, the client can mmediately issue another server request for future updates.
+
+	IV. Indexer: 
+		- process the events received from the Watcher and update the internal metadata database. 
+		- Once the chunks are successfully submitted to/downloaded from the Cloud Storage, the Indexer will communicate with the remote Synchronization Service to broadcast changes to other clients and update remote metadata database(changes made by the client).
+
+2) Metadata DB:
+- responsible for maintaining the versioning and metadata information about files/chunks, users, and workspaces
+- should maintain consistency
+- should store
+1. Chunks
+2. Files
+3. User
+4. Devices
+5. Workspace (sync folders)
+6. Permissions
+
+3) Synchronization Service
+- When the Synchronization Service receives an update request, it checks with the Metadata Database for consistency and then proceeds with the update. notification is sent to all subscribed users or devices to report the file update.
+- employs a differencing algorithm to reduce the amount of the data that needs to be synchronized. Instead of transmitting entire files from clients to the server or vice versa, we can just transmit the difference between two versions of a file. Therefore, only the part of the file that has been changed is transmitted. Server and clients can calculate a hash (e.g., SHA-256) to see whether to update the local copy of a chunk or not. On the server, if we already have a chunk with a similar hash (even from another user), we don’t need to create another copy, we can use the same chunk.
+
+4) Message Queue:
+- Request Queue shared by all clients. Clients’ requests to update the Metadata Database will be sent to the Request Queue first, from there the Synchronization Service will take it to update metadata.
+- Response Queues that correspond to individual subscribed clients are responsible for delivering the update messages to each client.
+
+5) Cloud/Block storage 
+
+CACHE:
+	- Before block storage for hot files/chunks with their hashes
+	- LRU eviction policy
+
+LOAD BALANCERS:
+	- in front of block servers
+	- in front of metadata servers
+
+SHARDING METADATA BD:
+1) Sharding based on first letter of file path:
+	- Hotspots
+2) Sharding based on hash of fileID % noofshards:
+	- can make use of consistent hashing to tackle horizontal scaling and overloaded partitions(replicas)

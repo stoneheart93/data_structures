@@ -1,0 +1,97 @@
+TinyURL:
+
+REQUIREMENTS:
+Functional Requirements:
+1) Generate a shorter and unique short URL 
+2) On clicking, should redirect to original URL
+3) Custom short URL
+4) specify expiration time, if not, default 
+
+Non-functional Requirements:
+1) Highly available
+2) Low latency
+
+Extended Requirements:
+1) Analytics - how many times redirection happened?
+
+DESIGN CONSIDERATIONS:
+1) To prevent abuse, each user can be limited to a certain number of URL creations.
+2) custom shortURL length limit
+
+SYSTEM API:
+shortURL = shortenURL(userID, originalURL, customShortURL=None, customLifeSpan=None)
+redirectURL(userID, shortURl)
+
+WORKFLOW(HIGH LEVEL DESIGN):
+read heavy
+1) write query:
+	- client calls shortenURL()
+	- App server interprets the API call and generates shortURL
+	- DB stores the originalURL-shortURL mapping
+	- shortURL is returned to client
+
+2) read query:
+	- client call redirectURL()
+	- App server interprets the API call and fetches the originalURL from DB
+	- client is redirected
+
+DATABASE SCHEMA:
+1) urlmappingsTable - originalURL, shortURL, creationTime, expirationTime
+2) userTable - userID, name
+
+NoSQL - key-value store
+
+GENERATION OF SHORT URL:
+1) Encoding originalURL:
+	- Generate hash(MD5, SHA265) of originalURL - if MD5, 128 bit hash value
+	- Use base64 encoder for that hash - 21+ chars (128/6)
+	- Pick first 6 chars or any method of picking 6 chars, shortURL len should be 6 chars
+
+	base64 - 64 letters - 6 bits
+	base10 - 10 letters - 4 bits
+
+	- since 6 chars, 6 ^ 64 possible unique keys
+
+	Cons:
+	- Different URLs might have same shortURL
+	- if parts of URL are URL-encoded, will generate diff shortURL
+
+	Workaround:
+	- append userID to originalURL and follow the above steps
+		- if user not signed in ??
+		- ask user to provide custom shortURL or keep generating till unique shortURL is returened
+
+2) Generating Keys offline:
+	- Key Generation Service(KGS) generates 6-letter strings beforehand and stores in key-DB
+		key-DB - unusedKeyTable ; usedKeyTable
+	- when client calls shortenURL, KGS gives one of the unused keys in unusedKeyTable and moves the key to usedKeyTable
+	- KGS can give some keys to each app server for caching
+		- what if the app server dies?? we will lose some keys
+	- replica of KGS to avoid single point of failure
+
+	Pros:
+	- fast, simple
+	- No collisions, unique keys.
+
+DB CLEANUP(to handle expired links):
+	- removal of expired links from DB and moving the key to unusedKeyTable
+	- lazy cleanup which can run periodically when user traffic is low
+	- If expired link is not removed from DB, and user access the shortURL, should throw an error(compare the expiration time)
+
+SHARDING:
+1) Range based (on first letter of originalURL or shortURL)
+	- unbalanced servers - hotspots
+2) Hash based (hash of originalURL or shortURL)
+	- can use consistent hashing
+
+CACHE:
+- For read query, can have cache servers that will cache frequently accessed URLS
+- For write query, KGS gives few unused keys to caches in app server
+- can cache approx 20% of daily traffic
+- LRU eviction policy
+
+LOAD BALANCER:
+1) client and app server
+2) app server and DB
+3) app server and cache servers
+- round robin

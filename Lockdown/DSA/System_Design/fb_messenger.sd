@@ -1,0 +1,24 @@
+Facebook messenger:
+
+REQUIREMENTS:
+Functional Requirements:
+1) one-on-one conversations
+2) offline/online statis
+
+Non Functional Requirements:
+1) low latency
+2) high availability, but as per CAP, to maintain high consistency, can tolerate low availabilty
+3) high consistency
+4) highly reliable
+
+Extended Requirements:
+1) Group chats
+2) video call
+3) notifications
+
+WORKFLOW (HIGH LEVEL DESIGN):
+1) User-A sends a message to User-B through chat server.
+2) server receives the message and sends an acknowledgment to User-A.
+3) server stores the message in its DB and sends the message to User-B.
+4) User-B receives the message and sends the acknowledgment to the server.
+5) The server notifies User-A that the message has been delivered successfully to User-B.

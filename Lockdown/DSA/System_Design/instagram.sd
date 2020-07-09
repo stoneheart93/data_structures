@@ -1,0 +1,83 @@
+Instagram:
+
+REQUIREMENTS:
+Functional Requirements:
+1) upload/view photos
+2) follow users
+3) service - generation of timeline
+
+Non-functional Requirements:
+1) highly available
+2) consistency - can take a hit
+3) reliable - no data loss
+4) low latency - user experience
+
+Extended Requirements:
+1) add tags to photos
+2) search for photos on tags
+3) comment on a post
+4) notification
+5) suggestions to follow other users
+6) privacy of posts
+7) DM
+
+DATABASE SCHEMA:
+1) userTable - userID, userName, personal info
+2) photoTable - photoID, contentID, location, timestamp
+3) commentTable - commentID, photoID, content, timestamp
+4) likeTable - likeID, type, activityID, userID
+5) userPhotoTable - userID, list<photoIDS>
+6) connectionTable - followerID, followeeID, timestamp
+
+SQL -> not good for scalability
+NOSQL key-value store 
+
+NOTE:
+- separate services for upload and view (write and read) as write requests are slow
+- multiple copies of each file to achieve reliability
+
+NEWSFEED GENERATION:
+I. Naive:
+1) get a list of people the user follows
+2) fetch metadata info of latest 100 photos of each user
+3) submit all these photos to ranking algorithm
+
+Cons:
+1) high latency 
+	- query multiple tables
+	- ranking on the results
+
+II. Hybrid approach
+- non celebrity followers:
+	1) dedicated service for pre-generating newsfeed and storing in userNewsFeedTable
+	2) service will query userNewsFeedTable and find the last time the feed was generated and start generating from that time onwards
+
+	How ?
+	1) whenever a non-celebrity posts a photo, list of people who follow this user is fetched
+	2) adds photoID to the list of users who follow the non-celebrity
+
+- celebrity followers: 
+	1) on regular intervals or when manually requested, get a list of cebrities the user follows
+	2) fetch metadata info of latest photos of each user
+	3) submit all these photos to ranking algorithm
+
+CACHE:
+- content closer to the user using a large number of geographically distributed photo cache servers and use CDNs
+- caches for metadata DB for hot users
+- LRU eviction policy
+- cache 20% of daily read volume
+
+SHARDING METADATA DB:
+1) based on userID % no of shards
+	- unbalanced servers - hot users
+	- Generation of anyID like photoID - each DB shard can have auto increment sequence for photoIDS and appending shardID will make it unique across system
+
+2) based on photoID:
+	- need photoID before sharding 
+	- Generation of ID:
+		- a separate KGS service
+		- since we would need latest photos for newsfeed, 
+		photoID = epochTime + autoincrementing sequence
+		per second - 1024 photos - 10 bits
+		if we need to store data for 50 years - 1.6B seconds - 32 bits
+		64 bits for photoID

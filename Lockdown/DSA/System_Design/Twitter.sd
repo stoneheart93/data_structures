@@ -1,0 +1,126 @@
+Twitter
+
+Functional Requirements:
+1) post tweets
+2) follow other users
+3) mark tweets as favorite
+4) service - generation of timeline
+
+Non-functional Requirements:
+1) highly available
+2) consistency - can take a hit
+3) durable
+4) low latency - user experience
+
+Extended Requirements:
+1) search for tweets
+2) reply to a tweet
+3) tweet notification
+4) suggestions to follow other users
+5) privacy of tweets
+6) trending of tweets - localization
+7) DM
+
+APIs:
+
+tweet -> who posted, content, timestamp, no of favorites (show top 2 ppl - x, y and others)
+
+timeline -> fetch x number of tweets based on client device - mobile/web
+
+1) postTweet(userID, tweetContent, timestamp)
+2) followUser(userID, toFollowUserID)
+3) favoriteTweet(userID, tweetID)
+4) List<Tweet> getUserFeed(userID, pageNo, pageSize)
+
+Tweet 
+{
+	userID
+	tweetContent
+	timestamp
+	noFavorites
+	topFavoriteNames
+}
+
+Analysis:
+I) higly available: 
+	- use multiple app servers with a load balancer
+	- replica for each shard 
+		- master-slave: master dies and slave takes over; but master's updates which the slave had not caught up - staleness
+		- primary-secondary: primary for writing and secondary for reading; asynchronous updates to secondary
+
+	Load Balancer:
+	- client and app server
+	- app servers and DB(shards and replicas)
+	- aggregation and cache servers ??
+	- ROUND ROBIN ?
+
+II) read-heavy system:
+DB:
+What to store?
+1) tweetTable - tweetID, userID, tweetContent, timestamp
+2) userTable - userID, userName, fname, lname, bdate, password, description
+3) connectionTable - followerID, followeeID
+4) favoritesTable - tweetID, userID
+
+Get the feed of a user - 
+- get the userIds a user follows (connectionTable)
+- get their top tweets (tweetTable : userID - top tweets by timestamp)
+- for each tweet get users who have favorited the tweet (favoritesTable)
+
+SQL - winner
+	i) SQL - joins / handling relationships(followers)
+
+How to store?
+1) Sharding based on userID:
+	- tweetTable - userID's tweets
+	- userTable - userID
+	- connectionTable - followerID = userID
+	- favoritesTable - no of favorites of only those tweets that are in the tweetTable
+
+	Pros:
+	- Equal distribution 
+	- Cheap writes (rely on the same shard)
+	Cons:
+	- read query on diff shards for timeline generation
+	- to favorite a tweet, rely on diff shards
+	- hotspot issue, for popular users
+
+2) Sharding based on tweetID:
+	- tweetTable - tweetID
+	- userTable - wont be sharded
+	- connectionTable - wont be sharded
+	- favoritesTable - those tweetID' favorites
+
+	Pros:
+	- solves hotposts
+	Cons:
+	- query multiple tweetTable shards for timeline generation
+
+3) Sharding based on timestamp:
+	- tweetTable - recent tweets; when the shard is full, a new shard is created and new incoming tweets are redirected to it
+	- userTable - wont be sharded
+	- connectionTable - wont be sharded
+	- favoritesTable - those recent tweets' favorites
+
+	Pros:
+	- faster timeline generation
+
+	Cons:
+	- Load imbalance - recent tweet shard will be handling traffic and others idle
+	- maintenance overhead - creating new shared - setup replication
+
+3) Hybrid:
+	- cache having recent tweets (timeline)
+	
+	CACHE SERVER:
+		- LRU
+		- store recent tweets of all users (maybe 3 days)
+		- replicate the cache servers and have a load balancer
+
+	- a DB sharded on userID
+
+III) Monitoring:
+	- logging agents 
+	- metrics/stats
+	- latency measuring logs/daily traffic assessment
+	- more replication/caching/load balancing

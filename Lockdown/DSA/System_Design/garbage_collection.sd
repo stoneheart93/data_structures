@@ -1,0 +1,54 @@
+Garbage collectors:
+garbage collection (GC) is a form of automatic memory management. The garbage collector, or just collector, attempts to reclaim garbage, or memory occupied by objects that are no longer in use by the program.
+
+Advantages:
+1) makes programming much easier - developers can focus more on logic
+2) reduce the follwing bugs
+ 	- dereferencing "Dangling pointers" which occur when a piece of memory is freed while there are still pointers to it, 
+	- Double free bugs, which occur when the program tries to free a region of memory that has already been freed, and perhaps already been allocated again.
+	- memory leaks, in which a program fails to free memory occupied by objects that have become unreachable, which can lead to memory exhaustion. 
+
+Disadavantages:
+1) need to implement logics to recycle memory
+2) consumes memory to store the status of objects
+3) In some naive garbage collection implementation, the recycle process may even block the program potentially.
+
+Design:
+Since the essence of a garbage collection system is to recycle unused memory in the program, the key is to identify which piece of memory is unused. More specifically, we should search for variables that are no longer referenced.
+If you think about all the objects (variables) in a program, it’s like a directional graph that each object references other objects and at the same time is also referenced by some objects. As a result, unreachable objects, which are those without any reference, should be recycled. As you can see, the big problem has been simplified to a graph problem – find unreachable nodes in a graph.
+
+NAIVE MARK AND SWEEP:
+Phase 1 - Mark: 
+each obj is associated with a flag reserved for gc
+DFS traversal of "root set"
+sets flag to true if reachable, false to unreachable
+
+Phase 2 - Sweep:
+again DFS traversal of "root set"
+if flag = true
+	flag = false
+if flag = false
+	claim memory
+
+Disadvantages:
+1) traverse twice
+2) freeze the system as mutation of objects shouldnt be allowed
+
+TRI-COLOR:
+three sets - white, gray, black
+1) All objects in white set
+2) Root objects moved to gray set
+3) A root object is scanned
+	- its references are gray and it is black
+	- its references are scanned and moved to black
+4) When gray is empty, white can be claimed
+
+Problems of Mark and Sweep - fragmentation
+
+REFERENCE COUNTING:
+The reference counting system will keep a counter for each object that counts the number of references it has. The counter is incremented when a reference to it is created, and decremented when a reference is destroyed. When the counter is 0, the object should be recycled.
+
+Disadvantages:
+1) adds space overhead to the whole system. 
+2) speed overhead. Since the system needs to keep updating the counter, every operation in the program requires modification of one or more reference counters. Another way to understand this is that instead of freeze the program to recycle objects, reference counting system divides the overhead into every small operation. Since you can’t get everything for free, you need to decide if you want every operation becomes slightly slower or stop the entire program once in a while.
+3) In addition, cycles can also be a problem of reference counting. If two objects reference each other, they will never be recycled. 
