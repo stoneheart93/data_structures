@@ -8590,6 +8590,446 @@ void reverseAlternate(struct node* root)
 	}
 }
 
+331. Print all nodes that don’t have sibling
+
+void printNoSiblingNodes(struct node* root)
+{
+	if(root == NULL)
+		return;
+
+	printNoSiblingNodes(root->left);
+
+	if(root->left != NULL && root->right == NULL)
+		printf("%d", root->left->data);
+	if(root->left == NULL && root->right != NULL)
+		printf("%d", root->right->data);
+
+	printNoSiblingNodes(root->right);
+}
+
+332. Check whether a given graph is Bipartite or not
+
+bool isBipartite(int N, vector<int>* adj)
+{
+	vector<int> color(N + 1, -1);
+
+	queue<int> q;
+	q.push(1);
+	color[1] = 1;
+
+	while(!q.empty())
+	{
+		int u = q.front();
+		q.pop();
+
+		for(auto it = adj[u].begin; it != adj[u].end(); it++)
+		{
+			int v = *it;
+
+			if(color[v] == -1)
+			{
+				q.push(v);
+				color[v] = 1 - color[u];
+			}
+			else if(color[v] == color[u])
+				return false;
+		}
+	}
+
+	return true;
+}
+
+333. Find the number of valid parentheses expressions of given length
+
+int validParantheses(int n)
+{
+	if(n & 1)
+		return 0;
+
+	int a = factorial(2 * n);
+	int b = factorial(n + 1);
+	int c = factorial(n);
+
+	return a / (b * c);
+}
+
+334. Number of distinct subsets of a set
+
+int distinctSubsets(int n)
+{
+	return 1 << n;
+}
+
+335. Print Concatenation of Zig-Zag String in ‘n’ Rows
+
+void printZigZagString(string str, int n)
+{
+	if(n == 1)
+	{
+		cout << str;
+		return;
+	}
+
+	string arr[n];
+
+	int row = 0;
+	bool down = true;
+
+	for(int i = 0; str[i]; i++)
+	{
+		arr[row] += str[i];
+
+		if(row == n - 1)
+			down = false;
+		else if(row == 0)
+			down = true;
+
+		row = down ? row + 1 : row - 1;
+	}
+
+	for(int i = 0; i < n; i++)
+		cout << arr[i] << endl;
+}
+
+336. Kth smallest element in a row-wise and column-wise sorted 2D array | Set 1
+
+typedef pair<int, pair<int, int>> ppi;
+int kthsmallest(vector<vector<int>> M, int k)
+{
+	priority_queue<ppi, vector<ppi>, greater<ppi>> min_heap;
+	int count = 0;
+
+	int n = M.size();
+
+	for(int i = 0; i < n && i < k; i++)
+		min_heap.push({M[i][0], {i, 0}});
+
+	while(!min_heap.empty())
+	{
+		ppi temp = min_heap.top();
+		min_heap.pop();
+
+		int element = temp.first;
+		int row = temp.second.first;
+		int col = temp.second.second;
+
+		count++;
+		if(count == k)
+			return element;
+
+		if(col + 1 < n)
+			min_heap.push({M[row][col + 1], {row, col + 1}});
+	}
+
+	return -1;
+}
+
+Time complexity = O(k log n)
+
+337. Longest substring of vowels
+
+int longestSubstringVowel(char* str)
+{
+	int max_len = INT_MIN;
+	int count = 0;
+
+	for(int i = 0; str[i]; i++)
+	{
+		if(isVowel(str[i]))
+		{
+			count++;
+			max_len = max(max_len, count);
+		}
+		else
+			count = 0;
+	}
+
+	return max_len;
+}
+
+338. Find if a string is interleaved of two other strings | DP-33
+
+bool isInterleaved(char* A, char* B, char* C)
+{
+	int m = strlen(A);
+	int n = strlen(B);
+
+	if(m + n != strlen(C))
+		return false;
+
+	bool DP[m + 1][n + 1];
+	memset(DP, false, sizeof(DP));
+
+	for(int i = 0; i <= m; i++)
+	{
+		for(int j = 0; j <= n; j++)
+		{
+			if(i == 0 && j == 0)
+				DP[i][j] = true;
+			else if(i == 0)
+			{
+				if(B[j - 1] == C[i + j - 1])
+					DP[i][j] = DP[i][j - 1];
+			}
+			else if(j == 0)
+			{
+				if(A[i - 1] == C[i + j - 1])
+					DP[i][j] = DP[i - 1][j];
+			}
+			else if(A[i - 1] == C[i + j - 1] && B[j - 1] != C[i + j - 1])
+				DP[i][j] = DP[i - 1][j];
+			else if(A[i - 1] != C[i + j - 1] && B[j - 1] == C[i + j - 1])
+				DP[i][j] = DP[i][j - 1];
+			else if(A[i - 1] == C[i + j - 1] && B[j - 1] == C[i + j - 1])
+				DP[i][j] = DP[i][j - 1] || DP[i - 1][j];
+		}
+	}
+
+	return DP[m][n];
+}
+
+340. Split array in three equal sum subarrays
+
+void splitArray(int a[], int n)
+{
+	int sum = 0;
+	for(int i = 0; i < n; i++)
+		sum += a[i];
+
+	if(sum % 3 != 0)
+		return;
+
+	int s1 = sum / 3;
+	int s2 = 2 * s1;
+
+	int preSum = 0;
+	int index1 = -1, index2 = -1;
+
+	for(int i = 0; i < n; i++)
+	{
+		preSum += a[i];
+
+		if(preSum == s1 && index1 == -1)
+			index1 = i;
+		else if(preSum == s2 && index2 == -1)
+			index2 = i;
+	}
+
+	if(index1 != -1 && index2 != -1)
+	{
+		printf("%d %d", index1, index2);
+		return;
+	}
+
+	printf("Not possible");
+}
+
+341. In-place conversion of Sorted DLL to Balanced BST
+
+struct node* DLL_to_BST(struct node** head, int n)
+{
+	if(n <= 0)
+		return NULL;
+
+	struct node* left = DLL_to_BST(head, n/2);
+
+	struct node* root = *head;
+	root->left = left;
+	(*head) = (*head)->next;
+
+	root->right = DLL_to_BST(head, n - n/2 - 1);
+
+	return root;
+}
+
+342. Maximum product of an increasing subsequence of size 3
+
+int maxProductSubsequence(int a[], int n)
+{
+	int smaller[n];
+	smaller[0] = -1;
+	int min = 0;
+	for(int i = 1; i < n; i++)
+	{
+		if(a[i] > a[min])
+			smaller[i] = min;
+		else
+		{
+			smaller[i] = -1;
+			min = i;
+		}
+	}
+
+	int greater[n];
+	greater[n - 1] = -1;
+	int max = n - 1;
+	for(int i = n - 2; i >= 0; i--)
+	{
+		if(a[i] < a[max])
+			greater[i] = max;
+		else
+		{
+			greater[i] = -1;
+			max = i;
+		}
+	}
+
+	int max_product = INT_MIN;
+	for(int i = 0; i < n; i++)
+	{
+		if(smaller[i] != -1 && greater[i] != -1)
+			max_product = max(max_product, a[smaller[i]] * a[i] * a[greater[i]]);
+	}
+
+	return max_product;
+}
+
+343. Postfix to Infix
+
+string postfixToInfix(string postfix)
+{
+	stack<string> s;
+
+	for(int i = 0; postfix[i]; i++)
+	{
+		if(isOperator(postfix[i]))
+		{
+			string val2 = s.top();
+			s.pop();
+
+			string val1 = s.top();
+			s.pop();
+
+			string temp = val1 + postfix[i] + val2;
+			s.push(temp);
+		}
+		else
+			s.push(string(1, postfix[i]));
+	}
+
+	return s.top();
+}
+
+344. Remove duplicates from a given string
+
+void removeDuplicates(char* str)
+{
+	int count[256];
+	memset(count, 0, sizeof(count));
+
+	int res_ind = 0;
+	for(int ip_ind = 0; str[ip_ind]; ip_ind++)
+	{
+		if(count[str[ip_ind]] == 0)
+		{
+			count[str[ip_ind]] = 1;
+			str[res_ind++] = str[ip_ind];
+		}
+	}
+
+	str[res_ind] = '\0';
+}
+
+345. Trie | (Insert and Search)
+
+struct trienode
+{
+	struct trienode* children[26];
+	bool isEnd;
+}
+
+void insert(struct trienode* root, char* str)
+{
+	for(int i = 0; str[i]; i++)
+	{
+		int index = str[i] - 'a';
+		if(root->children[index] == NULL)
+			root->children[index] = newNode();
+		root = root->children[index];
+	}
+	root->isEnd = true;
+}
+
+bool search(struct trienode* root, char* str)
+{
+	for(int i = 0; str[i]; i++)
+	{
+		int index = str[i] - 'a';
+		if(root->children[index] == NULL)
+			return false;
+		root = root->children[index];
+	}
+
+	return root->isEnd;
+}
+
+346. Find row with maximum sum in a Matrix
+
+int maxRowSum(int M[][], int m, int n)
+{
+	int maxSum = INT_MIN, max_row;
+
+	for(int i = 0; i < m; i++)
+	{
+		int sum = 0;
+		for(int j = 0; j < n; j++)
+			sum += M[i][j];
+
+		if(sum > maxSum)
+		{
+			maxSum = sum;
+			max_row = i;
+		}
+	}
+
+	return max_row;
+}
+
+347. K maximum sum combinations from two arrays
+
+typedef pair<int, pair<int, int>> ppi;
+void kMaxSumCombinations(int a[], int b[], int n, int k)
+{
+	sort(a, a + n);
+	sort(b, b + n);
+
+	priority_queue<ppi> max_heap;
+	max_heap.push({a[n - 1] + b[n - 1], {n - 1, n - 1}});
+
+	unordered_set<pair<int, int>> hash;
+	hash.insert({n - 1, n - 1});
+
+	for(int t = 0; t < k; t++)
+	{
+		ppi temp = max_heap.top();
+		max_heap.pop();
+
+		int element = temp.first;
+		int i = temp.second.first;
+		int j = temp.second.second;
+
+		printf("%d", element);
+
+		if(i > 0)
+		{
+			if(hash.find({i - 1, j}) == hash.end())
+			{
+				max_heap.push({a[i - 1] + b[j], {i - 1, j}});
+				hash.insert({i - 1, j});
+			}
+		}
+
+		if(j > 0)
+		{
+			if(hash.find({i, j - 1}) == hash.end())
+			{
+				max_heap.push({a[i] + b[j - 1], {i, j - 1}});
+				hash.insert({i, j - 1});
+			}
+		}
+	}
+}
+
 348. Median of two sorted arrays with different sizes
 
 double median(int a[], int aLen, int b[], int bLen)
