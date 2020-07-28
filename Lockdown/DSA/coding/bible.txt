@@ -236,7 +236,6 @@ There are only three possible moves from a cell (i, j)
 228. Longest Common Substring
 229. Rotate a matrix by 90 degree in clockwise direction without using any extra space
 230. Count all possible paths from top left to bottom right of a mXn matrix
-
 231. Remove all nodes which dont lie in any path with sum >= k
 232. Print Left View of a Binary Tree
 233. Extract Leaves of a Binary Tree in a Doubly Linked List
@@ -257,7 +256,6 @@ There are only three possible moves from a cell (i, j)
 248. Print Postorder traversal from given Inorder and Preorder traversals
 249. Word Ladder (Length of shortest chain to reach a target word)
 250. Minimum steps to reach target by a Knight
-
 251. Count Possible Decodings of a given Digit Sequence
 252. Floor and Ceil from a BST
 253. Deletion from a Circular Linked List
@@ -288,9 +286,6 @@ There are only three possible moves from a cell (i, j)
 278. Given two strings, find if first string is a subsequence of second
 279. Design a hit counter which counts the number of hits received in the past 5 minutes.
 280. Reverse alternate levels of a perfect binary tree
-
-
-
 281. Modify contents of Linked List
 282. Stack | Set 4 (Evaluation of Postfix Expression)
 283. Find next Smaller of next Greater in an array
@@ -329,7 +324,6 @@ There are only three possible moves from a cell (i, j)
 316. Segregate Even and Odd numbers
 317. Find Excel column name from a given column number
 
-280. Coin Change | DP-7
 
 331. Print all nodes that don’t have sibling
 332. Check whether a given graph is Bipartite or not
@@ -347,15 +341,14 @@ There are only three possible moves from a cell (i, j)
 345. Trie | (Insert and Search)
 346. Find row with maximum sum in a Matrix
 347. K maximum sum combinations from two arrays
-
 348. Median of two sorted arrays with different sizes
 349. Maximum circular subarray sum
 350. Smallest subarray with sum greater than a given value
 351. Position of robot after given movements
-*352. Find Recurring Sequence in a Fraction
+352. Find Recurring Sequence in a Fraction
 353. Program to add two fractions
 354. Weighted Job Scheduling
-*355. Form minimum number from given sequence
+355. Form minimum number from given sequence
 356. Lucky numbers
 357. How to implement a stack which will support following operations in O(1) time complexity?
 - push() which adds an element to the top of stack.
@@ -371,6 +364,7 @@ There are only three possible moves from a cell (i, j)
 
 
 
+280. Coin Change | DP-7
 
 
 

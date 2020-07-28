@@ -109,9 +109,7 @@ int majorityElement(int a[], int n)
 			count++;
 	}
 
-	if(count > n / 2)
-		return cand;
-	else
+	if 
 		return -1;
 }
 
@@ -355,7 +353,7 @@ Time complexity = O(n) where n is the length of the linked list
 19. Detect loop in a linked list and return the first node of the loop
 
 /*
-Distance travelled by fastptr = 2 * Distance travelled by slowptr
+Distance traveled by fastptr = 2 * Distance travelled by slowptr
 m + xn + k = 2 * (m + yn + k)
 m + k = xn - 2yn
 m + k = n * (x - 2y)
@@ -989,7 +987,7 @@ int merge(int a[], int l, int m, int r)
 int merge_sort(int a[], int l, int r)
 {
 	int count = 0;
-	while(l < r)
+	if(l < r)
 	{
 		int m = l + (r - l) / 2;
 		count += merge_sort(a, l, m);
