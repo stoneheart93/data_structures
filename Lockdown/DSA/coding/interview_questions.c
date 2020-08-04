@@ -8588,6 +8588,602 @@ void reverseAlternate(struct node* root)
 	}
 }
 
+281. Modify contents of Linked List
+
+void modifyUtil(struct node* a, struct node* b)
+{
+	while(a != NULL && b != NULL)
+	{
+		a->data = a->data - b->data;
+		a = a->next;
+		b = b->next;
+	}
+}
+
+void modify(struct node* head)
+{
+	if(head == NULL)
+		return;
+	if(head->next == NULL)
+		return;
+
+	struct node* slowptr = head;
+	struct node* fastptr = head;
+	struct node* prev = NULL;
+
+	while(fastptr != NULL && fastptr->next != NULL)
+	{
+		prev = slowptr;
+		slowptr = slowptr->next;
+		fastptr = fastptr->next->next;
+	}
+
+	struct node* mid = NULL;
+	if(fastptr != NULL)
+	{
+		mid = slowptr;
+		slowptr = slowptr->next;
+	}
+
+	struct node* a = head;
+	struct node* b = slowptr;
+	prev->next = NULL;
+
+	reverseList(&b);
+	modifyUtil(a, b);
+	reverseList(&b);
+
+	if(mid != NULL)
+	{
+		prev->next = mid;
+		mid->next = b;
+	}
+	else
+		prev->next = b;
+
+	return result;
+}
+
+282. Stack | Set 4 (Evaluation of Postfix Expression)
+
+int postfixEvaluation(string exp)
+{
+	stack<int> s;
+
+	for(int i = 0; exp[i]; i++)
+	{
+		if(isdigit(exp[i]))
+			s.push(exp[i] - '0');
+		else
+		{
+			int val2 = s.top();
+			s.pop();
+
+			int val1 = s.top();
+			s.pop();
+
+			s.push(applyOp(val1, val2, exp[i]));
+		}	
+	}
+
+	return s.top();
+}
+
+283. Find next Smaller of next Greater in an array
+
+void NSNGUtil(int a[], int n, int nxt[], char order)
+{
+	stack<int> s;
+
+	for(int i = 0; i < n; i++)
+	{
+		while(!s.empty() && (order == 'G' ? a[i] > a[s.top()] ? a[i] < a[s.top()]))
+		{
+			nxt[s.top()] = i;
+			s.pop();
+		}
+
+		s.push(i);
+	}
+
+	while(!s.empty())
+	{
+		nxt[s.top()] = i;
+		s.pop();
+	}
+}
+
+void NSNG(int a[], int n)
+{
+	int NG[n];
+	int NS[n];
+
+	NSNGUtil(a, n, NS, 'S');
+	NSNGUtil(a, n, NG, 'G');
+
+	for(int i = 0; i < n; i++)
+	{
+		if(NG[i] != -1 && NS[NG[i]] != -1)
+			printf("%d", a[NS[NG[i]]]);
+		else
+			printf("-1");
+	}
+}
+
+284. Add 1 to a number represented as linked list
+
+void addOneUtil(struct node* head)
+{
+	struct node* temp = NULL;
+	int carry = 1;
+
+	while(head != NULL)
+	{
+		int sum = head->data + carry;
+		head->data = sum % 10;
+		carry = sum / 10;
+		temp = head;
+		head = head->next;
+	}
+
+	if(carry)
+		temp->next = newNode(carry);
+}
+
+void addOne(struct node** head)
+{
+	reverseList(head);
+	addOneUtil(*head);
+	reverseList(head);
+}
+
+285. Construct a tree from Inorder and Level order traversals
+
+struct node* construct(int in[], int level[], int inS, int inE)
+{
+	if(inS > inE)
+		return NULL;
+
+	int rootData = level[0];
+	int rootIndex = -1;
+	for(int i = inS; i <= inE; i++)
+	{
+		if(in[i] == rootData)
+		{
+			rootIndex = i;
+			break;
+		}
+	}
+
+	int currLevelSize = inE - inS + 1;
+
+	int lInS = inS; 
+	int lInE = rootIndex - 1;
+	int rInS = rootIndex + 1;
+	int rInE = inE;
+
+	unordered_set<int> hash;
+	for(int i = lInS; i <= lInE; i++)
+		hash.insert(in[i]);
+
+	int lLevelSize = lInE - lInS + 1;
+	int rLevelSize = rInE - rInS + 1;
+	int lLevel[lLevelSize];
+	int rLevel[rLevelSize];
+
+	int li = 0, ri = 0;
+	for(int i = 1; i < currLevelSize; i++)
+	{
+		if(hash.find(level[i]) != hash.end())
+			lLevel[li++] = level[i];
+		else
+			rLevel[ri++] = level[i];
+	}
+
+	struct node* root = newNode(rootData);
+	root->left = construct(in, lLevel, lInS, lInE);
+	root->right = construct(in, rLevel, rInS, rInE);
+	return root;
+}
+
+286. Chocolate Distribution Problem
+
+int findMinDiff(int a[], int n, int m)
+{
+	if(n < m)
+    	return -1;
+
+	if(m == 0)
+    	return 0;
+
+	sort(a, a + n);
+ 
+	int min_diff = INT_MAX;
+ 
+    for(int i = 0; i + m - 1 < n; i++)
+    {
+        int diff = a[i + m - 1] - a[i];
+        if (diff < min_diff)
+            min_diff = diff;
+    }
+    return min_diff;
+}
+
+287. Implement a Dictionary using Trie
+
+struct trienode
+{
+	struct trienode* children[26];
+	bool isEnd;
+	string meaning;
+};
+
+void insert(struct trienode* root, string word, string meaning)
+{
+	for(int i = 0; word[i]; i++)
+	{
+		int index = word[i] - 'a';
+		if(root->children[index] == NULL)
+			root->children[index] = newNode();
+		root = root->children[index];
+	}
+	root->isEnd = true;
+	root->meaning = meaning;
+}
+
+string getMeaning(struct trienode* root, string word)
+{
+	for(int i = 0; word[i]; i++)
+	{
+		int index = word[i] - 'a';
+		if(root->children[index] == NULL)
+			return "not found";
+		root = root->children[index];
+	}
+
+	return root->isEnd ? root->meaning : "not found";
+}
+
+288. Print all nodes that are at distance k from a leaf node (Find only those nodes that are in root-to-leaf path)
+
+void printNodes(struct node* root, int path[], bool visited[], int index, int k)
+{
+	if(root == NULL)
+		return;
+
+	path[index] = root->data;
+	visited[index] = false;
+	index++;
+
+	if(root->left == NULL && root->right == NULL)
+	{
+		if(index - k - 1 >= 0 && !visited[index - k - 1])
+		{
+			printf("%d", path[index - k - 1]);
+			visited[index - k - 1] = true;
+			return;
+		}
+	}
+
+	printNodes(root->left, path, visited, index, k);
+	printNodes(root->right, path, visited, index, k);
+}
+
+289. Mobile Numeric Keypad Problem
+
+void printCombinationRecur(int input[], char* output, int ip_ind, int op_ind, int n)
+{
+	if(op_ind == n)
+		printf("%s\n", output);
+	else
+	{
+		int digit = input[ip_ind];
+		int len = strlen(keypad[digit]);
+		int j;
+		
+		for(j = 0; j < len; j++)
+		{
+			output[op_ind] = keypad[digit][j];
+			printCombinationRecur(input, output, ip_ind + 1, op_ind + 1, n);
+		}
+	}
+}
+
+void mobileKeypad(int input[], int n)
+{
+	char* output = (char*)malloc(sizeof(char) * (n + 1));
+	output[n] = '\0';
+    printCombinationRecur(input, output, 0, 0, n);
+	free(output);
+}
+
+290. GCD of more than two (or array) numbers
+
+int gcd(int a, int b)
+{
+	if(b == 0)
+		return a;
+	return gcd(b, a % b);
+}
+
+int gcd_array(int a[], int n)
+{
+	int result = a[0];
+
+	for(int i = 1; i < n; i++)
+		result = gcd(result, a[i]);
+
+	return result;
+}
+
+291. Iterative Postorder Traversal | Set 1 (Using Two Stacks)
+
+void iterativePostorder(struct node* root)
+{
+	if(root == NULL)
+		return;
+
+	stack<struct node*> child, parent;
+	child.push(root);
+
+	while(!child.empty())
+	{
+		struct node* temp = child.top();
+		child.pop();
+
+		parent.push(temp);
+
+		if(temp->left != NULL)
+			child.push(temp->left);
+		if(temp->right != NULL)
+			child.push(temp->right);
+	}
+
+	while(!parent.empty())
+	{
+		printf("%d", parent.top()->data);
+		parent.pop();
+	}
+}
+
+292. Program for N-th term of Arithmetic Progression series
+
+int nthTerm(int a, int n, int d)
+{
+	return a + (n - 1) * d;
+}
+
+293. Rearrange array in alternating positive & negative items with O(1) extra space | Set 1
+
+294. Find the maximum path sum between two leaves of a binary tree
+
+int maxPathSum(struct node* root, int* result)
+{
+	if(root == NULL)
+		return 0;
+
+	int l = maxPathSum(root->left, result);
+	int r = maxPathSum(root->right, result);
+
+	int return_number = max(l, r) + root->data;
+	*result = max(*result, l + r + root->data);
+
+	return return_number;
+}
+
+295. Maximum Path Sum in a Binary Tree
+
+int maxPathSum(struct node* root, int* result)
+{
+	if(root == NULL)
+		return 0;
+
+	int l = maxPathSum(root->left, result);
+	int r = maxPathSum(root->right, result);
+
+	int return_number = max(max(l, r) + root->data, root->data);
+	*result = max(*result, max(l + r + root->data, return_number));
+
+	return return_number;
+}
+
+296. Sum of heights of all individual nodes in a binary tree
+
+int height(struct node* root, int* sum)
+{
+	if(root == NULL)
+		return 0;
+
+	int lh = height(root->left, sum);
+	int rh = height(root->right, sum);
+	int h = max(lh, rh) + 1;
+
+	*sum += h;
+
+	return h;
+}
+
+297. Boggle (Find all possible words in a board of characters) | Set 1
+
+298. Count trailing zeroes in factorial of a number
+
+int countZeros(int n) 
+{
+	int count = 0; 
+	for(int i = 5; n / i > 0; i *= 5) 
+        count += n / i;
+    return count; 
+} 
+
+299. Rank of an element in a stream
+
+int rank(int a[], int n, int x)
+{
+	int count = 0;
+	for(int i = 0; i < n; i++)
+	{
+		if(a[i] <= x)
+			count++;
+	}
+
+	return count - 1;
+}
+
+300. Sum of nodes at maximum depth of a Binary Tree
+
+int max_level = INT_MIN;
+int sum = 0;
+void sumNodes(struct node *root, int level) 
+{
+	if(root == NULL) 
+    	return; 
+    if(level > max_level)
+    {
+    	sum = root->data;
+    	max_level = level; 
+    } 
+    else if(level == max_level) 
+    {
+    	sum += root->data; 
+	}
+
+    sumNodes(root->left, level + 1); 
+    sumNodes(root->right, level + 1);  
+} 
+
+301. Count pairs in a sorted array whose sum is less than x
+
+int countPairs(int a[], int n, int x)
+{
+	int count = 0;
+	int l = 0, r = n - 1;
+
+	while(l < r)
+	{
+		if(a[l] + a[r] < x)
+		{
+			count += r - l;
+			l++;
+		}
+		else
+			r--;
+	}
+
+	return count;
+}
+
+302. Rat in a Maze | Backtracking-2
+
+303. Reduce the string by removing K consecutive identical characters
+
+string reduceKIdentical(string str, int k)
+{
+	stack<pair<char, int>> s;
+
+	for(int i = 0; str[i]; i++)
+	{
+		if(!s.empty() && s.top().first == str[i])
+		{
+			s.top().second += 1;
+			if(s.top().second == k)
+				s.pop();
+		}
+		else
+			s.push({str[i], 1});
+	}
+
+	string result;
+	while(!s.empty())
+	{
+		while(s.top().second--)
+			result += s.top().first;
+		s.pop();
+	}
+
+	reverse(result.begin(), result.end());
+	return result;
+}
+
+304. Find length of loop in linked list
+
+int lengthLoopUtil(struct node* head)
+{
+	int count = 0;
+	struct node* rider = head;
+
+	while(rider->next != head)
+	{
+		count++;
+		rider = rider->next;
+	}
+
+	return count;
+}
+
+int lengthLoop(struct node* head)
+{
+	if(head == NULL)
+		return 0;
+
+	struct node* slowptr = head;
+	struct node* fastptr = head;
+
+	while(slowptr != NULL && fastptr != NULL && fastptr->next != NULL)
+	{
+		slowptr = slowptr->next;
+		fastptr = fastptr->next->next;
+
+		if(slowptr == fastptr)
+			return lengthLoopUtil(slowptr);
+	}
+
+	return 0;
+}
+
+305. Ways to arrange Balls such that adjacent balls are of different types
+
+int DP[20][20][20][3];
+int countWays(int p, int q, int r, int last) 
+{
+	if(p < 0 || q < 0 || r < 0)
+		return 0;
+	if(p == 1 && q == 0 && r == 0 && last == 0) 
+        return 1;
+    if(p == 0 && q == 1 && r == 0 && last == 1) 
+        return 1;
+    if(p == 0 && q == 0 && r == 1 && last == 2)
+    	return 1;
+
+	if(last == 0) 
+        DP[p][q][r][last] = countWays(p - 1, q, r, 1) + countWays(p - 1, q, r, 2);
+    else if(last == 1) 
+        DP[p][q][r][last] = countWays(p, q - 1, r, 0) + countWays(p, q - 1, r, 2); 
+    else if(last == 2)
+        DP[p][q][r][last] = countWays(p, q, r - 1, 0) + countWays(p, q, r - 1, 1);
+
+    return DP[p][q][r][last];
+}
+
+int arrangeBalls(int p, int q, int r) 
+{
+	memset(DP, sizeof(DP), -1);
+	return countWays(p, q, r, 0) + countWays(p, q, r, 1) + countWays(p, q, r, 2);
+} 
+
+306. Deepest left leaf node in a binary tree
+307. Converting Decimal Number lying between 1 to 3999 to Roman Numerals
+308. Print cousins of a given node in Binary Tree | Single Traversal
+309. Check if a given graph is tree or not
+310. Find the smallest missing number in a sorted array
+311. The Knight’s tour problem | Backtracking-1
+312. Given a linked list, reverse alternate nodes and append at the end
+313. Count all distinct pairs with difference equal to k
+314. Symmetric Tree (Mirror Image of itself)
+315. Count subarrays with equal number of 1’s and 0’s
+316. Segregate Even and Odd numbers
+317. Find Excel column name from a given column number
+
+
 331. Print all nodes that don’t have sibling
 
 void printNoSiblingNodes(struct node* root)
