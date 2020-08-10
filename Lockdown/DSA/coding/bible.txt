@@ -293,7 +293,7 @@ There are only three possible moves from a cell (i, j)
 285. Construct a tree from Inorder and Level order traversals
 286. Chocolate Distribution Problem
 287. Implement a Dictionary using Trie
-288. Print all nodes that are at distance k from a leaf node
+288. Print all nodes that are at distance k from a leaf node (Find only those nodes that are in root-to-leaf path)
 289. Mobile Numeric Keypad Problem
 290. GCD of more than two (or array) numbers
 291. Iterative Postorder Traversal | Set 1 (Using Two Stacks)
@@ -323,8 +323,19 @@ There are only three possible moves from a cell (i, j)
 315. Count subarrays with equal number of 1’s and 0’s
 316. Segregate Even and Odd numbers
 317. Find Excel column name from a given column number
-
-
+318. Find whether an array is subset of another array | Added Method 3
+319. Find maximum level sum in Binary Tree
+320. Print Nodes in Top View of Binary Tree
+321. Convert a normal BST to Balanced BST
+322. Lowest Common Ancestor in a Binary Tree | Set 2 (Using Parent Pointer)
+323. Find zeroes to be flipped so that number of consecutive 1’s is maximized
+324. Find number of subarrays with even sum
+325. Assembly Line Scheduling | DP-34
+326. Make two sets disjoint by removing minimum elements
+327. Longest Repeating Subsequence
+328. Remove "b" and "ac" from a given string
+329. 0-1 knapsack Problem | DP-10
+330. Generate 0 and 1 with 25% and 75% probability
 331. Print all nodes that don’t have sibling
 332. Check whether a given graph is Bipartite or not
 333. Find the number of valid parentheses expressions of given length
@@ -356,15 +367,7 @@ There are only three possible moves from a cell (i, j)
 - findMiddle() which will return middle element of the stack.
 358. Check if two strings after processing backspace character are equal or not
 359. Minimize Cash Flow among a given set of friends who have borrowed money from each other
-
-
-
-
-
-
-
-
-280. Coin Change | DP-7
+360. Coin Change | DP-7
 
 
 

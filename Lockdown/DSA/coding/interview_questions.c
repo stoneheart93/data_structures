@@ -9010,10 +9010,10 @@ int height(struct node* root, int* sum)
 int countZeros(int n) 
 {
 	int count = 0; 
-	for(int i = 5; n / i > 0; i *= 5) 
-        count += n / i;
-    return count; 
-} 
+	for(int i = 5; n / i > 0; i *= 5)
+		count += n / i;
+	return count; 
+}
 
 299. Rank of an element in a stream
 
@@ -9040,16 +9040,16 @@ void sumNodes(struct node *root, int level)
     if(level > max_level)
     {
     	sum = root->data;
-    	max_level = level; 
-    } 
-    else if(level == max_level) 
+    	max_level = level;
+    }
+    else if(level == max_level)
     {
     	sum += root->data; 
 	}
 
-    sumNodes(root->left, level + 1); 
-    sumNodes(root->right, level + 1);  
-} 
+	sumNodes(root->left, level + 1);
+	sumNodes(root->right, level + 1);
+}
 
 301. Count pairs in a sorted array whose sum is less than x
 
@@ -9073,6 +9073,58 @@ int countPairs(int a[], int n, int x)
 }
 
 302. Rat in a Maze | Backtracking-2
+
+bool isSafe(int x, int y, int m, int n, vector<vector<int>> M, vector<vector<int>> solution)
+{
+    return x >= 0 && x < m && y >= 0 && y < n && !solution[x][y] && M[x][y];
+}
+
+bool DFS(int x, int y, int m, int n, vector<vector<int>> M, vector<vector<int>>& solution)
+{
+	solution[x][y] = 1;
+
+    if(x == m - 1 && y == n - 1)
+		return true;
+
+	for(int k = 0; k < 2; k++)    
+	{
+		int next_x = x + row[k];
+		int next_y = y + col[k];
+
+		if(isSafe(next_x, next_y, m, n, M, solution))
+		{
+			if(DFS(next_x, next_y, m, n, M, solution))
+				return true;
+		}
+	}
+
+	solution[x][y] = 0;
+    return false;
+}
+
+bool maze(vector<vector<int>> M)
+{
+	int m = M.size();
+	int n = M[0].size();
+
+	vector<vector<int>> solution(m, vector<int>(n, 0));
+
+	if(DFS(0, 0, m, n, M, solution))
+    {
+    	for(int i = 0; i < m; i++)
+        {
+			for(int j = 0; j < n; j++)
+            {
+            	printf("%d ", solution[i][j]);
+            }
+            printf("\n");
+        }
+
+        return true;
+    }
+    else
+    	return false;
+}   
 
 303. Reduce the string by removing K consecutive identical characters
 
@@ -9147,21 +9199,21 @@ int countWays(int p, int q, int r, int last)
 {
 	if(p < 0 || q < 0 || r < 0)
 		return 0;
-	if(p == 1 && q == 0 && r == 0 && last == 0) 
-        return 1;
-    if(p == 0 && q == 1 && r == 0 && last == 1) 
-        return 1;
-    if(p == 0 && q == 0 && r == 1 && last == 2)
-    	return 1;
+	if(p == 1 && q == 0 && r == 0 && last == 0)
+		return 1;
+	if(p == 0 && q == 1 && r == 0 && last == 1)
+		return 1;
+	if(p == 0 && q == 0 && r == 1 && last == 2)
+		return 1;
 
-	if(last == 0) 
-        DP[p][q][r][last] = countWays(p - 1, q, r, 1) + countWays(p - 1, q, r, 2);
-    else if(last == 1) 
-        DP[p][q][r][last] = countWays(p, q - 1, r, 0) + countWays(p, q - 1, r, 2); 
-    else if(last == 2)
-        DP[p][q][r][last] = countWays(p, q, r - 1, 0) + countWays(p, q, r - 1, 1);
+	if(last == 0)
+		DP[p][q][r][last] = countWays(p - 1, q, r, 1) + countWays(p - 1, q, r, 2);
+	else if(last == 1)
+		DP[p][q][r][last] = countWays(p, q - 1, r, 0) + countWays(p, q - 1, r, 2);
+	else if(last == 2)
+		DP[p][q][r][last] = countWays(p, q, r - 1, 0) + countWays(p, q, r - 1, 1);
 
-    return DP[p][q][r][last];
+	return DP[p][q][r][last];
 }
 
 int arrangeBalls(int p, int q, int r) 
@@ -9171,18 +9223,626 @@ int arrangeBalls(int p, int q, int r)
 } 
 
 306. Deepest left leaf node in a binary tree
+
+int deepestLeftLeaf(struct node* root)
+{
+	if(root == NULL)
+		return - 1;
+
+	queue<struct node*> q;
+	q.push(root);
+	int result = -1;
+
+	while(!q.empty())
+	{
+		struct node* temp = q.front();
+		q.pop();
+
+		if(temp->left)
+		{
+			q.push(temp->left);
+			if(temp->left->left == NULL && temp->left->right == NULL)
+				result = temp->left->data;
+		}
+		if(temp->right)
+			q.push(temp->right);
+	}
+
+	return result;
+}
+
 307. Converting Decimal Number lying between 1 to 3999 to Roman Numerals
+
+string decimalToRoman(int decimal)
+{
+	string m[] = {"", "M", "MM", "MMM"};
+	string c[] = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+	string x[] = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+	string i[] = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+
+	string thousands = m[decimal / 1000];
+	string hundereds = c[(decimal % 1000) / 100];
+	string tens =  x[(decimal % 100) / 10];
+	string ones = i[decimal % 10];
+
+	return thousands + hundereds + tens + ones; 
+}
+
 308. Print cousins of a given node in Binary Tree | Single Traversal
+
+void printCousins(struct node* root, struct node* target)
+{
+	if(root == NULL)
+		return;
+	if(root == target)
+		return;
+
+	queue<struct node*> q;
+	q.push(root);
+	bool parent_found = false;
+
+	while(!q.empty() && !parent_found)
+	{
+		int n = q.size();
+
+		for(int i = 1; i <= n; i++)
+		{
+			struct node* temp = q.front();
+			q.pop();
+
+			if(temp->left == target || temp->right == target)
+				parent_found = true;
+			else
+			{
+				if(temp->left)
+					q.push(temp->left);
+				if(temp->right)
+					q.push(temp->right);
+			}
+		}
+	}
+
+	if(parent_found)
+	{
+		while(!q.empty())
+		{
+			printf("%d", q.front()->data);
+			q.pop();
+		}
+	}
+}
+
 309. Check if a given graph is tree or not
+
+bool isCycle(int u, int N, vector<int>* adj, int* color)
+{
+    color[u] = 1;
+	
+	for(auto it = adj[u].begin(); it != adj[u].end(); it++)
+	{
+	    int v = *it;
+	   	if(color[v] == 0 )
+		{
+			if(isCycle(v, N, adj, color))
+				return true;
+		}
+		else if(color[v] == 1)
+			return true;
+	}
+
+	color[u] = 2;
+	return false;
+}
+
+bool isTree(int N, vector<int>* adj)
+{
+	int color[N + 1];
+	for(int i = 1; i <= N; i++)
+		color[i] = 0;
+
+	for(int i = 1; i <= N; i++)
+	{
+		if(color[i] == 0)
+		{
+			if(isCycle(i, N, adj, color))
+				return false;
+		}
+	}
+
+	for(int i = 1; i <= N; i++)
+	{
+		if(color[i] == 0)
+			return false;
+	}
+
+	return true;
+}
+
 310. Find the smallest missing number in a sorted array
+
+int smallestMissing(int a[], int n)
+{
+	int low = 0, high = n - 1;
+
+	while(low <= high)
+	{
+		if(low != a[low])
+			return low;
+
+		int mid = low + (high - low) / 2;
+
+		if(mid == a[mid])
+			low = mid + 1;
+		else
+			high = mid;
+	}
+
+	return n;
+}
+
 311. The Knight’s tour problem | Backtracking-1
+
+bool isSafe(int x, int y, int n, vector<vector<int>> solution)
+{
+    return x >= 0 && x < n && y >= 0 && y < n && solution[x][y] == -1;
+}
+
+bool DFS(int x, int y, int moveCount, int n, vector<vector<int>>& solution)
+{
+	solution[x][y] = moveCount;
+
+    if(moveCount == n * n - 1)
+		return true;
+
+	for(int k = 0; k < 8; k++)    
+	{
+		int next_x = x + row[k];
+		int next_y = y + col[k];
+
+		if(isSafe(next_x, next_y, n, solution))
+		{
+			if(DFS(next_x, next_y, moveCount + 1, n, solution))
+				return true;
+		}
+	}
+
+	solution[x][y] = -1;
+    return false;
+}
+
+void knightTour(int n)
+{
+	vector<vector<int>> solution(n, vector<int>(n, 0));
+
+	if(DFS(0, 0, 0, n, solution))
+    {
+    	for(int i = 0; i < n; i++)
+        {
+			for(int j = 0; j < n; j++)
+            {
+            	printf("%d ", solution[i][j]);
+            }
+            printf("\n");
+        }
+    }
+    else
+    	printf("Not possible");
+}
+
 312. Given a linked list, reverse alternate nodes and append at the end
+
+void modifyList(struct node* head)
+{
+	struct node* odd = head;
+	struct node* even = NULL;
+	struct node* prev = NULL;
+
+	while(odd != NULL && odd->next != NULL)
+	{
+		prev = odd;
+		struct node* temp = odd->next;
+		odd->next = temp->next;
+		odd = odd->next;
+
+		temp->next = even;
+		even = temp;
+	}
+
+	if(odd != NULL)
+		odd->next = even;
+	else
+		prev->next = even;
+}
+
 313. Count all distinct pairs with difference equal to k
+
+int countPairs(int a[], int n, int k)
+{
+	sort(a, a + n);
+
+	int l = 0, r = 0;
+	int count = 0;
+
+	while(r < n)
+	{
+		if(a[r] - a[l] == k)
+		{
+			count++;
+			l++;
+			r++;
+		}
+		else if(a[r] - a[l] < k)
+			r++;
+		else
+			l++;
+	}
+
+	return count;
+}
+
 314. Symmetric Tree (Mirror Image of itself)
+
+bool isSymmetric(struct node* root)
+{
+	return areMirror(root, root);
+}
+
 315. Count subarrays with equal number of 1’s and 0’s
+
+int countSubarrays(int a[], int n)
+{
+	unordered_map<int, int> hash;
+	int sum = 0;
+
+	for(int i = 0; i < n; i++)
+	{
+		sum += (a[i] == 0) ? -1 : 1;
+		hash[sum]++;
+	}
+
+	int count = 0;
+	if(hash.find(0) != hash.end())
+		count += hash[0];
+
+	for(auto it = hash.begin(); it != hash.end(); it++)
+	{
+		if(it->second > 1)
+			count += (it->second * (it->second - 1)) / 2;
+	}
+
+	return count;
+}
+
 316. Segregate Even and Odd numbers
+
+void segregateEvenOdd(int a[], int n)
+{
+	int i = -1;
+	for(int j = 0; j < n; j++)
+	{
+		if(a[j] % 2 == 0)
+		{
+			i++;
+			swap(&a[i], &a[j]);
+		}
+	}
+}
+
 317. Find Excel column name from a given column number
 
+string findExcelColumn(int n)
+{
+	string result = "";
+	while(n > 0)
+	{
+		n--;
+		int rem = n % 20;
+		result += rem + 'A';
+		n = n / 26;
+	}
+
+	reverse(result.begin(), result.end());
+	return result;
+}
+
+318. Find whether an array is subset of another array | Added Method 3
+
+bool isSubset(int a[], int m, int b[], int n)
+{
+	unordered_set<int> hash;
+
+	for(int i = 0; i < m; i++)
+		hash.insert(a[i]);
+
+	for(int i = 0; i < n; i++)
+	{
+		if(hash.find(b[i]) == hash.end())
+			return false;
+	}
+
+	return true;
+}
+
+319. Find maximum level sum in Binary Tree
+
+int maxLevelSum(struct node* root)
+{
+	if(root == NULL)
+		return -1;
+
+	queue<struct node*> q;
+	q.push(root);
+	int max_sum = INT_MIN;
+
+	while(1)
+	{
+		int n = q.size();
+
+		if(n == 0)
+			break;
+
+		int sum = 0;
+
+		for(int i = 1; i <= n; i++)
+		{
+			struct node* temp = q.front();
+			q.pop();
+
+			sum += temp->data;
+
+			if(temp->left)
+				q.push(temp->left);
+			if(temp->right)
+				q.push(temp->right);
+		}
+
+		max_sum = max(max_sum, sum);
+	}
+
+	return max_sum;
+}
+
+320. Print Nodes in Top View of Binary Tree
+
+void topView(struct node* root)
+{
+	if(root == NULL)
+		return;
+
+	unordered_map<int, int> hash;
+	int hd = 0;
+
+	queue<pair<struct node*, int>> q;
+	q.push({root, hd});
+
+	while(!q.empty())
+	{
+		pair<struct node*, int> temp_pair = q.front();
+		q.pop();
+
+		struct node* temp = temp_pair.first;
+		hd = temp_pair.second;
+
+		if(hash.find(hd) == hash.end())
+			hash[hd] = temp->data;
+
+		if(temp->left)
+			q.push({temp->left, hd - 1});
+		if(temp->right)
+			q.push({temp->right, hd + 1});
+	}
+
+	for(auto it = hash.begin(); it != hash.end(); it++)
+		printf("%d %d", it->first, it->second);
+}
+
+321. Convert a normal BST to Balanced BST
+
+struct node* BST_to_balancedBST(struct node* root)
+{
+	int n = size(root);
+	
+	int a[n];
+	int index = 0;
+	storeInorder(root, a, &index);
+
+	return sortedArrToBST(a, 0, n - 1);
+}
+
+322. Lowest Common Ancestor in a Binary Tree | Set 2 (Using Parent Pointer)
+
+struct node* LCA(struct node* a, struct node* b)
+{
+	unordered_set<int> hash;
+
+	while(a != NULL)
+	{
+		hash.insert(a->data);
+		a = a->parent;
+	}
+
+	while(b != NULL)
+	{
+		if(hash.find(b->data) != hash.end())
+			return b;
+		b = b->parent;
+	}
+
+	return NULL;
+}
+
+323. Find zeroes to be flipped so that number of consecutive 1’s is maximized
+
+int flipZeroes(int a[], int n, int m)
+{
+	int max_len = INT_MIN;
+	int count = 0;
+	int begin = 0;
+
+	for(int end = 0; end < n; end++)
+	{
+		if(a[end] == 0)
+			count++;
+
+		if(count <= m)
+			max_len = max(max_len, end - begin + 1);
+		else
+		{
+			while(count > m)
+			{
+				if(a[begin] == 0)
+					count--;
+				begin++;
+			}
+		}
+	}
+
+	return max_len;
+}
+
+324. Find number of subarrays with even sum
+
+int subarraysEven(int a[], int n)
+{
+	int sum = 0, count = 0;
+	int odd = 0, even = 0;
+
+	for(int i = 0; i < n; i++)
+	{
+		sum += a[i];
+		if(sum % 2 == 0)
+		{
+			count++;
+			even++;
+		}
+		else
+			odd++;
+	}
+
+	return (odd * (odd - 1)) / 2 + (even * (even - 1)) / 2 + count;
+}
+
+325. Assembly Line Scheduling | DP-34
+
+int assemblyScheduling(int processing[2][NUM_STATIONS], int transfer[2][NUM_STATIONS], int entry[2], int exit[2]) 
+{
+	int DP[2][NUM_STATIONS + 1];
+
+	DP[0][0] = processing[0][0] + entry[0];
+	DP[1][0] = processing[1][0] + entry[1];
+
+	for(int i = 1; i < NUM_STATIONS; i++)
+	{
+		DP[0][i] = processing[0][i] + min(DP[0][i - 1], DP[1][i - 1] + transfer[1][i]);
+		DP[1][i] = processing[1][i] + min(DP[1][i - 1], DP[0][i - 1] + transfer[0][i]);
+	}
+
+	DP[0][NUM_STATIONS] = DP[0][NUM_STATIONS - 1] + exit[0];
+	DP[1][NUM_STATIONS] = DP[1][NUM_STATIONS - 1] + exit[1];
+
+	return min(DP[0][NUM_STATIONS], DP[1][NUM_STATIONS]);
+}
+
+326. Make two sets disjoint by removing minimum elements
+
+int disjoint(int a[], int m, int b[], int n)
+{
+	unordered_set<int> hash;
+
+	for(int i = 0; i < m; i++)
+		hash.insert(a[i]);
+
+	int count = 0;
+	for(int i = 0; i < n; i++)
+	{
+		if(hash.find(b[i]) != hash.end())
+			count++;
+	}
+
+	return count;
+}
+
+327. Longest Repeating Subsequence
+
+int LRS(char* X)
+{
+	int n = strlen(X);
+
+	int DP[n + 1][n + 1];
+
+	for(int i = 0; i <= n; i++)
+	{
+		for(int j = 0; j <= n; j++)
+		{
+			if(i == 0 || j == 0)
+				DP[i][j] = 0;
+			else if(X[i - 1] == X[j - 1] && i != j)
+				DP[i][j] = 1 + DP[i - 1][j - 1];
+			else
+				DP[i][j] = max(DP[i - 1][j], DP[i][j - 1]);
+		}
+	}
+
+	return DP[n][n];
+}
+
+328. Remove "b" and "ac" from a given string
+
+string removeB_AC(string str)
+{
+	string result = "";
+
+	int n = str.size();
+	
+	for(int i = 0; i < n; i++)
+	{
+		if(str[i] == 'b')
+			continue;
+		if(i + 1 < n && str[i] == 'a' && str[i + 1] == 'c')
+		{
+			i++;
+			continue;
+		}
+
+		result += str[i];
+	}
+
+	return result;
+}
+
+329. 0-1 knapsack Problem | DP-10
+
+int knapsack(int W, int wt[], int val[], int n)
+{
+	int DP[n + 1][W + 1];
+
+   	for(int i = 0; i <= n; i++)
+   	{
+   		for(int j = 0; j <= W; j++)
+   		{
+	   		if (i == 0 || j == 0)
+		   		DP[i][j] = 0;
+            else if (wt[i - 1] > j)
+        		DP[i][j] = DP[i - 1][j];
+			else
+				DP[i][j] = max(DP[i - 1][j], val[i - 1] + DP[i - 1][j - wt[i - 1]]);        
+		}
+	}
+   
+	return DP[n][W];
+}
+
+330. Generate 0 and 1 with 25% and 75% probability
+
+int rand50()
+{
+	return rand() & 1;
+}
+
+int rand25()
+{
+	return rand50() | rand50();
+}
 
 331. Print all nodes that don’t have sibling
 
@@ -10080,4 +10740,35 @@ void minimizeCashFlow(int N, int graph[][])
 	}
 
 	minimizeCashFlowUtil(amount, N);
+}
+
+360. Coin Change | DP-7
+
+int ways(int coins[], int amount, int n)
+{
+	int DP[n + 1][amount + 1];
+
+	for(int i = 0; i <= n; i++)
+	{
+		for(int j = 0; j <= amount; j++)
+		{
+			if(i == 0)
+				DP[i][j] = 0;
+			else if(j == 0)
+				DP[i][j] = 1;
+			else if(i == 1)
+			{
+				if(j % coins[i - 1] == 0)
+					DP[i][j] = 1;
+				else
+					DP[i][j] = DP[i - 1][j];
+			}
+			else if(coins[i - 1] > j)
+				DP[i][j] = DP[i - 1][j];
+			else
+				DP[i][j] = DP[i - 1][j] + DP[i][j - coins[i - 1]];
+		}
+	}
+
+	return DP[n][amount];
 }
